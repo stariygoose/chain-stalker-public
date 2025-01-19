@@ -1,0 +1,79 @@
+version: '3.7'
+
+services:
+  bot:
+    build:
+      context: ./bot
+    depends_on:
+      - ngrok
+    environment:
+      - TG_TOKEN=${TG_BOT_TOKEN}
+      - SERVERBOT_URL=${TG_BOT_URL}
+      - SERVER_URL=http://server:${SERVER_PORT}
+    networks:
+      - main
+    ports:
+      - ${TG_BOT_PORT}:${TG_BOT_PORT}
+  
+  server:
+    build:
+      context: ./server
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      - SERVERBOT_URL=${TG_BOT_URL}
+      - MONGODB_URL=mongodb://${DB_USER}:${DB_PASS}@mongodb:${DB_PORT}/${DB_DATABASE}
+      - OPENSEA_TOKEN=${OPENSEA_TOKEN}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - main
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${DB_DATABASE}
+    command: ["mongod", "--config", "/config/mongod.conf"]
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongod.conf:/config/mongod.conf:ro
+      - ./data/db-data/db:/data/db
+    env_file:
+      - .env
+    networks:
+      - main
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes: 
+      - ./data/cache:/data
+    networks:
+      - main
+
+  ngrok:
+    image: ngrok/ngrok:3.19.0-alpine
+    volumes:
+      - ./ngrok.yml:/var/lib/ngrok/ngrok.yml
+    command: ["start", "bot", "--authtoken", "${NGROK_TOKEN}"]
+    networks:
+      - main
+    ports:
+      - "4040:4040"
+
+networks:
+  main:
+    driver: bridge
+    

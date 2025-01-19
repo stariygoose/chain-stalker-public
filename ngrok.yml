@@ -1,0 +1,8 @@
+# Version of the ngrok Agent Configuration file. Required.
+version: 3
+
+endpoints:
+  - name: bot
+    url: YOUR_DOMAIN
+    upstream:
+      url: http://bot:1499
