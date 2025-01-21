@@ -1,10 +1,12 @@
 import axios from "axios";
 
-import { ICoin,
+import {
+	ICoin,
 	ICollection,
 	IUserContext,
 	IUserSubscriptions,
-	StalkingResponse } from "../types/interfaces.js";
+	StalkingResponse
+} from "../types/interfaces.js";
 import { NetworkStateKeys } from "../types/networkState.js";
 import { ApiError, StatusError } from "./ErrorService.js";
 
@@ -175,12 +177,38 @@ class ApiService {
 				});
 				throw error;
 			}
-			
+
 			console.error(`[ERROR]: Failed to fetch server API while trying to get all subscriptions.`, {
 				userId: userId,
 				error: error.message
 			});
 			throw new ApiError("Failed to fetch server API while trying to get your subscriptions. Try later.");
+		}
+	}
+
+	public async deleteUser(userId: number): Promise<void> {
+		try {
+			const res = await axios.delete(`${this.url}${this.version}/subscriptions/delete/${userId}`, {
+				headers: this.headers
+			})
+			
+			if (res.status != 204)
+				throw new StatusError(res.status, "delete user's data.");
+		} catch (error: any) {
+			if (error instanceof StatusError) {
+				console.error(`[ERROR]: Server error in ApiServer.deleteUser.`, {
+					userId: userId,
+					status: error.status,
+					error: error.message
+				});
+				throw error;
+			}
+
+			console.error(`[ERROR]: Failed to fetch server API while trying to delete user's data.`, {
+				userId: userId,
+				error: error.message
+			});
+			throw new ApiError("Failed to fetch server API while trying to delete your data. Try later.");
 		}
 	}
 }

@@ -13,6 +13,8 @@ import { myStalks } from "../options/myStalks.js";
 import { coinFoundMsg } from "../options/coinFound.js";
 import { isTargetCoin, isTargetNftCollection } from "../functions/functions.js";
 import { ApiError, StatusError } from "./ErrorService.js";
+import { UserState } from "../types/userState.js";
+import { deleteUserOption } from "../options/deleteUserOption.js";
 
 class BotMenuService extends AbstractBot {
 	private ApiService: ApiService;
@@ -110,7 +112,7 @@ class BotMenuService extends AbstractBot {
 	}
 
 	public async sendCollectionForStalking(chatId: number, network: NetworkStateKeys | null, address: string | null)
-	: Promise<Message> {
+		: Promise<Message> {
 		try {
 			if (!address || !network)
 				throw new Error("Invalid parameters. Please try again.");
@@ -149,9 +151,12 @@ class BotMenuService extends AbstractBot {
 			else if (isTargetCoin(state)) {
 				const res = await this.ApiService.stalkCoin(chatId, state);
 				return this.botMessageService.sendMessage(chatId, `🕵🏻‍♂️ ${res.message}`, menuOption);
+			} else if (state.state == UserState.AWAITING_DELETE_CONFIRMATION) {
+				await this.deleteUser(chatId);
+				return this.botMessageService.sendMessage(chatId, "Your data was successfuly deleted.", menuOption);
 			} else {
-				return this.botMessageService.sendMessage(chatId, "🤬 There was an issue"+
-					" creating the subscription. Please try again.", menuOption);
+				return this.botMessageService.sendMessage(chatId, "🤬 There was an issue." +
+					"Please try again.", menuOption);
 			}
 		} catch (error: any) {
 			if (error instanceof StatusError || error instanceof ApiError)
@@ -173,19 +178,48 @@ class BotMenuService extends AbstractBot {
 				const text = "👁️‍🗨️ You don't have any active stalks.";
 				return this.botMessageService.sendMessage(chatId, text, menuOption);
 			}
-			
+
 			const text = myStalks(subs);
-			
+
 			return this.botMessageService.sendMessage(chatId, text, menuOption);
 		} catch (error: any) {
 			if (error instanceof ApiError || error instanceof StatusError)
 				throw error;
 
-			console.error(`[UNEXPECTED ERROR]: [UNEXPECTED ERROR]: Unexpected error in onMyStalksBtn.`, {
+			console.error(`[UNEXPECTED ERROR]: Unexpected error in onMyStalksBtn.`, {
 				chatId: chatId,
 				error: error.message
 			});
 			throw new Error("Failed to retrieve your stalks.");
+		}
+	}
+
+	public async onDeleteUserBtn(chatId: number): Promise<Message> {
+		try {
+			const { text, options } = deleteUserOption();
+			return this.botMessageService.sendMessage(chatId, text, options);
+		} catch (error: any) {
+			console.log(`[UNEXPECTED ERROR]: Unexpected error in onDeleteUserBtn.`, {
+				chatId: chatId,
+				error: error.message
+			})
+			throw new Error("Failed to send confirmation message. Try later.");
+		}
+	}
+
+	private async deleteUser(chatId: number): Promise<void> {
+		try {
+			return await this.ApiService.deleteUser(chatId);
+		} catch (error: any) {
+			if (error instanceof ApiError || error instanceof StatusError)
+				throw error;
+
+			console.log(`[UNEXPECTED ERROR]: Unexpected error in deleteUser.`, {
+				chatId: chatId,
+				error: error.message
+			})
+			throw new Error("Failed to delete your data.");
+
 		}
 	}
 }

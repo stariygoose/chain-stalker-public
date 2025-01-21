@@ -11,8 +11,8 @@ export function coinMessagePingOption(data: IPing<ICoin>) {
 
 function coinNegativeMessagePing(data: IPing<ICoin>) {
 	const text = `🪙 ${data.target.symbol}\n` +
-	`🔻 The price changed by -${data.percentage.toFixed(2)}%\n`+
-	`💲 Current price: ${data.target.price} USDT`;
+		`🔻 The price changed by ${data.percentage.toFixed(2)}%\n` +
+		`💲 Current price: ${data.target.price} USDT`;
 	return {
 		text,
 		options: {
@@ -23,9 +23,9 @@ function coinNegativeMessagePing(data: IPing<ICoin>) {
 }
 
 function coinPositiveMessagePing(data: IPing<ICoin>) {
-	const text = `🪙 ${data.target.symbol}\n`+
-	`🚀 The price changed by +${data.percentage.toFixed(2)}%\n`+
-	`💲 Current price: ${data.target.price} USDT`;
+	const text = `🪙 ${data.target.symbol}\n` +
+		`🚀 The price changed by +${data.percentage.toFixed(2)}%\n` +
+		`💲 Current price: ${data.target.price} USDT`;
 	return {
 		text,
 		options: {

@@ -234,6 +234,19 @@ class DBManager {
 			throw new DataBaseError("Can't add or update coin subscription in the database.");
 		}
 	}
+
+	public async deleteUser(userId: number) {
+		try {
+			await CoinSubscription.deleteMany({ userId: userId });
+			await NftSubscription.deleteMany({ userId: userId });
+		} catch (error: any) {
+			console.error(`[ERROR]: Unexpected error while trying to delete a user.`, {
+				userId: userId,
+				error: error.message
+			});
+			throw new DataBaseError(`Unexpected error while trying to delete a user <${userId}>`);
+		}
+	}
 }
 
 export { DBManager };

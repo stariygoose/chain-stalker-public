@@ -6,11 +6,12 @@ const menuOption = {
 		inline_keyboard: [
 			[{ text: "Coins", callback_data: MenuState.COINS }],
 			[{ text: "NFTs", callback_data: MenuState.NFTS }],
-			[{ text: "My Stalks", callback_data: MenuState.SUBS_LIST }]
+			[{ text: "My Stalks", callback_data: MenuState.SUBS_LIST }],
+			[{ text: "Delete account", callback_data: MenuState.DELETE_USER }]
 		]
 	},
 	parse_mode: "HTML" as ParseMode,
 	disable_web_page_preview: true
 };
 
-export {menuOption};
+export { menuOption };

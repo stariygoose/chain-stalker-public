@@ -29,20 +29,18 @@ export async function startServer() {
 
 		const stalkRouter = initStalkRouter(os, WebsocketManager);
 		app.use("/api/v1", stalkRouter);
-		app.use("/api/v1", subsRouter);
+		app.use("/api/v1/subscriptions", subsRouter);
 		app.use(errorMiddleware);
 
 		OpenSea.initStalksAfterReboot(os)
 			.then(() => console.log("[INFO]: OpenSea service was successfully set up."))
 			.catch((error: Error) => {
 				console.error(`[CRITICAL ERROR]: Can't connect to the OpenSea Stream API: ${error.message}`);
-				process.exit(1);
 			});
 		WebsocketManager.initWebsocketsAfterReboot()
 			.then(() => console.log("[INFO]: Binance WebSocket Manager was successfully set up."))
 			.catch((error: Error) => {
 				console.error(`[CRITICAL ERROR]: Can't initialize Binance WebSocket Manager: ${error.message}`);
-				process.exit(1);
 			});
 	} catch (error: any) {
 		console.error(`[ERROR]: Unexpected error while starting the server: ${error.message}`);

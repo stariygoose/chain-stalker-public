@@ -3,6 +3,6 @@ version: 3
 
 endpoints:
   - name: bot
-    url: YOUR_DOMAIN
+    url: pretty-casual-hound.ngrok-free.app
     upstream:
-      url: http://bot:1499
+      url: http://bot:30000

@@ -10,6 +10,7 @@ services:
       - TG_TOKEN=${TG_BOT_TOKEN}
       - SERVERBOT_URL=${TG_BOT_URL}
       - SERVER_URL=http://server:${SERVER_PORT}
+      - TG_BOT_PORT=${TG_BOT_PORT}
     networks:
       - main
     ports:
@@ -23,6 +24,7 @@ services:
       - redis
     environment:
       - SERVERBOT_URL=${TG_BOT_URL}
+      - SERVER_PORT=${SERVER_PORT}
       - MONGODB_URL=mongodb://${DB_USER}:${DB_PASS}@mongodb:${DB_PORT}/${DB_DATABASE}
       - OPENSEA_TOKEN=${OPENSEA_TOKEN}
       - REDIS_HOST=${REDIS_HOST}
@@ -36,8 +38,6 @@ services:
   mongodb:
     image: mongo:latest
     restart: always
-    ports:
-      - ${DB_PORT}:${DB_PORT}
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${DB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}

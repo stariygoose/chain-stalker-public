@@ -12,7 +12,7 @@ export function nftMessagePingOption(data: IPing<ICollection>) {
 function nfgNegativeMessagePing(data: IPing<ICollection>) {
 	const url = `https://opensea.io/collection/${data.target.collection}`;
 	const text = `<a href="${url}"> 🖼️ ${data.target.collection}</a>\n
-	🔻 The price changed by -${data.percentage.toFixed(2)}%\n
+	🔻 The price changed by ${data.percentage.toFixed(2)}%\n
 	💲 Current FP: ${data.target.floorPrice} ETH`;
 	return {
 		text,

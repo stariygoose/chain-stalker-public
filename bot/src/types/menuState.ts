@@ -5,7 +5,7 @@ enum MenuState {
 	NETWORK = "network",
 	CANCEL = "cancel",
 	YES = "yes",
-	YES_COINS = "yes_coins"
+	DELETE_USER = "delete_user"
 };
 
-export {MenuState};
+export { MenuState };

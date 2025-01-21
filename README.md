@@ -9,9 +9,11 @@ The development of **Chain Stalker** is organized in stages. Below is the curren
 ## 🚀 V1 - Initial Bot Release (Completed)
 - ✅ **Telegram Bot for Token Price Alerts:** The bot is fully functional for tracking token prices.
 - ✅ **Supported Exchanges:** Currently, the bot works only with Binance for token price tracking.
-- ✅ **NFT Tracking:** Integration with OpenSea to track NFT listings and sales is complete.
+- ✅ **NFT Tracking:** Integration with OpenSea to track NFT floor price is complete.
+- ✅ **User data wipe:** The ability to delete user data.
 
 ## 🌐 V1.1 - Website for Subscription Management (In Progress)
+- ❌ **Bot interface for Managing Subscriptions:** Provide an interface for the bot to manage subscriptions.
 - ❌ **Website for Managing Subscriptions:** A web interface will be developed to allow users to manage their tracked tokens and NFTs, as well as adjust alert settings.
 
 ## 🚀 V2 - Expanded Token Tracking (Planned)
@@ -33,7 +35,7 @@ Next rename `.env.example` to `.env`.
 A `.env` file is a configuration file used to store environment variables.
 ### ⚠️ It is recommended not to change variables such as ports or any variables in lowercase format. ⚠️
 
-The first three variables you can modify are `DB_USER`, `DB_PASS` and `REDIS_PASSWORD`.  You are free to choose any value for these.
+The first four variables you can modify are `DB_USER`, `DB_PASS`, `DB_DATABASE` and `REDIS_PASSWORD`.  You are free to choose any value for these.
 
 ## Opensea Stream API Installation
 The server uses the Opensea Stream API to track NFT listings and sales. This is a crucial part of the server.  
@@ -65,7 +67,9 @@ Ngrok is used to expose your local server to the internet. Follow these steps:
    
 6. Additionally, edit the `ngrok.yml` file:
    
+   Remove `.example` from the filename `ngrok.yml.example`.
    Replace the placeholder `YOUR_DOMAIN` with your actual Static Domain.
+   ⚠️ **If you have changed the `TG_BOT_PORT` variable to a different value, you must also update the port in the `upstream: url:` to the new `TG_BOT_PORT` value.**
 ### ⚠️ Do not remove `https://` prefix from the `TG_BOT_URL` variable. ⚠️
 
 https://github.com/user-attachments/assets/ce0d4886-9795-4057-92cf-91ef986178ca

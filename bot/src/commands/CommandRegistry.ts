@@ -17,6 +17,7 @@ import { MyStalksCommand } from "./commands/MyStalksCommand.js";
 import { CoinsCommand } from "./commands/CoinsCommand.js";
 import { CoinsSymbolCommand } from "./commands/CoinsSymbolCommand.js";
 import { CoinsPercentageCommand } from "./commands/CoinsPercentageCommand.js";
+import { DeleteUserCommand } from "./commands/DeleteUserCommand.js";
 import { ICoin, ICollection, IUserContext } from "../types/interfaces.js";
 
 
@@ -50,8 +51,8 @@ export class CommandRegistry {
 
 		this.bot.onText(/^[^/].*$/, (msg: Message) => {
 			const chatId = msg.chat.id;
-      		const userState = this.userStateManager.getState(chatId);
-			
+			const userState = this.userStateManager.getState(chatId);
+
 			this.processText(chatId, userState, msg);
 		})
 	}
@@ -76,6 +77,10 @@ export class CommandRegistry {
 				break;
 			case MenuState.SUBS_LIST:
 				new MyStalksCommand(this.botMessageService, this.botMenuService, this.userStateManager, this.errorService)
+					.execute(chatId);
+				break;
+			case MenuState.DELETE_USER:
+				new DeleteUserCommand(this.botMessageService, this.botMenuService, this.userStateManager, this.errorService)
 					.execute(chatId);
 				break;
 			case MenuState.CANCEL:

@@ -17,4 +17,18 @@ export class SubsController {
 			next(error);
 		}
 	}
+
+	public deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+		try {
+			const { userId } = req.params;
+			if (!userId) {
+				throw new BadRequestError();
+			}
+			
+			await new SubsService().deleteUser(+userId);
+			return res.sendStatus(204);
+		} catch (error) {
+			next(error);
+		}
+	}
 }
