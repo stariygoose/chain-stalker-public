@@ -1,7 +1,7 @@
 import { MenuState } from "../types/menuState.js";
 
 export function deleteUserOption() {
-	const text = `Are you sure to delete all your data?`;
+	const text = `🗑️ Are you sure to delete all your data?`;
 	return {
 		text,
 		options: {

@@ -31,7 +31,7 @@ export class DeleteUserCommand {
 			})
 		} catch (error: any) {
 			this.messageService.deleteMessage(chatId, userState.prevMsgId);
-			const msg = await this.errorService.unknownError(chatId, error.message);
+			const msg = await this.errorService.sendErrorMessage(chatId, error.message);
 			this.userState.setState(chatId, {
 				prevMsgId: msg.message_id
 			})

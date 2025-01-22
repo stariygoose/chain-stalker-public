@@ -12,8 +12,8 @@ function myStalks(data: IUserSubscriptions) {
 	const coinsText = coinsSubscriptions.length > 0 
 		? coinsSubscriptions
 				.map((sub: ISubscription<ICoin>, index: number) => {
-					const formattedPrice = parseFloat(sub.target.price.toString()).toFixed(2);
-					return `${index + 1}. ${sub.target.symbol} - Stalked price: ${formattedPrice} USDT\n` +
+					const formattedPrice = parseFloat(sub.target.price.toString());
+					return `${index + 1}. #${sub.target.symbol} - Stalked price: ${formattedPrice} USDT\n` +
 						`Percentage change: ${sub.percentage}%`;
 				})
 				.join("\n")
@@ -24,7 +24,7 @@ function myStalks(data: IUserSubscriptions) {
 		? nftsSubscriptions
 				.map((sub: ISubscription<ICollection>, index: number) => {
 					const url = `https://opensea.io/collection/${sub.target.collection}`;
-					const formattedPrice = parseFloat(sub.target.floorPrice.toString()).toFixed(2);
+					const formattedPrice = parseFloat(sub.target.floorPrice.toString());
 					return `${index + 1}. <a href="${url}">${sub.target.name}</a> - Stalked floor price: ${formattedPrice} ${sub.target.floorPriceSymbol}\n` +
 						`Percentage change: ${sub.percentage}%`;
 				})

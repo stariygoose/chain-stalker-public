@@ -12,13 +12,12 @@ import { NftNetworkCommand } from "./commands/NftNetworkCommand.js";
 import { NftContractCommand } from "./commands/NftContractCommand.js";
 import { StartCommand } from "./commands/StartCommand.js";
 import { YesCommand } from "./commands/YesCommand.js";
-import { NftPercentageCommand } from "./commands/NftPercentageCommand.js";
 import { MyStalksCommand } from "./commands/MyStalksCommand.js";
 import { CoinsCommand } from "./commands/CoinsCommand.js";
 import { CoinsSymbolCommand } from "./commands/CoinsSymbolCommand.js";
-import { CoinsPercentageCommand } from "./commands/CoinsPercentageCommand.js";
 import { DeleteUserCommand } from "./commands/DeleteUserCommand.js";
 import { ICoin, ICollection, IUserContext } from "../types/interfaces.js";
+import { PercentageCommand } from "./commands/PercentageCommand.js";
 
 
 export class CommandRegistry {
@@ -95,7 +94,7 @@ export class CommandRegistry {
 				console.error(`[UNEXPECTED ERROR]: Type of callback query is unknown. Default case error.`, {
 					typeOfButtonClicked: typeOfButtonClicked
 				})
-				this.errorService.unknownError(chatId, `Unexpected error.`);
+				this.errorService.sendErrorMessage(chatId, `Unexpected error.`);
 				break;
 		}
 	}
@@ -106,8 +105,8 @@ export class CommandRegistry {
 				new CoinsSymbolCommand(this.botMessageService, this.botMenuService, this.userStateManager, this.errorService)
 					.execute(msg);
 				break;
-			case UserState.AWAITING_COIN_PERCENTAGE:
-				new CoinsPercentageCommand(this.botMessageService, this.botMenuService, this.userStateManager, this.errorService)
+			case UserState.AWAITING_PERCENTAGE:
+				new PercentageCommand(this.botMessageService, this.botMenuService, this.userStateManager, this.errorService)
 					.execute(msg);
 				break;
 			case UserState.AWAITING_NFT_NETWORK:
@@ -116,10 +115,6 @@ export class CommandRegistry {
 				break;
 			case UserState.AWAITING_NFT_CONTRACT:
 				new NftContractCommand(this.botMessageService, this.botMenuService, this.userStateManager, this.errorService)
-					.execute(msg);
-				break;
-			case UserState.AWAITING_NFT_PERCENTAGE:
-				new NftPercentageCommand(this.botMessageService, this.botMenuService, this.userStateManager, this.errorService)
 					.execute(msg);
 				break;
 			default:

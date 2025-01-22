@@ -7,7 +7,7 @@ import {
 	IUserContext
 } from "../interfaces/interfaces.js";
 import { OpenSea } from "./marketplaces/OpenSea.js";
-import { DataBaseError, NotFoundError } from "../errors/Errors.js";
+import { ApiError, DataBaseError, NotFoundError } from "../errors/Errors.js";
 import { BinanceWebsocketManager } from "./marketplaces/binance/BinanceWebsocketManager.js";
 import { BinanceWebsocket } from "./marketplaces/binance/BinanceWebsocket.js";
 
@@ -67,10 +67,9 @@ class BotService {
 		try {
 			return await BinanceWebsocket.getCoin(symbol);
 		} catch (error: any) {
-			console.error(`[ERROR]: Error while fetching coin ${symbol}.`, {
-				error: error.message
-			});
-			throw new Error(`Error fetching coin ${symbol}: ${error.message}`);
+			if (error instanceof ApiError)
+				throw error;
+			throw new Error("Unexpected error.");
 		}
 	}
 

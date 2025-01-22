@@ -6,7 +6,7 @@ import { UserStateManager } from "../../state/UserStateManager.js";
 import { BotMessageService } from "../../services/BotMessageService.js";
 import { UserState } from "../../types/userState.js";
 
-class NftContractCommand {
+export class NftContractCommand {
 	private botMessageService: BotMessageService;
 	private botMenuService: BotMenuService;
 	private userState: UserStateManager;
@@ -31,17 +31,15 @@ class NftContractCommand {
 
 			const msg = await this.botMenuService.sendPercentageMessage(chatId);
 			this.userState.setState(chatId, {
-				state: UserState.AWAITING_NFT_PERCENTAGE,
+				state: UserState.AWAITING_PERCENTAGE,
 				contract: contract,
 				prevMsgId: msg.message_id
 			});
 		} catch (error: any) {
 			this.botMessageService.deleteMessage(chatId, prevMsgId);
 
-			const errorMsg = await this.errorService.unknownError(chatId);
+			const errorMsg = await this.errorService.sendErrorMessage(chatId);
 			this.userState.setState(chatId, { prevMsgId: errorMsg.chat.id })
 		}
 	}
 }
-
-export { NftContractCommand };

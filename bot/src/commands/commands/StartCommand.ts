@@ -27,7 +27,7 @@ class StartCommand {
 		} catch (error: any) {
 			this.botMessageService.deleteMessage(chatId, currState.prevMsgId);
 
-			const errorMsg = await this.errorService.unknownError(chatId);
+			const errorMsg = await this.errorService.sendErrorMessage(chatId);
 			this.userState.setState(chatId, { prevMsgId: errorMsg.message_id });
 		}
 	}

@@ -7,7 +7,7 @@ import { UserStateManager } from "../../state/UserStateManager.js";
 import { UserState } from "../../types/userState.js";
 
 
-class CoinsSymbolCommand {
+export class CoinsSymbolCommand {
 	private botMessageService: BotMessageService;
 	private botMenuService: BotMenuService;
 	private userState: UserStateManager;
@@ -31,17 +31,15 @@ class CoinsSymbolCommand {
 
 			const msg = await this.botMenuService.sendPercentageMessage(chatId);
 			this.userState.setState(chatId, {
-				state: UserState.AWAITING_COIN_PERCENTAGE,
+				state: UserState.AWAITING_PERCENTAGE,
 				contract: symbol,
 				prevMsgId: msg.message_id
 			});
 		} catch (error: any) {
 			this.botMessageService.deleteMessage(chatId, prevMsgId);
 
-			const errorMsg = await this.errorService.unknownError(chatId);
-			this.userState.setState(chatId, { prevMsgId: errorMsg.chat.id })
+			const errorMsg = await this.errorService.sendErrorMessage(chatId);
+			this.userState.setState(chatId, { prevMsgId: errorMsg.message_id })
 		}
 	}
 }
-
-export { CoinsSymbolCommand }

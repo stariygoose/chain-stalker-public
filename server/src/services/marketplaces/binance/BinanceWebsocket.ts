@@ -1,11 +1,11 @@
 import { Data, WebSocket } from "ws";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import { Channel, ICoin, IUserContext } from "../../../interfaces/interfaces.js";
 import { DBManager } from "../../../db/DBManager.js";
 import { calculatePercentage } from "../../../functions/functions.js";
 import { BotService } from "../../BotService.js";
-import { DataBaseError } from "../../../errors/Errors.js";
+import { ApiError, DataBaseError, NotFoundError } from "../../../errors/Errors.js";
 
 
 export class BinanceWebsocket {
@@ -42,9 +42,13 @@ export class BinanceWebsocket {
 		} catch (error: any) {
 			console.error(`[ERROR]: Failed to fetch coin data from Binance API.`, {
 				symbol: symbol.toUpperCase(),
-				error: error.message
+				error: error.message,
 			});
-			throw new Error("Cannot fetch data from Binance.");
+
+			if (error.status === 400)
+				throw new NotFoundError(`Invalid token symbol. Can not find token on Binance.`);
+			else
+				throw new ApiError("Failed to fetch coin data from Binance API.", error.status);
 		}
 	}
 
@@ -59,9 +63,12 @@ export class BinanceWebsocket {
 	private processEvents(userId: number): void {
 		this.ws.on('open', () => {
 			console.log(`[INFO]: The Binance WebSocket connection was opened for the <${this.symbol}> coin.`);
-
-			this.addUser(userId);
-			this.sendToBinanceChannel();
+			try {
+				this.sendToBinanceChannel();
+				this.addUser(userId);
+			} catch (error) {
+				throw new Error();
+			}
 		});
 
 		this.ws.on('message', async (res: Data) => {
@@ -93,10 +100,15 @@ export class BinanceWebsocket {
 			id: 1,
 		};
 
-		if (this.ws.OPEN)
-			this.ws.send(JSON.stringify(subscribeParams));
-		else			
-			this.ws
+		this.ws.send(JSON.stringify(subscribeParams), (error: any) => {
+			if (error) {
+				console.error(`[ERROR] Error while trying to follow to coin stream data.`, {
+					symbol: this.symbol.toLowerCase(),
+					error: error.messsage
+				});
+				throw new Error(`Error while trying to follow to coin <${this.symbol.toLowerCase()}> stream data.`);
+			}
+		});
 	}
 
 	private async processCoinMessage(coin: ICoin): Promise<void> {

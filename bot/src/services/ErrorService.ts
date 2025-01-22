@@ -12,7 +12,7 @@ export class ErrorService {
 		this.userState = userState;
 	}
 
-	public async unknownError(chatId: number, message?: string): Promise<Message> {
+	public async sendErrorMessage(chatId: number, message?: string): Promise<Message> {
 		this.userState.resetState(chatId);
 		try {
 			const msg = message || "Unexpected error. Please try again later.";
@@ -40,10 +40,18 @@ export class ApiError extends Error {
 	}
 }
 
-export class StatusError extends Error {
+export class StatusError extends ApiError {
 	constructor(readonly status: number, resource: string) {
 		super(`Server error while trying to ${resource}.`);
 		this.status = status;
 		this.name = this.constructor.name;
+	}
+}
+
+export class NotFoundError extends ApiError {
+	readonly status: number = 404;
+
+	constructor(message: string) {
+		super(message);
 	}
 }

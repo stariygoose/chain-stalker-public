@@ -35,7 +35,7 @@ class NftCommand {
 		} catch (e) {
 			this.botMessageService.deleteMessage(chatId, state.prevMsgId);
 			
-			const msg = await this.errorService.unknownError(chatId);
+			const msg = await this.errorService.sendErrorMessage(chatId);
 			this.userState.setState(chatId, { prevMsgId: msg.message_id });
 		}
 	}

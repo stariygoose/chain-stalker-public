@@ -1,7 +1,5 @@
 export const NetworkState = {
-	ETHEREUM: "ethereum",
-	ARBITRUM: "arbitrum",
-	SOLANA: "solana"
+	ETHEREUM: "ethereum"
 } as const
 
 export type NetworkStateKeys = typeof NetworkState[keyof typeof NetworkState];

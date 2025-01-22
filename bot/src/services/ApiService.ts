@@ -8,7 +8,7 @@ import {
 	StalkingResponse
 } from "../types/interfaces.js";
 import { NetworkStateKeys } from "../types/networkState.js";
-import { ApiError, StatusError } from "./ErrorService.js";
+import { ApiError, NotFoundError, StatusError } from "./ErrorService.js";
 
 class ApiService {
 	private url: string;
@@ -28,27 +28,19 @@ class ApiService {
 		try {
 			const res = await axios.get<ICoin>(`${this.url}${this.version}/coins/${symbol}`, {
 				headers: this.headers
-			})
-
-			if (res.status != 200)
-				throw new StatusError(res.status, "get coin data");
-
+			});
 			return res.data;
 		} catch (error: any) {
-			if (error instanceof StatusError) {
-				console.error(`[ERROR]: Server error in ApiServer.findCollection.`, {
-					symbol: symbol,
-					status: error.status,
-					error: error.message
-				});
-				throw error;
-			}
-
 			console.error(`[ERROR]: Failed to fetch API while finding a coin.`, {
 				symbol: symbol,
-				error: error.message
+				error: error.response.data.message,
+				status: error.response.status
 			});
-			throw new ApiError("Failed to fetch server API while trying to find coin data. Try later.");
+			
+			if (error.response.status === 404)
+				throw new NotFoundError(error.response.data.message);
+			else
+				throw new ApiError(`Failed to fetch server while finding a coin.`);
 		}
 	}
 
