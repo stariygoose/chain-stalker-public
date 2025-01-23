@@ -14,15 +14,14 @@ class SubsService {
 		try {
 			return await this.db.getAllSubscriptions(userId);
 		} catch (error: any) {
-			console.error(`[ERROR]: Failed to retrieve subscriptions for user <${userId}>.`, {
-				userId,
-				error: error.message
-			});
-
 			if (error instanceof DataBaseError)
 				throw error;
 
-			throw new Error(`An unexpected error occurred while retrieving subscriptions for user ${userId}`);
+			console.error(`[ERROR]: Failed to retrieve ALL subscriptions for user <${userId}>.`, {
+				userId: userId,
+				error: error.message
+			});
+			throw new Error(`Unexpected error.`);
 		}
 	}
 

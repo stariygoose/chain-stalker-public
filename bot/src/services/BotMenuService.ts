@@ -70,7 +70,7 @@ class BotMenuService extends AbstractBot {
 
 	public async sendNetworkMessage(chatId: number): Promise<Message> {
 		try {
-			const text = `🌐 Please select a network.\nAvailable options: ${Object.values(NetworkState).join(", ")}`;
+			const text = `🌐 Please select a network.\n🟢 Available options: ${Object.values(NetworkState).join(", ")}`;
 			return this.botMessageService.sendMessage(chatId, text, cancelMsg);
 		} catch (error: any) {
 			console.error(`[ERROR]: Unexpected error while sending network selection message.`, {
@@ -125,7 +125,7 @@ class BotMenuService extends AbstractBot {
 			})
 			return this.botMessageService.sendMessage(chatId, text, options);
 		} catch (error: any) {
-			if (error instanceof ApiError || error instanceof StatusError)
+			if (error instanceof ApiError)
 				throw error;
 
 			console.error(`[ERROR]: Unexpected error while processing collection stalking request.`, {
@@ -134,7 +134,7 @@ class BotMenuService extends AbstractBot {
 				address: address,
 				error: error.message
 			})
-			throw new Error(error.message);
+			throw new Error(`Unexpected error.`);
 		}
 	}
 
@@ -154,7 +154,7 @@ class BotMenuService extends AbstractBot {
 					"Please try again.", menuOption);
 			}
 		} catch (error: any) {
-			if (error instanceof StatusError || error instanceof ApiError)
+			if (error instanceof ApiError)
 				throw error;
 
 			console.error(`[UNEXPECTED ERROR]: Unexpected error in onYesBtn.`, {
@@ -206,15 +206,14 @@ class BotMenuService extends AbstractBot {
 		try {
 			return await this.ApiService.deleteUser(chatId);
 		} catch (error: any) {
-			if (error instanceof ApiError || error instanceof StatusError)
+			if (error instanceof ApiError)
 				throw error;
 
 			console.log(`[UNEXPECTED ERROR]: Unexpected error in deleteUser.`, {
 				chatId: chatId,
 				error: error.message
-			})
+			});
 			throw new Error("Failed to delete your data.");
-
 		}
 	}
 }

@@ -2,7 +2,7 @@ import { menuOption } from "../../options/menu.js";
 import { BotMessageService } from "../../services/BotMessageService.js";
 import { UserStateManager } from "../../state/UserStateManager.js";
 
-class CancelCommand {
+export class CancelCommand {
 	private botMessageService: BotMessageService;
 	private userState: UserStateManager;
 
@@ -14,8 +14,8 @@ class CancelCommand {
 	public async execute(chatId: number): Promise<void> {
 		const state = this.userState.getState(chatId);
 
+		this.botMessageService.deleteMessage(chatId, state.prevMsgId).catch(() => {});
 		try {
-			this.botMessageService.deleteMessage(chatId, state.prevMsgId);
 
 			const msg = await this.botMessageService.sendMessage(chatId, "Choose your option:", menuOption);
 			this.userState.resetState(chatId);
@@ -26,5 +26,3 @@ class CancelCommand {
 		}
 	}
 }
-
-export {CancelCommand};

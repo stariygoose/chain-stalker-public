@@ -26,9 +26,8 @@ export class CoinsSymbolCommand {
 		const symbol = msg.text ?? "";
 		const { prevMsgId } = this.userState.getState(chatId);
 
+		this.botMessageService.deleteMessage(chatId, prevMsgId).catch(() => {});
 		try {
-			this.botMessageService.deleteMessage(chatId, prevMsgId);
-
 			const msg = await this.botMenuService.sendPercentageMessage(chatId);
 			this.userState.setState(chatId, {
 				state: UserState.AWAITING_PERCENTAGE,
@@ -36,8 +35,6 @@ export class CoinsSymbolCommand {
 				prevMsgId: msg.message_id
 			});
 		} catch (error: any) {
-			this.botMessageService.deleteMessage(chatId, prevMsgId);
-
 			const errorMsg = await this.errorService.sendErrorMessage(chatId);
 			this.userState.setState(chatId, { prevMsgId: errorMsg.message_id })
 		}

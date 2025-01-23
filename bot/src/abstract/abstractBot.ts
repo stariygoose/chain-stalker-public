@@ -6,8 +6,8 @@ abstract class AbstractBot {
 		this.bot = bot;
 	}
 
-	public checkAddressValidity(address: string) {
-		return isAddress(address, true);
+	public checkAddressValidity(address: string | undefined) {
+		return address ? isAddress(address, true) : false;
 	}
 }
 

@@ -27,15 +27,14 @@ export class PercentageCommand {
 		const percentage = +(msg.text ?? 5);
 		const { prevMsgId, contract, btnType, network } = this.userState.getState(chatId);
 
+		this.botMessageService.deleteMessage(chatId, prevMsgId).catch(() => {});
 		try {
 			let message;
-			
-			this.botMessageService.deleteMessage(chatId, prevMsgId);
 			
 			if (isNaN(percentage))
 				message = await this.botMessageService.sendMessage(chatId, `Invalid percentage.`, cancelMsg);
 			else if (percentage <= 0)
-				message = await this.botMessageService.sendMessage(chatId, `Percentage must be > 0`, cancelMsg);
+				message = await this.botMessageService.sendMessage(chatId, `The percentage must be strictly greater than zero.`, cancelMsg);
 			else {
 				switch (btnType) {
 					case MenuState.COINS:
@@ -58,8 +57,6 @@ export class PercentageCommand {
 				prevMsgId: message.message_id
 			});
 		} catch (error: any) {
-			this.botMessageService.deleteMessage(chatId, prevMsgId);
-
 			const msg = await this.errorService.sendErrorMessage(chatId, error.message);
 			this.userState.setState(chatId, {
 				prevMsgId: msg.message_id

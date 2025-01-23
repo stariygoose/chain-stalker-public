@@ -6,6 +6,7 @@ import { Channel, ICollection, IFloorPriceOSRequest, IUserContext } from "../../
 import { calculatePercentage, fromWeiToEth } from "../../functions/functions.js";
 import { DBManager } from "../../db/DBManager.js";
 import { BotService } from "../BotService.js";
+import { ApiError, DataBaseError, NotFoundError } from "../../errors/Errors.js";
 
 
 class OpenSea {
@@ -34,9 +35,17 @@ class OpenSea {
 				headers: this.headers
 			});
 			return collection.data;
-		} catch (error) {
-			console.log(`Failed to fetch collection data <${address}> from OpenSea:\n${error}`);
-			throw new Error(`Failed to fetch collection data from OpenSea.`);
+		} catch (error: any) {
+			console.error(`[ERROR]: Failed to fetch collection data from Opensea API.`, {
+				address: address,
+				network: network,
+				error: error.message,
+			});
+
+			if (error.response.status === 400)
+				throw new NotFoundError(`Invalid contract address. Can not find collection on Opensea.`);
+			else
+				throw new ApiError("Failed to fetch collection data from Opensea API.", error.status);
 		}
 	}
 
@@ -50,9 +59,16 @@ class OpenSea {
 				floorPrice: stats.data.total.floor_price,
 				floorPriceSymbol: stats.data.total.floor_price_symbol
 			};
-		} catch (error) {
-			console.error(`Failed to fetch floor price of collection <${slug}> from OpenSea:\n${error}`);
-			throw new Error(`Failed to fetch floor price of collection from OpenSea.`);
+		} catch (error: any) {
+			console.error(`[ERROR]: Failed to fetch floor price data from Opensea API.`, {
+				slug: slug,
+				error: error.message,
+			});
+
+			if (error.response.status === 400)
+				throw new NotFoundError(`Invalid slug. Can not find collection on Opensea.`);
+			else
+				throw new ApiError("Failed to fetch collection data from Opensea API.", error.status);
 		}
 	}
 
@@ -81,7 +97,8 @@ class OpenSea {
 
 	public static async initStalksAfterReboot(openSea: OpenSea)
 		: Promise<void> {
-		const subs = await new DBManager().getNftSubscriptions();
+		const subs = await new DBManager().getNftSubscriptions()
+								.catch((error: DataBaseError) => { throw error; });
 
 		subs.forEach(({ userId, target, percentage }) => {
 			openSea.stalkCollection(userId, target.collection, percentage)

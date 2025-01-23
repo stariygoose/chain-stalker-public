@@ -2,6 +2,8 @@ import { Message } from "node-telegram-bot-api";
 import { BotMessageService } from "./BotMessageService.js";
 import { UserStateManager } from "../state/UserStateManager.js";
 import { menuOption } from "../options/menu.js";
+import { NetworkState } from "../types/networkState.js";
+import { cancelMsg } from "../options/cancel.js";
 
 export class ErrorService {
 	private botMessageService: BotMessageService;
@@ -26,10 +28,14 @@ export class ErrorService {
 	}
 
 	public async unknownNetwork(chatId: number): Promise<Message> {
-		this.userState.resetState(chatId);
-		const text = "❗Wrong network. Please ensure the network is spelled correctly.\n" +
-		"❓If you're sure the network name is correct, it might not yet be supported by the bot."
-		return this.botMessageService.sendMessage(chatId, text, menuOption);
+		const text = "❗ Wrong network. Please ensure the network is spelled correctly.\n"+
+		`🟢 Available options: ${Object.values(NetworkState).join(", ")}`;
+		return this.botMessageService.sendMessage(chatId, text, cancelMsg);
+	}
+
+	public async invalidAddress(chatId: number): Promise<Message> {
+		const text = `❗ Invalid contract address. Please use a valid EVM address.`;
+		return this.botMessageService.sendMessage(chatId, text, cancelMsg);
 	}
 }
 

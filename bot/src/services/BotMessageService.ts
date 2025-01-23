@@ -74,7 +74,7 @@ class BotMessageService extends AbstractBot {
 			try {
 				await this.bot.deleteMessage(chatId, msgId);
 			} catch (error) {
-				console.error("[WARNING]: Message to delete not found in chat: ", chatId);
+				console.error(`[WARNING]: Message to delete not found in chat: ${chatId}`);
 			}
 		}
 	}

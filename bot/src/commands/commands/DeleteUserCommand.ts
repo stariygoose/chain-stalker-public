@@ -22,15 +22,14 @@ export class DeleteUserCommand {
 	public async execute(chatId: number): Promise<void> {
 		const userState = this.userState.getState(chatId);
 
+		this.messageService.deleteMessage(chatId, userState.prevMsgId).catch(() => {});
 		try {
-			this.messageService.deleteMessage(chatId, userState.prevMsgId);
 			const msg = await this.menuService.onDeleteUserBtn(chatId);
 			this.userState.setState(chatId, {
 				prevMsgId: msg.message_id,
 				state: UserState.AWAITING_DELETE_CONFIRMATION
 			})
 		} catch (error: any) {
-			this.messageService.deleteMessage(chatId, userState.prevMsgId);
 			const msg = await this.errorService.sendErrorMessage(chatId, error.message);
 			this.userState.setState(chatId, {
 				prevMsgId: msg.message_id

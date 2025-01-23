@@ -47,7 +47,7 @@ class DBManager {
 				userId: userId,
 				error: error.message
 			});
-			throw new DataBaseError("Unexpected error. Can't get all subscriptions from the database.");
+			throw new DataBaseError("Unexpected error. Can't get all subscriptions from the database for user.");
 		}
 	}
 
@@ -101,6 +101,7 @@ class DBManager {
 		} catch (error: any) {
 			if (error instanceof NotFoundError)
 				throw error;
+			
 			console.error(`[ERROR]: An unexpected error in getFloorPriceFromDB.`, {
 				userId: userId,
 				target: { collection: slug },

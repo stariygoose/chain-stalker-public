@@ -27,9 +27,8 @@ export class NftNetworkCommand {
 		const network = msg.text?.toLowerCase();
 		const { prevMsgId } = this.userState.getState(chatId);
 
+		this.botMessageService.deleteMessage(chatId, prevMsgId).catch(() => {});
 		try {
-			this.botMessageService.deleteMessage(chatId, prevMsgId);
-
 			if (isValidNetwork(network)) {
 				const message = await this.botMenuService.sendContractMessage(chatId);
 				this.userState.setState(chatId, {
@@ -44,8 +43,6 @@ export class NftNetworkCommand {
 				});
 			}
 		} catch (error: any) {
-			this.botMessageService.deleteMessage(chatId, prevMsgId);
-
 			const errorMsg = await this.errorService.sendErrorMessage(chatId);
 			this.userState.setState(chatId, {
 				prevMsgId: errorMsg.message_id

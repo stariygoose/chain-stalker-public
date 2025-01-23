@@ -3,7 +3,7 @@ import { BotMessageService } from "../../services/BotMessageService.js";
 import { ErrorService } from "../../services/ErrorService.js";
 import { UserStateManager } from "../../state/UserStateManager.js";
 
-class MyStalksCommand {
+export class MyStalksCommand {
 	private botMessageService: BotMessageService;
 	private botMenuService: BotMenuService;
 	private userState: UserStateManager;
@@ -20,20 +20,15 @@ class MyStalksCommand {
 	public async execute(chatId: number): Promise<void> {
 		const currState = this.userState.getState(chatId);
 
+		this.botMessageService.deleteMessage(chatId, currState.prevMsgId).catch(() => {});
 		try {
-			this.botMessageService.deleteMessage(chatId, currState.prevMsgId);
-
 			const msg = await this.botMenuService.onMyStalksBtn(chatId);
 			this.userState.setState(chatId, {
 				prevMsgId: msg.message_id
 			})
 		} catch (error: any) {
-			this.botMessageService.deleteMessage(chatId, currState.prevMsgId);
-
 			const msg = await this.errorService.sendErrorMessage(chatId, error.message);
 			this.userState.setState(chatId, { prevMsgId: msg.message_id });
 		}
 	}
 }
-
-export { MyStalksCommand };

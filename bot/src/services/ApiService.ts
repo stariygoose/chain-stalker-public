@@ -40,7 +40,7 @@ class ApiService {
 			if (error.response.status === 404)
 				throw new NotFoundError(error.response.data.message);
 			else
-				throw new ApiError(`Failed to fetch server while finding a coin.`);
+				throw new ApiError(`Failed to fetch server API while finding a coin.`);
 		}
 	}
 
@@ -48,29 +48,19 @@ class ApiService {
 		try {
 			const res = await axios.get<ICollection>(`${this.url}${this.version}/collections/${network}/${address}`, {
 				headers: this.headers
-			})
-
-			if (res.status != 200)
-				throw new StatusError(res.status, "get NFT collection data");
-
+			});
 			return res.data;
 		} catch (error: any) {
-			if (error instanceof StatusError) {
-				console.error(`[ERROR]: Server error in ApiServer.findCollection.`, {
-					network: network,
-					address: address,
-					status: error.status,
-					error: error.message
-				});
-				throw error;
-			}
-
 			console.error(`[ERROR]: Failed to fetch API while finding a collection.`, {
 				network: network,
 				address: address,
 				error: error.message
 			});
-			throw new ApiError("Failed to fetch server API while trying to find NFT collection data. Try later.");
+
+			if (error.response.status === 404)
+				throw new NotFoundError(error.response.data.message);
+			else
+				throw new ApiError("Failed to fetch server API while trying to find NFT collection data. Try later.");
 		}
 	}
 
@@ -87,22 +77,8 @@ class ApiService {
 			const res = await axios.post<StalkingResponse>(`${this.url}${this.version}/stalk/coin`, body, {
 				headers: this.headers
 			});
-
-			if (res.status != 201)
-				throw new StatusError(res.status, "start stalking this coin");
-
 			return res.data;
 		} catch (error: any) {
-			if (error instanceof StatusError) {
-				console.error(`[ERROR]: Server error in ApiServer.stalkCoin.`, {
-					userId: userId,
-					state: state,
-					status: error.status,
-					error: error.message
-				});
-				throw error;
-			}
-
 			console.error(`[ERROR]: Failed to fetch server API while trying to send a request for stalking a coin.`, {
 				userId: userId,
 				state: state,
@@ -125,22 +101,8 @@ class ApiService {
 			const res = await axios.post<StalkingResponse>(`${this.url}${this.version}/stalk/collection`, body, {
 				headers: this.headers
 			});
-
-			if (res.status != 201)
-				throw new StatusError(res.status, "start stalking NFT collection");
-
 			return res.data;
 		} catch (error: any) {
-			if (error instanceof StatusError) {
-				console.error(`[ERROR]: Server error in ApiServer.stalkNftContract.`, {
-					userId: userId,
-					state: state,
-					status: error.status,
-					error: error.message
-				});
-				throw error;
-			}
-
 			console.error(`[ERROR]: Failed to fetch server API while trying to send a request for stalking a NFT collection.`, {
 				userId: userId,
 				state: state,
@@ -155,21 +117,8 @@ class ApiService {
 			const res = await axios.get<IUserSubscriptions>(`${this.url}${this.version}/subscriptions/${userId}/`, {
 				headers: this.headers
 			});
-
-			if (res.status != 200)
-				throw new StatusError(res.status, "get your stalks");
-
 			return res.data;
 		} catch (error: any) {
-			if (error instanceof StatusError) {
-				console.error(`[ERROR]: Server error in ApiServer.getSubscriptionsByUser.`, {
-					userId: userId,
-					status: error.status,
-					error: error.message
-				});
-				throw error;
-			}
-
 			console.error(`[ERROR]: Failed to fetch server API while trying to get all subscriptions.`, {
 				userId: userId,
 				error: error.message
@@ -180,22 +129,10 @@ class ApiService {
 
 	public async deleteUser(userId: number): Promise<void> {
 		try {
-			const res = await axios.delete(`${this.url}${this.version}/subscriptions/delete/${userId}`, {
+			return await axios.delete(`${this.url}${this.version}/subscriptions/delete/${userId}`, {
 				headers: this.headers
-			})
-			
-			if (res.status != 204)
-				throw new StatusError(res.status, "delete user's data.");
+			});
 		} catch (error: any) {
-			if (error instanceof StatusError) {
-				console.error(`[ERROR]: Server error in ApiServer.deleteUser.`, {
-					userId: userId,
-					status: error.status,
-					error: error.message
-				});
-				throw error;
-			}
-
 			console.error(`[ERROR]: Failed to fetch server API while trying to delete user's data.`, {
 				userId: userId,
 				error: error.message

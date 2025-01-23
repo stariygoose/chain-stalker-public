@@ -53,10 +53,9 @@ class BotService {
 			}
 			return res;
 		} catch (error: any) {
-			console.error(`[ERROR]: Error while fetching collection ${address} on network ${network}.`, {
-				error: error.message
-			});
-			throw new Error(`Error fetching collection ${address} on network ${network}: ${error.message}`);
+			if (error instanceof ApiError)
+				throw error;
+			throw new Error();
 		}
 	}
 
@@ -80,11 +79,12 @@ class BotService {
 		} catch (error: any) {
 			if (error instanceof DataBaseError)
 				throw error;
+
 			console.error(`[ERROR]: Error while stalking coin ${data.target.symbol} for user ${data.userId}.`, {
 				data: data,
 				error: error.message
 			});
-			throw new Error(`Error stalking coin ${data.target.symbol}: ${error.message}`);
+			throw new Error(`Unexpected error.`);
 		}
 	}
 

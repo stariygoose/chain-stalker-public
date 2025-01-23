@@ -5,7 +5,7 @@ import { UserStateManager } from "../../state/UserStateManager.js";
 import { MenuState } from "../../types/menuState.js";
 import { UserState } from "../../types/userState.js";
 
-class NftCommand {
+export class NftCommand {
 	private botMessageService: BotMessageService;
 	private botMenuService: BotMenuService;
 	private userState: UserStateManager;
@@ -23,22 +23,17 @@ class NftCommand {
 	public async execute(chatId: number): Promise<void> {
 		const state = this.userState.getState(chatId);
 		
+		this.botMessageService.deleteMessage(chatId, state.prevMsgId).catch(() => {});
 		try {
-			this.botMessageService.deleteMessage(chatId, state.prevMsgId);
-
 			const msg = await this.botMenuService.sendNetworkMessage(chatId);
 			this.userState.setState(chatId, {
 				state: UserState.AWAITING_NFT_NETWORK,
 				btnType: MenuState.NFTS,
 				prevMsgId: msg.message_id
 			}); 
-		} catch (e) {
-			this.botMessageService.deleteMessage(chatId, state.prevMsgId);
-			
+		} catch (error: any) {
 			const msg = await this.errorService.sendErrorMessage(chatId);
 			this.userState.setState(chatId, { prevMsgId: msg.message_id });
 		}
 	}
 }
-
-export {NftCommand};
