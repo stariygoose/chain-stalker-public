@@ -18,9 +18,10 @@ export class ErrorService {
 		this.userState.resetState(chatId);
 		try {
 			const msg = message || "Unexpected error. Please try again later.";
-			return this.botMessageService.sendMessage(chatId, "🚨 " + msg, menuOption);
+			return await this.botMessageService.sendMessage(chatId, "🚨 " + msg, menuOption);
 		} catch (error: any) {
 			console.error(`[ERROR] Unexpected error while sending error message.`, {
+				chatId: chatId,
 				error: error.message
 			});
 			throw new Error("Failed to send error message.");
@@ -28,14 +29,43 @@ export class ErrorService {
 	}
 
 	public async unknownNetwork(chatId: number): Promise<Message> {
-		const text = "❗ Wrong network. Please ensure the network is spelled correctly.\n"+
-		`🟢 Available options: ${Object.values(NetworkState).join(", ")}`;
-		return this.botMessageService.sendMessage(chatId, text, cancelMsg);
+		try {
+			const text = "❗ Wrong network. Please ensure the network is spelled correctly.\n"+
+			`🟢 Available options: ${Object.values(NetworkState).join(", ")}`;
+			return await this.botMessageService.sendMessage(chatId, text, cancelMsg);
+		} catch (error: any) {
+			console.error(`[ERROR] Unexpected error while sending error message.`, {
+				chatId: chatId,
+				error: error.message
+			});
+			throw new Error();
+		}
 	}
 
 	public async invalidAddress(chatId: number): Promise<Message> {
-		const text = `❗ Invalid contract address. Please use a valid EVM address.`;
-		return this.botMessageService.sendMessage(chatId, text, cancelMsg);
+		try {
+			const text = `❗ Invalid contract address. Please use a valid EVM address.`;
+			return await this.botMessageService.sendMessage(chatId, text, cancelMsg);
+		} catch (error: any) {
+			console.error(`[ERROR] Unexpected error while sending error message.`, {
+				chatId: chatId,
+				error: error.message
+			});
+			throw new Error();
+		}
+	}
+
+	public async invalidPercentage(chatId: number): Promise<Message> {
+		try {
+			const text = `❗ Invalid percentage. The percentage must be strictly greater than zero.`;
+			return await this.botMessageService.sendMessage(chatId, text, cancelMsg);
+		} catch (error: any) {
+			console.error(`[ERROR] Unexpected error while sending error message.`, {
+				chatId: chatId,
+				error: error.message
+			});
+			throw new Error();
+		}
 	}
 }
 

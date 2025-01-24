@@ -1,0 +1,19 @@
+.btn {
+	border: none;
+	outline: none;
+	background: transparent;
+	cursor: pointer;
+	-webkit-appearance: none; 
+	appearance: none;
+}
+.btn:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+#header_title {
+	text-shadow: 2px 2px 4px rgba(179, 147, 211, 0.1),
+               3px 4px 4px rgba(179, 147, 211, 0.15),
+               4px 6px 4px rgba(179, 147, 211, 0.2),
+               5px 8px 4px rgba(179, 147, 211, 0.25);
+}

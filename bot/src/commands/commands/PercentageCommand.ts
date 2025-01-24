@@ -31,10 +31,8 @@ export class PercentageCommand {
 		try {
 			let message;
 			
-			if (isNaN(percentage))
-				message = await this.botMessageService.sendMessage(chatId, `Invalid percentage.`, cancelMsg);
-			else if (percentage <= 0)
-				message = await this.botMessageService.sendMessage(chatId, `The percentage must be strictly greater than zero.`, cancelMsg);
+			if (!this.isValidPercentage(percentage))
+				message = await this.errorService.invalidPercentage(chatId);
 			else {
 				switch (btnType) {
 					case MenuState.COINS:
@@ -62,5 +60,9 @@ export class PercentageCommand {
 				prevMsgId: msg.message_id
 			})
 		}
+	}
+
+	private isValidPercentage(percentage: number): boolean {
+		return !isNaN(percentage) && percentage > 0;
 	}
 }

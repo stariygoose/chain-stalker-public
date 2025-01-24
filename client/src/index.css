@@ -1,0 +1,31 @@
+:root {
+    --background-color-light: #ffffff;
+    --text-color-light: #000000;
+    --background-color-dark: #121212;
+    --text-color-dark: #ffffff;
+
+	--font-family: "Afacad Flux", serif;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+[theme="dark"] body {
+	background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
+
+[theme="light"] body {
+	background-color: var(--background-color-light);
+    color: var(--text-color-light);
+}
+
+[theme="light"] p, h1, h2, h3, h4 {
+	color: var(--text-color-light);
+}
+
+[theme="dark"] p, h1, h2, h3, h4 {
+	color: var(--text-color-dark);
+}
