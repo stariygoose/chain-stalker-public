@@ -1,18 +1,19 @@
 import { FC } from "react";
 
 interface LogoIconParams {
-  isDarkTheme: boolean
+	width: number,
+	height: number
 }
 
-export const LogoIcon: FC<LogoIconParams> = ({ isDarkTheme }) => {
+export const LogoIcon: FC<LogoIconParams> = ({ width, height }) => {
 	return (
   <>
 		<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="45px" height="45px" viewBox="0 0 1080.000000 1280.000000"
+ width={ width + "px" } height={ height + "px" } viewBox="0 0 1080.000000 1280.000000"
  preserveAspectRatio="xMidYMid meet">
 
 <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
-fill={isDarkTheme ? "#ffffff" : "#000000"} stroke="none">
+stroke="none">
 <path d="M5418 12742 c-3 -10 -6 -58 -7 -107 -1 -50 -4 -114 -7 -142 -6 -49
 -8 -53 -32 -53 -26 0 -34 -2 -152 -41 -183 -60 -562 -271 -762 -425 -31 -24
 -59 -44 -62 -44 -8 0 -186 -138 -278 -216 -117 -100 -313 -296 -380 -379 -85

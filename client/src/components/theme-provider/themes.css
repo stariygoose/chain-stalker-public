@@ -1,0 +1,42 @@
+:root {
+	--background-primary-light: 227, 227, 227;
+	--background-second-light: 218, 217, 217;
+
+	--accent-light: 17, 17, 17;
+
+	--background-primary-dark: 24, 25, 32;
+	--background-second-dark: 37, 38, 44;
+
+	--accent-dark: 227, 227, 227;
+
+	--accent-shadow-dark: 37, 38, 44;
+	--accent-shadow-light: 227, 227, 227;
+
+	--font-family: "Afacad Flux", serif;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+[data-theme='light'] {
+	--background-primary: var(--background-primary-light);
+	--background-second: var(--background-second-light);
+
+	--accent: var(--accent-light);
+	--accent-shadow: var(--accent-shadow-dark);
+}
+
+[data-theme='dark'] {
+	--background-primary: var(--background-primary-dark);
+	--background-second: var(--background-second-dark);
+
+	--accent: var(--accent-dark);
+	--accent-shadow: var(--accent-shadow-light);
+}
+
+.class {
+	color: rgb(var(--accent));
+	background-color: rgba(var(--background-primary), 0.5);
+}

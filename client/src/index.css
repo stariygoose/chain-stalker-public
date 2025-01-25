@@ -1,31 +1,29 @@
-:root {
-    --background-color-light: #ffffff;
-    --text-color-light: #000000;
-    --background-color-dark: #121212;
-    --text-color-dark: #ffffff;
-
-	--font-family: "Afacad Flux", serif;
+html {
+	background-color: rgb(var(--background-primary));
 }
 
-body {
-	margin: 0;
+
+p, h1, h2, h3, h4, h5, h6, div, span {
+	color: rgb(var(--accent));
 	padding: 0;
+	margin: 0;
 }
 
-[theme="dark"] body {
-	background-color: var(--background-color-dark);
-    color: var(--text-color-dark);
+h1 {
+	font-weight: 600;
 }
 
-[theme="light"] body {
-	background-color: var(--background-color-light);
-    color: var(--text-color-light);
+svg {
+	fill: rgb(var(--accent))
 }
 
-[theme="light"] p, h1, h2, h3, h4 {
-	color: var(--text-color-light);
-}
+.btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+	border-radius: 10px;
 
-[theme="dark"] p, h1, h2, h3, h4 {
-	color: var(--text-color-dark);
+	width: 200px;
+	height: 50px;
 }

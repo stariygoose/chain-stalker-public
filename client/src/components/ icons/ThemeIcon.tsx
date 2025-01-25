@@ -1,19 +1,18 @@
 import { FC } from "react";
 
 interface ThemeIconProps {
-  isDarkTheme: boolean
+  width: number,
+	height: number
 }
 
-export const ThemeIcon: FC<ThemeIconProps> = ({
-  isDarkTheme
-}) => {
+export const ThemeIcon: FC<ThemeIconProps> = ({ width, height }) => {
 	return (
 		<>
-      <svg fill={isDarkTheme ? "#ffffff" : "#000000"} height="35px" width="35px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 
+      <svg height={ height + "px"} width={ width + "px" } version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 
       xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 478.47 478.47" xmlSpace="preserve" stroke="#000000" 
-      transform="rotate(0)" stroke-width="0.0047846600000000005">
-        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      transform="rotate(0)" strokeWidth="0.0047846600000000005">
+        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+        <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
         <g id="SVGRepo_iconCarrier"> 
         <g> 
           <g> 
