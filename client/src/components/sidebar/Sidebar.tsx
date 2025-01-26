@@ -65,7 +65,7 @@ export const Sidebar: FC = () => {
 		<nav className="sidebar">
 			<div className="sidebar_option">
 				<LogoIcon	width={45} height={45}/>
-				<h1 className="title text">Chain Stalker</h1>
+				<h1 className="title sidebar_option__text">Chain Stalker</h1>
 			</div>
 
 			<div className="sidebar_wrapper">

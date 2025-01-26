@@ -18,12 +18,13 @@ svg {
 }
 
 .btn {
+	cursor: pointer;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	
 	border-radius: 10px;
 
-	width: 200px;
+	width: 20vh;
 	height: 50px;
 }

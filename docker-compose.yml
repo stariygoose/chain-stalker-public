@@ -67,12 +67,12 @@ services:
     image: ngrok/ngrok:3.19.0-alpine
     volumes:
       - ./ngrok.yml:/var/lib/ngrok/ngrok.yml
-    command: ["start", "bot", "--authtoken", "${NGROK_TOKEN}"]
+    command: ["start", "server", "--authtoken", "${NGROK_TOKEN}"]
     networks:
       - main
     ports:
       - "4040:4040"
-
+      
 networks:
   main:
     driver: bridge

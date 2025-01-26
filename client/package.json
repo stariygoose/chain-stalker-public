@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
+    "ngrok": "ngrok http --url=awake-goblin-lasting.ngrok-free.app http://192.168.0.26:5173/",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

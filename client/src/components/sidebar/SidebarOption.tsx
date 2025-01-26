@@ -25,7 +25,7 @@ export const SidebarOption: FC<SidebarOptionProps> = ({
 					onClick={() => onClick?.(theme)}
 		>
 			{ icon }
-			<p className="text">{text}</p>
+			<p className="sidebar_option__text">{text}</p>
 		</div>
 	);
 }

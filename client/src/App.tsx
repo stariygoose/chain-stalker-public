@@ -7,7 +7,7 @@ import { Login } from './components/login/Login'
 const App: FC = () => {
   return (
     <>
-			<Sidebar />
+			<Sidebar />	
 			<Login />
     </>
   )
