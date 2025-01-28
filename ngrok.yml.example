@@ -1,8 +1,8 @@
 # Version of the ngrok Agent Configuration file. Required.
 version: 3
 
-endpoints:
-  - name: bot
-    url: YOUR_DOMAIN # your static domain from ngrok dashboard
-    upstream:
-      url: http://bot:1499  # or your TG_BOT_PORT. Example (http://bot:5453)
+tunnels:
+  web:
+    addr: nginx:{{YOUR_TUNNEL_PORT}}
+    proto: http
+    domain: {{YOUR_NGROK_STATIC_DOMAIN}}

@@ -5,7 +5,7 @@ import { BotMessageService } from "../services/BotMessageService.js";
 import { IPing, ICoin, ICollection } from "../types/interfaces.js";
 
 const app: Express = express();
-const port = process.env.TG_BOT_PORT ?? 1499;
+const port = process.env.TG_BOT_PORT ?? 30000;
 
 app.use(express.json());
 
@@ -15,7 +15,7 @@ export async function startBotServer() {
 	})
 }
 
-app.post("/bot", (req: Request, res: Response) => {
+app.post("/webhook", (req: Request, res: Response) => {
 	const body = req.body;
 	bot.processUpdate(body);
 	res.sendStatus(200);

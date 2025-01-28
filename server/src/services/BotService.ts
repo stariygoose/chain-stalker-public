@@ -25,7 +25,7 @@ class BotService {
 	public static async sendToTGBot(state: IUserContext<ICoin | ICollection>, channel: string)
 		: Promise<void> {
 		try {
-			await axios.post(`${process.env.SERVERBOT_URL}/${channel}`, state);
+			await axios.post(`${process.env.BOT_URL}/${channel}`, state);
 			console.log(`[INFO]: Successfully sent data to bot on channel ${channel}.`);
 		} catch (error: any) {
 			console.error(`[ERROR]: Failed to send data to bot.`, {
@@ -33,7 +33,6 @@ class BotService {
 				channel: channel,
 				error: error.message
 			});
-			throw new Error("Failed to send message to bot.");
 		}
 	}
 

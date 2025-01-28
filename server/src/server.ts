@@ -10,18 +10,23 @@ import { OpenSea } from './services/marketplaces/OpenSea.js';
 import { BinanceWebsocketManager } from './services/marketplaces/binance/BinanceWebsocketManager.js';
 
 const app: Express = express();
-const port = process.env.SERVER_PORT ?? 1488;
+
+const PORT = process.env.SERVER_PORT ?? 1488;
+const MONGO_URL = process.env.MONGODB_URL ?? "";
 
 
 app.use(express.json());
 
 export async function startServer() {
 	try {
-		mongoose.connect(process.env.MONGODB_URL ?? "")
+		mongoose.connect(MONGO_URL)
 			.then(() => console.log(`[INFO]: Successfully connected to the database.`))
 			.catch((error: Error) => {
-				console.error(`[CRITICAL ERROR]: Error while connecting to the database: ${error.message}`);
-				console.log(`[ADVICE]: Try deleting the ./data folder (where the database and cache are stored) and restarting.`);
+				console.error(`[CRITICAL ERROR]: Error while connecting to the database.`, {
+					error: error.message,
+					mongoUrl: process.env.MONGODB_URL
+				});
+				process.exit(1);
 			});
 
 		const WebsocketManager = new BinanceWebsocketManager();
@@ -47,8 +52,8 @@ export async function startServer() {
 		process.exit(1);
 	}
 
-	app.listen(port, () => {
-		console.log(`[INFO]: Server is running on port ${port}`);
+	app.listen(PORT, () => {
+		console.log(`[INFO]: Server is running on port ${PORT}`);
 	});
 }
 

@@ -8,34 +8,31 @@ function myStalks(data: IUserSubscriptions) {
 		data.subscriptions
 			.filter((sub): sub is ISubscription<ICollection> => sub.type === SubscriptionType.nft);
 
-	// Format coin stalks text
 	const coinsText = coinsSubscriptions.length > 0 
 		? coinsSubscriptions
 				.map((sub: ISubscription<ICoin>, index: number) => {
 					const formattedPrice = parseFloat(sub.target.price.toString());
-					return `${index + 1}. #${sub.target.symbol} - Stalked price: ${formattedPrice} USDT\n` +
-						`Percentage change: ${sub.percentage}%`;
+					return `${index + 1}. #${sub.target.symbol} - Stalked price: <b>${formattedPrice} USDT</b>\n` +
+						`Percentage change: <b>${sub.percentage}%</b>`;
 				})
 				.join("\n")
-		: "No coin subscriptions.";
+		: "<b>🤷‍♂️No coin subscriptions.</b>";
 
-	// Format NFT stalks text
 	const nftsText = nftsSubscriptions.length > 0 
 		? nftsSubscriptions
 				.map((sub: ISubscription<ICollection>, index: number) => {
 					const url = `https://opensea.io/collection/${sub.target.collection}`;
 					const formattedPrice = parseFloat(sub.target.floorPrice.toString());
-					return `${index + 1}. <a href="${url}">${sub.target.name}</a> - Stalked floor price: ${formattedPrice} ${sub.target.floorPriceSymbol}\n` +
-						`Percentage change: ${sub.percentage}%`;
+					return `${index + 1}. <a href="${url}">${sub.target.name}</a> - Stalked floor price: <b>${formattedPrice} ${sub.target.floorPriceSymbol}</b>\n` +
+						`<b>Percentage change: ${sub.percentage}%</b>`;
 				})
 				.join("\n")
-		: "No NFT subscriptions.";
+		: "<b>🤷‍♂️ No NFT subscriptions.</b>";
 
-	// Return formatted text with summary
 	const totalCoins = coinsSubscriptions.length;
 	const totalNfts = nftsSubscriptions.length;
 
-	return `💰 Coins Stalks (${totalCoins}):\n${coinsText}\n\n🖼️ NFTs Stalks (${totalNfts}):\n${nftsText}`;
+	return `💰 <b>Coins Stalks: ${totalCoins}</b>\n${coinsText}\n\n🖼️ <b>NFTs Stalks: ${totalNfts}</b>\n${nftsText}`;
 }
 
 export { myStalks };

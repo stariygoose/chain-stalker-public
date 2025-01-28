@@ -3,7 +3,6 @@ import { FC, useEffect, useRef } from "react";
 import "./Login.css"
 import { LogoIcon } from "../ icons/LogoIcon";
 
-
 export const Login: FC = () => {
 	const telegramBtnRef = useRef<HTMLDivElement>(null);
 
@@ -11,14 +10,20 @@ export const Login: FC = () => {
 		if (document.querySelector("script[data-telegram-login]")) {
       return;
     }
+		
+		const domain = import.meta.env.VITE_DOMAIN_URL;
+		const botName = import.meta.env.VITE_TG_BOT_NAME;
+
+		console.log(domain)
+		console.log(botName)
 
     const script = document.createElement("script");
     script.src = "https://telegram.org/js/telegram-widget.js?22";
     script.async = true;
-    script.setAttribute("data-telegram-login", "ChainStalkerBot");
+    script.setAttribute("data-telegram-login", botName);
     script.setAttribute("data-size", "large");
     script.setAttribute("data-userpic", "false");
-    script.setAttribute("data-auth-url", "https://pretty-casual-hound.ngrok-free.app/");
+    script.setAttribute("data-auth-url", domain);
 		script.setAttribute("data-request-access", "write");
     
     telegramBtnRef.current?.appendChild(script);

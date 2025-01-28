@@ -6,32 +6,29 @@ dotenv.config();
 import { startBotServer } from "./server/server.js";
 import { CommandRegistry } from "./commands/CommandRegistry.js";
 
-const token = process.env.TG_TOKEN ? process.env.TG_TOKEN : "";
-const server_url = process.env.SERVERBOT_URL ? process.env.SERVERBOT_URL : "";
-const bot = new TelegramBot(token);
+const TG_BOT_TOKEN = process.env.TG_TOKEN ?? "ERROR";
+const DOMAIN_URL = process.env.DOMAIN_URL ?? "ERROR";
+const TELEGRAM_API_URL = `https://api.telegram.org/bot${TG_BOT_TOKEN}`;
+const WEBHOOK_URL = `https://${DOMAIN_URL}/webhook`;
 
-bot.setWebHook(`${server_url}/bot${token}`).then(() => {
-	console.log("[INFO]: Setting up a webhook...");
-})
-.catch((error) => {
-	console.error("[CRITICAL ERROR]: Error setting up a webhook: ", {
-		error: error.message
-	});
-	process.exit(1);
-});
+const bot = new TelegramBot(TG_BOT_TOKEN);
 
-async function setTelegramWebhook() {
-	try {
-		await axios.post(`https://api.telegram.org/bot${token}/\
-			setWebhook?url=${server_url}/bot`);
-		console.log("[INFO]: Webhook has been successfully set up");
-	} catch (error: any) {
-		console.error("[CRITICAL ERROR]: Error setting up a webhook.", {
-			error: error.message
+function setTelegramWebhook() {
+	axios.post(`${TELEGRAM_API_URL}/setWebhook`, {
+		url: WEBHOOK_URL
+	})
+	.then(() => {
+		console.log('[INFO]: Webhook for telegram bot set successfully.');
+	})
+	.catch(error => {
+		console.error('[CRITICAL ERROR]: Error setting a webhook for telegram bot.', {
+			error: error.message,
+			token: TG_BOT_TOKEN,
+			domain: DOMAIN_URL
 		});
 		process.exit(1);
-	}
-  }
+	});
+}
   
 startBotServer().then(() => {
 	setTimeout(setTelegramWebhook, 3000);
