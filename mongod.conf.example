@@ -1,0 +1,17 @@
+systemLog:
+  verbosity: 0
+  destination: file
+  path: /dev/null
+  
+storage:
+  dbPath: /data/db
+
+processManagement:
+  timeZoneInfo: /usr/share/zoneinfo
+
+net:
+  port: {{YOUR_DB_PORT}}
+  bindIp: 0.0.0.0
+  
+security:
+    authorization: enabled
