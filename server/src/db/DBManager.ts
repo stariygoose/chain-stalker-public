@@ -2,13 +2,78 @@ import {
 	ICollection,
 	ICoin,
 	IUserContext,
-	ISubscription
+	ISubscription,
+	IJwt,
+	IUserMetadata
 } from "../interfaces/interfaces.js";
 import { NftCollection } from "./models/NftCollectionModel.js";
 import { NftSubscription, CoinSubscription } from "./models/SubscriptionModel.js";
 import { DataBaseError, NotFoundError } from "../errors/Errors.js";
+import { UserModel } from "./models/UserModel.js";
+import { TokenModel } from "./models/TokenModel.js";
+
 
 class DBManager {
+	public async getUser(userId: number): Promise<IUserMetadata | null> {
+		try { 
+			return await UserModel.findOne({ userId });
+		} catch (error: any) {
+			console.error(`[ERROR]: Unexpected error while trying to find a User Metadata in Database: `, {
+				error: error.message,
+				userId: userId
+			});
+			throw new DataBaseError(`Unexpected error while trying to find a refresh token in Database.`);
+		}
+	}
+
+	public async findToken(refreshToken: string): Promise<IJwt | null> {
+		try {
+			return await TokenModel.findOne<IJwt>({refreshToken});
+		} catch (error: any) {
+			console.error(`[ERROR]: Unexpected error while trying to find a refresh token in Database: `, {
+				error: error.message,
+				refreshToken: refreshToken
+			});
+			throw new DataBaseError(`Unexpected error while trying to find a refresh token in Database.`);
+		}
+	}
+
+	public async addOrUpdateRefreshToken(userId: number, refreshToken: string)
+		: Promise<IJwt> {
+		try {
+			return await TokenModel.findOneAndUpdate<{userId: number, refreshToken: string}>(
+				{ userId }, // search
+				{ 
+					userId: userId, 
+					refreshToken 
+				}, // update,
+				{ upsert: true, new: true }
+			);
+		} catch (error: any) {
+			console.error(`[ERROR]: Unexpected error while trying to update a user's refresh token: `, {
+				userId: userId,
+				error: error.message
+			});
+			throw new DataBaseError(`Unexpected error while trying to update a user's refresh token.`);
+		}
+	}
+
+	public async addOrUpdateUser(userId: number): Promise<IUserMetadata> {
+		try {
+			return await UserModel.findOneAndUpdate<IUserMetadata>(
+				{ userId: userId }, // search
+				{ userId: userId }, // update
+				{ upsert: true, new: true } // create if not found
+			);
+		} catch (error: any) {
+			console.error(`[ERROR]: Unexpected error while trying to create a user: `, {
+				userId: userId,
+				error: error.message
+			});
+			throw new DataBaseError(`Unexpected error while trying to create a user.`);
+		}
+	}
+
 	public async getSubscriptionsByCoinSymbol(symbol: string)
 		: Promise<Array<ISubscription<ICoin>>> {
 		try {

@@ -2,12 +2,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express, { Express } from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 
 import { initStalkRouter } from "./routes/StalkRouter.js";
 import { subsRouter } from './routes/SubsRouter.js';
 import { errorMiddleware } from './middlewares/ErrorMiddleware.js';
 import { OpenSea } from './services/marketplaces/OpenSea.js';
 import { BinanceWebsocketManager } from './services/marketplaces/binance/BinanceWebsocketManager.js';
+import cookieParser from 'cookie-parser';
+import { authRouter } from './routes/AuthRouter.js';
 
 const app: Express = express();
 
@@ -16,6 +19,11 @@ const MONGO_URL = process.env.MONGODB_URL ?? "";
 
 
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+  origin: 'https://${DOMAIN_URL}',
+  credentials: true,
+}));
 
 export async function startServer() {
 	try {
@@ -35,6 +43,8 @@ export async function startServer() {
 		const stalkRouter = initStalkRouter(os, WebsocketManager);
 		app.use("/api/v1", stalkRouter);
 		app.use("/api/v1/subscriptions", subsRouter);
+		app.use("/api/v1/auth", authRouter);
+		
 		app.use(errorMiddleware);
 
 		OpenSea.initStalksAfterReboot(os)

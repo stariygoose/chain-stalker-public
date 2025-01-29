@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const basedSubscriptionSchema = new mongoose.Schema(
 	{
-		userId: { type: Number, require: true, index: true },
+		userId: { type: Number, require: true, index: true, ref: 'User' },
 		percentage: { type: Number, require: true, default: 5 },
 		isStalked: { type: Boolean, require: true, default: true },
 	},

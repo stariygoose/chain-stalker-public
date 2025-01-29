@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef } from "react";
 
 import "./Login.css"
-import { LogoIcon } from "../ icons/LogoIcon";
+import { LogoIcon } from "../icons/LogoIcon";
 
 export const Login: FC = () => {
 	const telegramBtnRef = useRef<HTMLDivElement>(null);
@@ -23,7 +23,7 @@ export const Login: FC = () => {
     script.setAttribute("data-telegram-login", botName);
     script.setAttribute("data-size", "large");
     script.setAttribute("data-userpic", "false");
-    script.setAttribute("data-auth-url", domain);
+    script.setAttribute("data-auth-url", `https://${domain}/api/v1/auth/login`);
 		script.setAttribute("data-request-access", "write");
     
     telegramBtnRef.current?.appendChild(script);
@@ -33,10 +33,6 @@ export const Login: FC = () => {
 
 	return (
 		<div className="window">
-			<div className="content">
-				<div className="btn text-normal">Hosted bot</div>
-				<div className="btn text-normal">Custom bot</div>
-			</div>				
 			<div className="content">
 				<LogoIcon width={90} height={90}/>
 				<h1>Chain<br/>Stalker</h1>

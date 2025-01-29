@@ -32,6 +32,15 @@ export interface ISubscription<T extends ICollection | ICoin> {
 	updatedAt: Date
 }
 
+export interface IUserMetadata {
+	userId: number
+}
+
+export interface IJwt {
+	userId: number,
+	refreshToken: string
+}
+
 export enum Channel {
 	NFT_PRICE_CHANGED = "nft_price_changed",
 	COIN_PRICE_CHANGED = "coin_price_changed"

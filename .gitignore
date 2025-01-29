@@ -1,6 +1,7 @@
 node_modules
 data
 .env
+.env.dev
 mongod.conf
 nginx.conf
 ngrok.yml

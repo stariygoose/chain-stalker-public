@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { ThemeIcon } from "../ icons/ThemeIcon";
+import { ThemeIcon } from "../icons/ThemeIcon";
 import "./themes.css"
 
 const StorageKey = 'features-color-theme';

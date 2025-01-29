@@ -3,8 +3,8 @@ import { FC, MouseEvent } from 'react';
 import './Sidebar.css';
 
 import { Theme, Themes, useTheme } from '../theme-provider/Theme';
-import { LogoIcon } from '../ icons/LogoIcon';
-import { SubscriptionsIcon } from '../ icons/SubscriptionsIcon';
+import { LogoIcon } from '../icons/LogoIcon';
+import { SubscriptionsIcon } from '../icons/SubscriptionsIcon';
 import { SidebarOption, SidebarOptionProps } from './SidebarOption';
 
 export const Sidebar: FC = () => {
