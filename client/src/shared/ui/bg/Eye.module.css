@@ -1,0 +1,57 @@
+#background {
+	z-index: -1000;
+	position: fixed;
+
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+
+	overflow: hidden;
+}
+
+#background_svg {
+	width: 100%;
+	height: 100%;
+}
+
+#eye_group {
+	opacity: 0.05;
+	transform: scaleY(0);
+
+	stroke: rgb(var(--background-second));
+	transform-origin: 600px 400px;
+	animation: blink 300s infinite ease;
+}
+
+#eye_pupil {
+	fill: rgb(var(--background-second));
+	stroke: rgb(var(--background-second));
+}
+
+@keyframes blink {
+	from, 1.1% {
+		transform: scaleY(0);
+	}
+	1.2% {
+		transform: scaleY(1);
+	}
+	1.8% {
+		transform: scaleY(0.3);
+	}
+	2% {
+		transform: scaleY(0.4);
+	}
+	2.4% {
+		transform: scaleY(0.8);
+	}
+	2.5% {
+		transform: scaleY(0.7);
+	}
+	2.6%, 2.8% {
+		transform: scaleY(1);
+	}
+	3% {
+		transform: scaleY(0);
+	}
+}

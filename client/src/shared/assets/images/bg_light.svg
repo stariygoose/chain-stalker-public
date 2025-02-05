@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+  <!-- Light Theme Background -->
+  <defs>
+    <linearGradient id="lightBackgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color: #f5f5f5; stop-opacity: 1" />
+      <stop offset="100%" style="stop-color: #e0e0e0; stop-opacity: 1" />
+    </linearGradient>
+    <radialGradient id="lightHighlightGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 0.8" />
+      <stop offset="100%" style="stop-color: transparent; stop-opacity: 0" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#lightBackgroundGradient)" />
+  <g opacity="0.8">
+    <circle cx="300" cy="400" r="100" fill="url(#lightHighlightGradient)" />
+    <circle cx="900" cy="400" r="100" fill="url(#lightHighlightGradient)" />
+    <path d="M400,400 Q600,250 800,400 Q600,550 400,400 Z" fill="none" stroke="#b0b0b0" stroke-width="4" />
+    <circle cx="600" cy="400" r="30" fill="#b0b0b0" />
+  </g>
+  <g opacity="0.6">
+    <ellipse cx="600" cy="200" rx="150" ry="50" fill="none" stroke="#a0a0a0" stroke-width="3" />
+    <ellipse cx="600" cy="600" rx="150" ry="50" fill="none" stroke="#a0a0a0" stroke-width="3" />
+    <line x1="600" y1="200" x2="600" y2="600" stroke="#a0a0a0" stroke-width="2" stroke-dasharray="5,5" />
+  </g>
+
+  <!-- Dark Theme Background -->
+  <defs>
+    <linearGradient id="darkBackgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color: #1e1e2f; stop-opacity: 1" />
+      <stop offset="100%" style="stop-color: #2a2a40; stop-opacity: 1" />
+    </linearGradient>
+    <radialGradient id="darkHighlightGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color: #4a90e2; stop-opacity: 0.8" />
+      <stop offset="100%" style="stop-color: transparent; stop-opacity: 0" />
+    </radialGradient>
+  </defs>
+  <rect y="800" width="1200" height="800" fill="url(#darkBackgroundGradient)" />
+  <g opacity="0.8" transform="translate(0, 800)">
+    <circle cx="300" cy="400" r="100" fill="url(#darkHighlightGradient)" />
+    <circle cx="900" cy="400" r="100" fill="url(#darkHighlightGradient)" />
+    <path d="M400,400 Q600,250 800,400 Q600,550 400,400 Z" fill="none" stroke="#4a90e2" stroke-width="4" />
+    <circle cx="600" cy="400" r="30" fill="#4a90e2" />
+  </g>
+  <g opacity="0.6" transform="translate(0, 800)">
+    <ellipse cx="600" cy="200" rx="150" ry="50" fill="none" stroke="#e94e77" stroke-width="3" />
+    <ellipse cx="600" cy="600" rx="150" ry="50" fill="none" stroke="#e94e77" stroke-width="3" />
+    <line x1="600" y1="200" x2="600" y2="600" stroke="#e94e77" stroke-width="2" stroke-dasharray="5,5" />
+  </g>
+</svg>

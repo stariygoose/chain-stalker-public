@@ -1,7 +1,53 @@
+:root {
+	--background-primary-light: 253, 255, 245;
+	--background-second-light: 250, 245, 239; 
+	--background-btn-light: 222, 224, 224;
+
+	--accent-light: 17, 17, 17;
+
+	--background-primary-dark: 24, 25, 32;
+	--background-second-dark: 37, 38, 44;
+	--background-btn-dark: 22, 24, 32;
+
+	--accent-dark: 227, 227, 227;
+
+	--accent-shadow-dark: 37, 38, 44;
+	--accent-shadow-light: 227, 227, 227;
+
+	--font-family: "Afacad Flux", serif;
+}
+
+[data-theme='light'] {
+	--background-primary: var(--background-primary-light);
+	--background-second: var(--background-second-light);
+	--background-btn: var(--background-btn-light);
+
+	--accent: var(--accent-light);
+	--accent-shadow: var(--accent-shadow-light);
+}
+
+[data-theme='dark'] {
+	--background-primary: var(--background-primary-dark);
+	--background-second: var(--background-second-dark);
+	--background-btn: var(--background-btn-dark);
+
+	--accent: var(--accent-dark);
+	--accent-shadow: var(--accent-shadow-dark);
+}
+
+.class {
+	color: rgb(var(--accent));
+	background-color: rgba(var(--background-primary), 0.5);
+}
+
 html {
 	background-color: rgb(var(--background-primary));
 }
 
+body {
+	margin: 0;
+	padding: 0;
+}
 
 p, h1, h2, h3, h4, h5, h6, div, span {
 	color: rgb(var(--accent));
@@ -20,11 +66,31 @@ svg {
 .btn {
 	cursor: pointer;
 	display: flex;
-	justify-content: center;
 	align-items: center;
-	
-	border-radius: 10px;
 
-	width: 20vh;
-	height: 50px;
+	background-color: rgb(var(--background-btn));
+	-webkit-box-shadow: inset 0px 0px 16px 7px rgba(var(--accent-shadow), 0.1); 
+	box-shadow: inset 0px 0px 16px 7px rgba(var(--accent-shadow), 0.1);
+	border-radius: 10px;
+}
+
+.text-normal {
+	font-size: 20px;
+	font-weight: 500;
+	text-align: center;
+}
+
+.text-small {
+	font-size: 12px;
+	text-align: center;
+	font-weight: 200;
+}
+
+.navlink {
+	text-decoration: none;
+}
+.navlink.active {
+  color: blue; /* Цвет активной ссылки */
+  font-weight: bold; /* Можно добавить жирность */
+  text-decoration: underline; /* Или включить подчеркивание */
 }
