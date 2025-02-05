@@ -1,5 +1,4 @@
 import { FC } from "react"
-import style from "./ThemeToogler.module.css"
 import { IconProps } from "../../shared/types/icons"
 import { useTheme } from "../../shared/lib/hooks/useTheme"
 import { ThemeIcon } from "../../shared/assets/icons/ThemeIcon";
@@ -13,8 +12,7 @@ export const ThemeToogler: FC<IconProps>= ({ width, height, color, className }) 
 	}
 
 	return (
-		<div className={style.theme_toogler}
-				onClick={toogleTheme}>
+		<div onClick={toogleTheme}>
 			<ThemeIcon
 				width={width}
 				height={height}

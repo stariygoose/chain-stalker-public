@@ -1,79 +1,98 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
-import style from "./Sidebar.module.css"
-import { SidebarOption, SidebarOptionProps } from './SidebarOption';
-import { SubscriptionsIcon } from '../../shared/assets/icons/SubscriptionsIcon';
+import { SidebarOption, SidebarOptionProps } from '../../shared/ui/SidebarOption/SidebarOption';
 import { LogoIcon } from '../../shared/assets/icons/LogoIcon';
 import { ThemeToogler } from '../../features/ThemeToogler/ThemeToogler';
 import { useTheme } from '../../shared/lib/hooks/useTheme';
-import { Link, NavLink } from 'react-router-dom';
-import { Arrow } from '../../shared/assets/icons/Arrow';
+import { Link } from 'react-router-dom';
+import { ArrowIcon } from '../../shared/assets/icons/ArrowIcon';
+import { CoinIcon } from '../../shared/assets/icons/CoinIcon';
+import { NftIcon } from '../../shared/assets/icons/NftIcon';
+import { DashboardIcon } from '../../shared/assets/icons/DashboardIcon';
+import { Hamburger } from '../../features/Hamburger/Hamburger';
 
 
 const sidebarOptions: SidebarOptionProps[] = [
 	{ 
-		icon: <SubscriptionsIcon width={30} height={30}/>,
-		text: "adsf fasdf",
+		icon: <DashboardIcon width={30} height={30}/>,
+		text: "Dashboard",
+		link: "/dashboard"
 	},
 	{ 
-		icon: <SubscriptionsIcon width={30} height={30}/>,
-		text: "adsf fasdf",
+		icon: <CoinIcon width={30} height={30}/>,
+		text: "Coins",
+		link: "/subscriptions/coins"
 	},
 	{ 
-		icon: <SubscriptionsIcon width={30} height={30}/>,
-		text: "adsf fasdf",
+		icon: <NftIcon width={30} height={30}/>,
+		text: "Nfts",
+		link: "/subscriptions/nfts"
 	},
-	{ 
-		icon: <SubscriptionsIcon width={30} height={30}/>,
-		text: "adsf fasdf",
-	},
-	{ 
-		icon: <SubscriptionsIcon width={30} height={30}/>,
-		text: "adsf fasdf"
+	{
+		icon: <ArrowIcon width={30} height={30}/>,
+		text: "login",
+		link: "/login"
 	}
 ];
 
+
 export const Sidebar: FC = () => {
+	const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
 	const { theme, setTheme } = useTheme();
+
 	const changeTheme = () => {
 		theme === 'dark' ? setTheme('light') : setTheme('dark');
 	}
 
+	const toogleHamburger = () => {
+		setIsOpenMenu(!isOpenMenu);
+		if (!isOpenMenu) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = 'auto';
+		}
+	};
+
+	const closeMenu = () => {
+		setIsOpenMenu(false);
+		document.body.style.overflow = 'auto';
+	};
+
 	return (
-		<nav className={style.sidebar}>
-			<Link to="/" className='navlink'>
-					<div className={style.sidebar_logo} >
-						<LogoIcon	width={50} height={50}/>
-						<h1 className={style.sidebar_title}>Chain<br />Stalker</h1>
-					</div>
-			</Link>
-			<div className={style.sidebar_options}>
-				{
-					sidebarOptions.map((option, index) => {
-						return <SidebarOption
-											key={index} 
-											icon={option.icon}
-											text={option.text}
-											onMouseEnter={option.onMouseEnter}
-											onMouseLeave={option.onMouseLeave}
-											onClick={option.onClick}/>})
-				}
-			</div>
-			<div className={style.sidebar_footer}>
-				<div className={`${style.theme_toogler} btn`} onClick={changeTheme}>
-					<ThemeToogler className={style.sidebar_toogler__icon}/>
-					<div className={`${style.sidebar_toogler__text} text-normal`}>{theme}</div>
+		<div className='relative'>
+			{isOpenMenu && (
+				<div
+					className="fixed inset-0 bg-black bg-opacity-50 z-40"
+					onClick={closeMenu}
+				>
 				</div>
-				<NavLink to="/login"
-					className={({isActive}) => (isActive ? "navlink active" : 'navlink')}>
-					<div className={style.sidebar_login}>
-						<span className={`text-normal`}>login</span>
-						<span>
-							<Arrow width={25} height={25} className={style.sidebar_toogler__text}/>
-						</span>
-					</div>
-				</NavLink>
-			</div>
-		</nav>
+			)}
+			<Hamburger toogleMenu={toogleHamburger}/>
+			<nav className={`${
+				isOpenMenu ? "max-sm:left-0" : "max-sm:-left-full"
+			} max-sm:fixed max-sm:h-screen max-sm:w-64 max-sm:items-start
+				z-50 h-[97vh] w-[80px] fixed flex flex-col items-center justify-between
+				p-4 bg-color-second rounded-2xl m-3 border-1
+				transition-all duration-300 ease-in`}>
+				<Link to="/" className='navlink'>
+						<div>
+							<LogoIcon	width={50} height={50}/>
+						</div>
+				</Link>
+				<div>
+					{
+						sidebarOptions.map((option, index) => {
+							return <SidebarOption
+												key={index} 
+												icon={option.icon}
+												text={option.text}
+												link={option.link}/>})
+					}
+				</div>
+				<div className='cursor-pointer' onClick={changeTheme}>
+					<ThemeToogler width={35} height={35}/>
+				</div>
+			</nav>
+		</div>
 	);
 }

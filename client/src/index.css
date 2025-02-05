@@ -1,96 +1,43 @@
-:root {
-	--background-primary-light: 253, 255, 245;
-	--background-second-light: 250, 245, 239; 
-	--background-btn-light: 222, 224, 224;
+@import "tailwindcss";
 
-	--accent-light: 17, 17, 17;
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-	--background-primary-dark: 24, 25, 32;
-	--background-second-dark: 37, 38, 44;
-	--background-btn-dark: 22, 24, 32;
+@theme {
+	--font-*: initial;
+	--font-sans: 'Afacad Flux', 'serif';
 
-	--accent-dark: 227, 227, 227;
+	--color-text-main: #fdfff5;
+	--fill-color: #fdfff5;
 
-	--accent-shadow-dark: 37, 38, 44;
-	--accent-shadow-light: 227, 227, 227;
+	--inset-shadow-md: inset 0 2px 3px rgba(0, 0, 0, 0.25);
 
-	--font-family: "Afacad Flux", serif;
+	--color-bg-main: #0e0e16;
+	--color-bg-second: #0e0e0e;
+	--color-bg-hover: #1c1b1b	;
 }
 
-[data-theme='light'] {
-	--background-primary: var(--background-primary-light);
-	--background-second: var(--background-second-light);
-	--background-btn: var(--background-btn-light);
+[data-theme="light"] {
+	--color-text-main: #1c1b1b;
+	--fill-color: #1c1b1b;
 
-	--accent: var(--accent-light);
-	--accent-shadow: var(--accent-shadow-light);
+	--color-bg-main: #f4f8ff;
+	--color-bg-second: #fdfff5;
+	--color-bg-hover: #c2c0c0;
 }
 
-[data-theme='dark'] {
-	--background-primary: var(--background-primary-dark);
-	--background-second: var(--background-second-dark);
-	--background-btn: var(--background-btn-dark);
-
-	--accent: var(--accent-dark);
-	--accent-shadow: var(--accent-shadow-dark);
+@utility bg-color-main {
+	@apply bg-[var(--color-bg-main)]
+}
+@utility bg-color-second {
+	@apply bg-[var(--color-bg-second)]
+}
+@utility text-color-main {
+	@apply text-[var(--color-text-main)]
+}
+@utility bg-color-hover {
+	@apply bg-[var(--color-bg-hover)]
 }
 
-.class {
-	color: rgb(var(--accent));
-	background-color: rgba(var(--background-primary), 0.5);
-}
-
-html {
-	background-color: rgb(var(--background-primary));
-}
-
-body {
-	margin: 0;
-	padding: 0;
-}
-
-p, h1, h2, h3, h4, h5, h6, div, span {
-	color: rgb(var(--accent));
-	padding: 0;
-	margin: 0;
-}
-
-h1 {
-	font-weight: 600;
-}
-
-svg {
-	fill: rgb(var(--accent))
-}
-
-.btn {
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-
-	background-color: rgb(var(--background-btn));
-	-webkit-box-shadow: inset 0px 0px 16px 7px rgba(var(--accent-shadow), 0.1); 
-	box-shadow: inset 0px 0px 16px 7px rgba(var(--accent-shadow), 0.1);
-	border-radius: 10px;
-}
-
-.text-normal {
-	font-size: 20px;
-	font-weight: 500;
-	text-align: center;
-}
-
-.text-small {
-	font-size: 12px;
-	text-align: center;
-	font-weight: 200;
-}
-
-.navlink {
-	text-decoration: none;
-}
-.navlink.active {
-  color: blue; /* Цвет активной ссылки */
-  font-weight: bold; /* Можно добавить жирность */
-  text-decoration: underline; /* Или включить подчеркивание */
+@layer components {
+	
 }

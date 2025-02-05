@@ -2,9 +2,9 @@ import { FC } from "react";
 import { IconProps } from "../../types/icons";
 
 
-export const SubscriptionsIcon: FC<IconProps> = ({ width = 50, height = 50, color, className }) => {
+export const SubscriptionsIcon: FC<IconProps> = ({ width = 50, height = 50, color, className = ''}) => {
 	return (
-		<svg className={className} fill={color} width={width + "px"} height={height + "px"} viewBox="0 0 16.00 16.00" 
+		<svg className={`${className} fill-[var(--fill-color)]`} fill={color} width={width + "px"} height={height + "px"} viewBox="0 0 16.00 16.00" 
 		xmlns="http://www.w3.org/2000/svg" stroke="#000000" strokeWidth="0.00016">
 			<g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
 			<g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>

@@ -41,9 +41,9 @@ export const Eye = () => {
   const pupil = calculatePupilPosition(eye.x, eye.y, pupilRadius, eye.radius);
 
 	return (
-    <div id={style.background}>
+    <div className="z-10 pointer-events-none w-1/1 h-screen fixed top-0 left-0 overflow-hidden">
       <svg xmlns="http://www.w3.org/2000/svg"
-				id={style.background_svg}>        
+				className="h-[100%] w-[100%]">        
         <g>
 					{/* Full Eye */}
 					<g id={style.eye_group}>
@@ -53,8 +53,8 @@ export const Eye = () => {
 							strokeWidth="4"
 						/>
 						{/* Pupil */}
-						<circle 
-							id={style.eye_pupil}
+						<circle
+							fill="grey"
 							cx={eye.x + pupil.x/2}
 							cy={eye.y + pupil.y/2}
 							r={pupilRadius} />

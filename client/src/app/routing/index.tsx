@@ -1,8 +1,7 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { MainLayout } from "../layouts/MainLayout/MainLayout";
-import { LoginPage } from "../../pages/LoginPage";
-import { NotFoundPage } from "../../pages/NotFoundPage";
 import { ProtectedRoutes } from "./ProtectedRoutes";
+import { LoginPage, NotFoundPage } from "../../pages";
 
 export const router = createBrowserRouter([
 	{
@@ -12,6 +11,13 @@ export const router = createBrowserRouter([
 		),
 		errorElement: <NotFoundPage />,
 		children: [
+			{
+				index: true,
+				element: (
+					<Navigate
+						to={"/dashboard"} />
+				)
+			},
 			{
 				path: 'login',
 				element: <LoginPage />
@@ -24,6 +30,10 @@ export const router = createBrowserRouter([
 						element: <h2>TESTESTSETESTSETSETSETESTS</h2>
 					}
 				]
+			},
+			{
+				path: '*',
+				element: <NotFoundPage />
 			}
 		]
 	}

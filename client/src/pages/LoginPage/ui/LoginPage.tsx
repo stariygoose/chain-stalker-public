@@ -1,6 +1,5 @@
 import { FC, useEffect, useRef } from "react";
 
-import style from "./LoginPage.module.css";
 import { LogoIcon } from "../../../shared/assets/icons/LogoIcon";
 
 
@@ -30,20 +29,19 @@ export const LoginPage: FC = () => {
 
 
 	return (
-		<div className={style.login}>
-			<div className={style.login_wrapper}>
-				<div className={style.login_title}>
+		<div className='h-screen flex items-center justify-center p-3 text-center'>
+			<div className="flex flex-col justify-center">
+				<div className='flex justify-center items-center'>
 					<LogoIcon width={90} height={90}/>
-					<h1>Chain<br/>Stalker</h1>
+					<h1 className="text-5xl font-bold">Chain<br/>Stalker</h1>
 				</div>
-				<div className={style.login_descr}>
-					<p className="text-normal">Manage your subscriptions</p>
-					<p className="text-small">Connect your telegram and manage your subscriptions easily</p>
+				<div className='mt-3 flex flex-col items-center'>
+					<p className='text-xl font-bold'>Manage your subscriptions</p>
+					<p className='text-sm opacity-70'>Connect your telegram and manage your subscriptions easily</p>
 				</div>
-				<div ref={telegramBtnRef}	style={{ marginTop: "30px" }}></div>
-				<noscript>You must enable javascript to connect your telegram</noscript>
+				<div ref={telegramBtnRef} className="mt-5 m-auto"></div>
+				<noscript>You must enable javascript to connect your telegram</noscript>		
 			</div>
-			
 		</div>
 	);
 };

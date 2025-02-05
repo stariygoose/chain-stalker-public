@@ -2,9 +2,9 @@ import { FC } from "react";
 import { IconProps } from "../../types/icons";
 
 
-export const ThemeIcon: FC<IconProps> = ({ width = 50, height = 50, color, className }) => {
+export const ThemeIcon: FC<IconProps> = ({ width = 50, height = 50, color, className = ''}) => {
 	return (
-		<svg className={ className } fill={ color } height={ height + "px"} width={ width + "px" }
+		<svg className={`${className} fill-[var(--fill-color)]`} fill={ color } height={ height + "px"} width={ width + "px" }
 		version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 
 		xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 478.47 478.47" xmlSpace="preserve" stroke="#000000" 
 		transform="rotate(0)" strokeWidth="0.0047846600000000005">

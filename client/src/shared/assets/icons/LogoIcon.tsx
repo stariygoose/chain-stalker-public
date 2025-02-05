@@ -2,10 +2,10 @@ import { FC } from "react";
 import { IconProps } from "../../types/icons";
 
 
-export const LogoIcon: FC<IconProps> = ({ width = 50, height = 50, color, className }) => {
+export const LogoIcon: FC<IconProps> = ({ width = 50, height = 50, color, className = ''}) => {
 	return (
   <>
-		<svg version="1.0" className={className} fill={color} xmlns="http://www.w3.org/2000/svg"
+		<svg version="1.0" className={`${className} fill-[var(--fill-color)]`} fill={color} xmlns="http://www.w3.org/2000/svg"
 		width={ width + "px" } height={ height + "px" } viewBox="0 0 1080.000000 1280.000000"
 		preserveAspectRatio="xMidYMid meet">
 
