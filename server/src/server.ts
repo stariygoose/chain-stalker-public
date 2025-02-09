@@ -27,15 +27,8 @@ app.use(cors({
 
 export async function startServer() {
 	try {
-		mongoose.connect(MONGO_URL)
-			.then(() => console.log(`[INFO]: Successfully connected to the database.`))
-			.catch((error: Error) => {
-				console.error(`[CRITICAL ERROR]: Error while connecting to the database.`, {
-					error: error.message,
-					mongoUrl: process.env.MONGODB_URL
-				});
-				process.exit(1);
-			});
+		await mongoose.connect(MONGO_URL)
+		console.log(`[INFO]: Successfully connected to the database.`);
 
 		const WebsocketManager = new BinanceWebsocketManager();
 		const os = new OpenSea();

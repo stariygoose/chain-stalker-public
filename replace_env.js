@@ -26,6 +26,9 @@ const DEFAULT_DB_PASS					 = 'useruser';
 const DEFAULT_REDIS_HOST			= 'redis';
 const DEFAULT_REDIS_PASSWORD	= 'redisredis';
 
+const DEFAULT_JWT_ACCESS_SECRET	= 'jwt_access_token';
+const DEFAULT_JWT_REFRESH_SECRET	= 'jwt_refresh_token';
+
 const Placeholders = {
 	TUNNEL_PORT: 'YOUR_TUNNEL_PORT',
 	OPENSEA_TOKEN: 'YOUR_OPENSEA_TOKEN',
@@ -47,7 +50,10 @@ const Placeholders = {
 
 	REDIS_HOST: 'YOUR_REDIS_HOST',
 	REDIS_PORT: 'YOUR_REDIS_PORT',
-	REDIS_PASSWORD: 'YOUR_REDIS_PASSWORD'
+	REDIS_PASSWORD: 'YOUR_REDIS_PASSWORD',
+
+	JWT_ACCESS_SECRET: 'YOUR_JWT_ACCESS_SECRET',
+	JWT_REFRESH_SECRET: 'YOUR_JWT_REFRESH_SECRET'
 }
 
 const loadFile = (filePath) => { return fs.readFileSync(filePath, 'utf-8'); };
@@ -134,7 +140,9 @@ function replaceMainEnvFile(data) {
 		[Placeholders.DB_PASS]: data.dbUserPass,
 		[Placeholders.REDIS_HOST]: data.redisHost,
 		[Placeholders.REDIS_PORT]: data.redisPort,
-		[Placeholders.REDIS_PASSWORD]: data.redisPass
+		[Placeholders.REDIS_PASSWORD]: data.redisPass,
+		[Placeholders.JWT_ACCESS_SECRET]: data.jwt_access_secret,
+		[Placeholders.JWT_REFRESH_SECRET]: data.jwt_refresh_secret,
 	});
 	const mainEnvPath = path.join(__dirname, "./.env");
 
@@ -201,6 +209,8 @@ async function replaceMainEnv(data) {
 	replaceMainMongodConf(data);
 }
 
+
+// --------------------------- SCRIPT EXECUTION ----------------------------------
 async function main() {
 	const portsAsk = await ask(`[OPTIONAL]: Do you want to configurate your own ports? (Recommended to use default values)\n` +
 		`Default ports: [${DEFAULT_PORTS.map((port) => {return port})}]\n` + 
@@ -211,7 +221,7 @@ async function main() {
 			portsAsk === 'YES'
 		) ?
 		true :
-		false
+		false;
 	const dbConfAsk = await ask(`[OPTIONAL]: Do you want to configurate your own Database Config? (Recommended to configurate for better security)\n` +
 		`(Y)es | (N)o ? : `);
 	const isDbConf = (
@@ -220,8 +230,8 @@ async function main() {
 			dbConfAsk === `YES`
 		) ?
 		true :
-		false
-	const redisConfAsk = await ask(`[OPTIONAL]: Do you want to configurate your own Redis Config? (Recommended to use default values)\n` +
+		false;
+	const redisConfAsk = await ask(`[OPTIONAL]: Do you want to configurate your own Redis Config? (Recommended to configurate for better security)\n` +
 		`Default port: ${DEFAULT_REDIS_PORT}\n`	+
 		`(Y)es | (N)o ? : `);
 	const isRedisConf = (
@@ -230,8 +240,19 @@ async function main() {
 			redisConfAsk === `YES`
 		) ?
 		true :
-		false
-	
+		false;
+	const jwtTokensAsk = await ask(`[OPTIONAL]: Do you want to configurate your own Json Web Tokens(JWT) secret phrases? (Recommended to configurate for better security)\n` +
+		`Default values: [ACCESS: ${DEFAULT_JWT_ACCESS_SECRET}, REFRESH: ${DEFAULT_JWT_REFRESH_SECRET}]\n`	+
+		`(Y)es | (N)o ? : `);
+	const isJwtTokens = (
+			jwtTokensAsk === 'yes' || jwtTokensAsk === 'Yes' || 
+			jwtTokensAsk === 'Y' || jwtTokensAsk === 'y' ||
+			jwtTokensAsk === `YES`
+		) ?
+		true :
+		false;
+
+
 	const openseaToken = await ask(`[REQUIRED]: Your Opensea Auth Token : `);
 	const ngrokToken = await ask(`[REQUIRED]: Your Ngrok Auth Token : `);
 	const tgBotToken = await ask(`[REQUIRED]: Your Telegram Bot Auth Token : `);
@@ -293,6 +314,15 @@ async function main() {
 					`${DEFAULT_REDIS_PASSWORD}) : `) || DEFAULT_REDIS_PASSWORD)
 				: DEFAULT_REDIS_PASSWORD;
 
+	const jwt_access_secret = isJwtTokens ?
+				(await ask(`[OPTIONAL]: Your secret phrase for Access JWT (leave blank to use default value: ` +
+					`${DEFAULT_JWT_ACCESS_SECRET}) : `) || DEFAULT_JWT_ACCESS_SECRET)
+				: DEFAULT_JWT_ACCESS_SECRET;
+	const jwt_refresh_secret = isJwtTokens ?
+				(await ask(`[OPTIONAL]: Your secret phrase for Refresh JWT (leave blank to use default value: ` +
+					`${DEFAULT_JWT_REFRESH_SECRET}) : `) || DEFAULT_JWT_REFRESH_SECRET)
+				: DEFAULT_JWT_REFRESH_SECRET;
+
 	await replaceMainEnv({
 		openseaToken,
 		ngrokToken,
@@ -311,7 +341,9 @@ async function main() {
 		dbUserName,
 		dbUserPass,
 		redisHost,
-		redisPass
+		redisPass,
+		jwt_access_secret,
+		jwt_refresh_secret
 	});
 	await replaceClientSection(
 		tgBotName,

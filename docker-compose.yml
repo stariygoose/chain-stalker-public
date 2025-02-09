@@ -1,4 +1,8 @@
-version: '3.7'
+version: '3.8'
+networks:
+  main:
+    driver: bridge
+    name: main
 
 services:
 
@@ -48,7 +52,7 @@ services:
       - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
       - SERVER_PORT=${SERVER_PORT}
 
-      - MONGODB_URL=mongodb://${DB_USER}:${DB_PASS}@mongodb:${DB_PORT}/${DB_DATABASE}
+      - MONGODB_URL=mongodb://${DB_USER}:${DB_PASS}@mongodb:${DB_PORT}/${DB_DATABASE}?authSource=${DB_DATABASE}&directConnection=true
       - BOT_URL=http://bot:${TG_BOT_PORT}
 
       - OPENSEA_TOKEN=${OPENSEA_TOKEN}
@@ -73,9 +77,11 @@ services:
     image: mongo:latest
     restart: always
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${DB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-      - MONGO_INITDB_DATABASE=${DB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_DATABASE}
+      MONGO_DB_USERNAME: ${DB_USER}
+      MONGO_DB_PASSWORD: ${DB_PASS}
     command: ["mongod", "--config", "/config/mongod.conf"]
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
@@ -91,13 +97,8 @@ services:
       - ${REDIS_PORT}:${REDIS_PORT}
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes: 
-      - ./data/cache:/data
+      - ./data/redis:/data
     networks:
       - main
 
-
-      
-networks:
-  main:
-    driver: bridge
     
