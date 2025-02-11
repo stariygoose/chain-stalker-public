@@ -29,7 +29,7 @@ export const LoginPage: FC = () => {
 
 
 	return (
-		<div className='h-screen flex items-center justify-center p-3 text-center'>
+		<div className='h-full flex items-center justify-center p-3 text-center'>
 			<div className="flex flex-col justify-center">
 				<div className='flex justify-center items-center'>
 					<LogoIcon width={90} height={90}/>
@@ -40,7 +40,7 @@ export const LoginPage: FC = () => {
 					<p className='text-sm opacity-70'>Connect your telegram and manage your subscriptions easily</p>
 				</div>
 				<div ref={telegramBtnRef} className="mt-5 m-auto"></div>
-				<noscript>You must enable javascript to connect your telegram</noscript>		
+				<noscript>You must enable javascript to connect your telegram</noscript>
 			</div>
 		</div>
 	);

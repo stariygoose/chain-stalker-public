@@ -10,7 +10,7 @@ export const MainLayout: FC = () => {
 		<ThemeProvider>
 			<Eye />
 			<Sidebar />
-			<main className="w-screen h-screen">
+			<main className="w-full h-screen overflow-hidden">
 				<Outlet />
 			</main>
 		</ThemeProvider>

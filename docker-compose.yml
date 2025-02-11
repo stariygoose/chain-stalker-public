@@ -1,8 +1,4 @@
 version: '3.8'
-networks:
-  main:
-    driver: bridge
-    name: main
 
 services:
 
@@ -86,7 +82,7 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./mongod.conf:/config/mongod.conf:ro
-      - ./data/db-data/db:/data/db
+      - ./_volume/mongodb:/data/db
     networks:
       - main
 
@@ -97,8 +93,12 @@ services:
       - ${REDIS_PORT}:${REDIS_PORT}
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes: 
-      - ./data/redis:/data
+      - ./_volume/redis:/data
     networks:
       - main
 
     
+networks:
+  main:
+    driver: bridge
+    name: main

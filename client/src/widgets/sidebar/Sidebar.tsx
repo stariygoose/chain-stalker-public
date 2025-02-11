@@ -68,9 +68,11 @@ export const Sidebar: FC = () => {
 				</div>
 			)}
 			<Hamburger toogleMenu={toogleHamburger}/>
-			<nav className={`${
-				isOpenMenu ? "max-sm:left-0" : "max-sm:-left-full"
-			} max-sm:fixed max-sm:h-screen max-sm:w-64 max-sm:items-start
+			<aside className={`${
+				isOpenMenu
+					? "max-sm:left-0"
+					: "max-sm:-left-full"
+				} max-sm:fixed max-sm:h-[97%] max-sm:w-64 max-sm:items-start
 				z-50 h-[97vh] w-[80px] fixed flex flex-col items-center justify-between
 				p-4 bg-color-second rounded-2xl m-3 border-1
 				transition-all duration-300 ease-in`}>
@@ -92,7 +94,7 @@ export const Sidebar: FC = () => {
 				<div className='cursor-pointer' onClick={changeTheme}>
 					<ThemeToogler width={35} height={35}/>
 				</div>
-			</nav>
+			</aside>
 		</div>
 	);
 }
