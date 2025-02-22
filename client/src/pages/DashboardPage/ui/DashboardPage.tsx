@@ -1,7 +1,9 @@
 import { FC, useState } from "react";
-import { DashboardNavigation } from "../../../widgets/dashboard";
+import { DashboardNavigation } from "../../../widgets/dashboard/navigation/ui/DashboardNavigation";
 import { DashboardTypesKeys, IDashboardContentOption } from "../../../widgets/dashboard/model/types";
-import { DashboardContent } from "../../../widgets/dashboard/content/ui/DashboardContent/DashboardContent";
+import { DashboardContent } from "../../../widgets/dashboard/content/ui/DashboardContent";
+import { DashboardInformation } from "../../../widgets/dashboard/information/ui/DashboardInformation";
+import { CoinIcon } from "../../../shared/assets/icons/CoinIcon";
 
 
 export const DashboardPage: FC = () => {
@@ -60,8 +62,11 @@ export const DashboardPage: FC = () => {
 		<section className="w-[calc(100%-180px)] h-screen max-sm:size-full p-5 mx-auto">
 			<h1 className="text-4xl font-bold max-sm:text-center">Dashboard</h1>
 			<DashboardNavigation activeTab={activeTab} changeActiveTab={setActiveTab}/>
-			<div className="h-[calc(100vh-150px)] overflow-y-auto" style={{scrollbarWidth: 'none'}}>
-				{ renderContent() }
+			<div className="flex flex-wrap justify-between">
+				<div className="h-[calc(100vh-150px)] max-lg:w-full overflow-y-auto" style={{scrollbarWidth: 'none'}}>
+					{ renderContent() }
+				</div>
+				<DashboardInformation title={'Collection 1'} icon={<CoinIcon/>}/>
 			</div>
 		</section>
 	);

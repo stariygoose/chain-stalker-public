@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { DashboardTypesKeys } from "../../../model/types";
+import { DashboardTypesKeys } from "../../model/types";
 
 interface IDashboardOption {
 	id: DashboardTypesKeys;

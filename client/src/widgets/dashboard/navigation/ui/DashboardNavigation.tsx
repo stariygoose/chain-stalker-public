@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { NftIcon } from "../../../../../shared/assets/icons/NftIcon";
-import { CoinIcon } from "../../../../../shared/assets/icons/CoinIcon";
-import { DashboardTypesKeys } from "../../../model/types";
-import { DashboardNavigationOption } from "../DashboardNavigationOption/DashboardNavigationOption";
-import { SubscriptionsIcon } from "../../../../../shared/assets/icons/SubscriptionsIcon";
+import { NftIcon } from "../../../../shared/assets/icons/NftIcon";
+import { CoinIcon } from "../../../../shared/assets/icons/CoinIcon";
+import { DashboardTypesKeys } from "../../model/types";
+import { DashboardNavigationOption } from "./DashboardNavigationOption";
+import { SubscriptionsIcon } from "../../../../shared/assets/icons/SubscriptionsIcon";
 
 interface IDashboardNavigation {
 	activeTab: DashboardTypesKeys,

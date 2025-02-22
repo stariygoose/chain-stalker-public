@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { IDashboardContentOption } from "../../../model/types";
-import { DashboardContentOption } from "../DashboardContentOption/DashboardContentOption";
+import { IDashboardContentOption } from "../../model/types";
+import { DashboardContentOption } from "./DashboardContentOption";
 
 interface IDashboardContent {
 	content: IDashboardContentOption[];
@@ -9,14 +9,14 @@ interface IDashboardContent {
 
 export const DashboardContent: FC<IDashboardContent> = ({ content, handleSort }) => {
 	return (
-			<table className="max-w-[75%] border-collapse">
+			<table className="border-collapse">
 				<thead>
 					<tr className="bg-color-second w-full text-left text-lg sticky top-0 cursor-pointer">
-						<th className="w-[10%]"></th>
-						<th className="font-light w-[50%]" onClick={() => handleSort('title')}>Title</th>
-						<th className="font-light w-[15%]" onClick={() => handleSort('price')}>Price</th>
-						<th className="font-light w-[15%]" onClick={() => handleSort('symbol')}>Symbol</th>
-						<th className="font-light max-w-[25%]" onClick={() => handleSort('percentage')}>Percentage</th>
+						<th className="min-w-8 max-w-20"></th>
+						<th className="font-light min-w-30 w-80" onClick={() => handleSort('title')}>Title</th>
+						<th className="font-light min-w-15 w-30" onClick={() => handleSort('price')}>Price</th>
+						<th className="font-light min-w-15 w-30" onClick={() => handleSort('symbol')}>Symbol</th>
+						<th className="font-light min-w-15 w-20" onClick={() => handleSort('percentage')}>Percentage</th>
 					</tr>
 				</thead>
 				<tbody>
