@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 export interface SidebarOptionProps {
 	icon: ReactNode,
 	text: string,
-	link: string,
+	link: string
 }
 
 export const SidebarOption: FC<SidebarOptionProps> = ({

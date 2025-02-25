@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 
 interface ButtonProps {
 	children: ReactNode,
-	className: string
+	className?: string
 }
 
 export const Button: FC<ButtonProps> = ({ children, className }) => {

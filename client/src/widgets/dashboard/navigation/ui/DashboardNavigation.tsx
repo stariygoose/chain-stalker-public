@@ -37,7 +37,8 @@ export const DashboardNavigation: FC<IDashboardNavigation> = ({ activeTab, chang
 
 	return (
 		<div className="p-2 mt-3 flex gap-4 border-b-1 border-t-1 
-		border-gray-300/20 text-lg cursor-pointer">
+		border-gray-300/20 text-lg cursor-pointer overflow-x-scroll"
+		style={{scrollbarWidth: 'none'}}>
 			{
 				options.map((option, index) => (
 					<DashboardNavigationOption

@@ -12,7 +12,7 @@ export const DashboardContent: FC<IDashboardContent> = ({ content, handleSort })
 			<table className="border-collapse">
 				<thead>
 					<tr className="bg-color-second w-full text-left text-lg sticky top-0 cursor-pointer">
-						<th className="min-w-8 max-w-20"></th>
+						<th className="min-w-6 max-w-10 w-10"></th>
 						<th className="font-light min-w-30 w-80" onClick={() => handleSort('title')}>Title</th>
 						<th className="font-light min-w-15 w-30" onClick={() => handleSort('price')}>Price</th>
 						<th className="font-light min-w-15 w-30" onClick={() => handleSort('symbol')}>Symbol</th>

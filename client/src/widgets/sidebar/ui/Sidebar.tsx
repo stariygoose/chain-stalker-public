@@ -1,15 +1,15 @@
 import { FC, useState } from 'react';
 
-import { SidebarOption, SidebarOptionProps } from '../../shared/ui/SidebarOption/SidebarOption';
-import { LogoIcon } from '../../shared/assets/icons/LogoIcon';
-import { ThemeToogler } from '../../features/ThemeToogler/ThemeToogler';
-import { useTheme } from '../../shared/lib/hooks/useTheme';
+import { SidebarOption, SidebarOptionProps } from './SidebarOption';
+import { LogoIcon } from '../../../shared/assets/icons/LogoIcon';
+import { ThemeToogler } from '../../../features/ThemeToogler/ThemeToogler';
+import { useTheme } from '../../../shared/lib/hooks/useTheme';
 import { Link } from 'react-router-dom';
-import { ArrowIcon } from '../../shared/assets/icons/ArrowIcon';
-import { CoinIcon } from '../../shared/assets/icons/CoinIcon';
-import { NftIcon } from '../../shared/assets/icons/NftIcon';
-import { DashboardIcon } from '../../shared/assets/icons/DashboardIcon';
-import { Hamburger } from '../../features/Hamburger/Hamburger';
+import { ArrowIcon } from '../../../shared/assets/icons/ArrowIcon';
+import { CoinIcon } from '../../../shared/assets/icons/CoinIcon';
+import { NftIcon } from '../../../shared/assets/icons/NftIcon';
+import { DashboardIcon } from '../../../shared/assets/icons/DashboardIcon';
+import { Hamburger } from '../../../features/Hamburger/Hamburger';
 
 
 const sidebarOptions: SidebarOptionProps[] = [
@@ -41,6 +41,7 @@ export const Sidebar: FC = () => {
 	const { theme, setTheme } = useTheme();
 
 	const changeTheme = () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		theme === 'dark' ? setTheme('light') : setTheme('dark');
 	}
 
@@ -81,7 +82,7 @@ export const Sidebar: FC = () => {
 							<LogoIcon	width={50} height={50}/>
 						</div>
 				</Link>
-				<div>
+				<div onClick={closeMenu}>
 					{
 						sidebarOptions.map((option, index) => {
 							return <SidebarOption
