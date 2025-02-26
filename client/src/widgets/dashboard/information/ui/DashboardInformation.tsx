@@ -1,10 +1,17 @@
-import { ChangeEvent, FC, ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, FC, ReactNode } from "react";
 import { Input } from "../../../../shared/ui/Input/Input";
 import { Button } from "../../../../shared/ui/Button/Button";
+import { useComponentState } from "../../../../shared/lib/hooks/useComponentState";
+import { isValidPercentage } from "../lib/helper/isValidPercentage";
+import { addZeroAtStart } from "../lib/helper/addZeroAtStart";
 
 interface DashboardInformationProps {
 	icon: ReactNode,
 	title: string,
+	percentage: number
+}
+
+interface DashboardInformationState {
 	percentage: number
 }
 
@@ -13,35 +20,46 @@ export const DashboardInformation: FC<DashboardInformationProps> = ({
 	title,
 	percentage
 }) => {
-	const [newPersentage, setNewPercentage] = useState<number>(percentage);
-	const [error, setError] = useState<string>("");
+	const { 
+		state,
+		setState,
+		isLoading,
+		error,
+		setError,
+		handleAction
+	} = useComponentState<DashboardInformationState>({ percentage });
 
 	const handlePercentageInput = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
-		const numStr = value.replace('%', '');
+		let numStr = value.replace('%', '');
 
-		const num = parseFloat(numStr);
-		if (isNaN(num)) {
-			setError("Please enter a valid number");
-      return;
+		if (numStr.startsWith('0')) {
+			numStr = addZeroAtStart(numStr);
 		}
-		if (num < 0 || num > 1000) {
-			setError("Percentage must be between 0 and 1000");
+
+		const { isError, errorMessage } = isValidPercentage(numStr);
+		if (isError) {
+			setError(errorMessage);
 			return ;
 		}
-		setError("");
-		setNewPercentage(num);
+		const inputValue = parseFloat(numStr)
+
+		setState({ percentage: inputValue });
+		setError(null);
 	}
 
 	return (
 		<div className="max-lg:hidden flex flex-col bg-color-second w-1/3 rounded-2xl
 		justify-around p-5 items-center mt-4">
-			<div className="size-25 ">
+			<div className="size-25">
 				{icon}
 			</div>
-			<div className="text-center text-3xl font-extrabold"> { title } </div>
-			<Input title="Percentage %" 
-				placeholder={5 + '%'} 
+			<div className="text-center text-3xl font-extrabold">
+				{ title }
+			</div>
+			<Input title="Percentage %"
+				type="text" 
+				placeholder={percentage + '%'} 
 				className="w-full"
 				handleInput={handlePercentageInput}
 				error={error}/>

@@ -1,8 +1,6 @@
 import { FC, useState } from "react";
-import { DashboardNavigation } from "../../../widgets/dashboard/navigation/ui/DashboardNavigation";
+import { DashboardContent, DashboardInformation, DashboardNavigation } from "../../../widgets/index";
 import { DashboardTypesKeys, IDashboardContentOption } from "../../../widgets/dashboard/model/types";
-import { DashboardContent } from "../../../widgets/dashboard/content/ui/DashboardContent";
-import { DashboardInformation } from "../../../widgets/dashboard/information/ui/DashboardInformation";
 import { CoinIcon } from "../../../shared/assets/icons/CoinIcon";
 
 

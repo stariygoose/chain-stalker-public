@@ -2,14 +2,16 @@ import { ChangeEvent, FC, useState } from "react";
 
 interface InputProps {
 	title: string,
+	type: string, 
 	placeholder?: string,
 	className?: string,
 	handleInput?: (e: ChangeEvent<HTMLInputElement>) => void,
-	error?: string
+	error?: string | null
 }
 
 export const Input:FC<InputProps> = ({
 	title,
+	type,
 	placeholder = "",
 	className = "",
 	handleInput,
@@ -25,7 +27,7 @@ export const Input:FC<InputProps> = ({
 	const onChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
 		setIsFilled(!!value);
-		handleInput(e);
+		handleInput?.(e);
 	}
 
 	const onBlur = () => {
@@ -34,7 +36,7 @@ export const Input:FC<InputProps> = ({
 
 	return (
 		<label className={`relative cursor-pointer ${className}`}>
-			<input type="text"
+			<input type={type}
 					className={`border-2 box-border block w-full p-1 
 					bg-transparent rounded-2xl
 					focus:outline-none
@@ -49,8 +51,9 @@ export const Input:FC<InputProps> = ({
 				rounded-2xl transition-all duration-100 easy-in
 				${isFilled 
 					? 'translate-x-5 translate-y-[-65%] scale-75'
-					: "peer-focus:translate-x-5 peer-focus:translate-y-[-65%] peer-focus:scale-75"}`}>
-					{error ? error : title }
+					: "peer-focus:translate-x-5 peer-focus:translate-y-[-65%] peer-focus:scale-75"}`
+				}>
+					{ error || title }
 				</span>
 		</label>
 	);
