@@ -49,7 +49,7 @@ export const DashboardInformation: FC<DashboardInformationProps> = ({
 	}
 
 	return (
-		<div className="max-lg:hidden flex flex-col bg-color-second w-1/3 rounded-2xl
+		<div className="border max-lg:hidden flex flex-col bg-color-second w-1/3 rounded-2xl
 		justify-around p-5 items-center mt-4">
 			<div className="size-25">
 				{icon}

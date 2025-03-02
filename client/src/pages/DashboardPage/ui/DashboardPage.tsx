@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { DashboardInformation, DashboardNavigation } from "@/widgets/";
-import { DashboardTypesKeys, IDashboardContentOption } from "@/widgets/dashboard/model/types";
+import { DashboardTypesKeys } from "@/widgets/dashboard/model/types";
 import { CoinIcon } from "@/shared/assets/icons/CoinIcon";
 import { Outlet } from "react-router-dom";
 
