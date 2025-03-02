@@ -11,17 +11,17 @@ export const useSidebarOptions = () => {
 		{ 
 			icon: <DashboardIcon width={30} height={30}/>,
 			text: "Dashboard",
-			link: "/dashboard"
+			link: "/dashboard/all"
 		},
 		{ 
 			icon: <CoinIcon width={30} height={30}/>,
-			text: "Coins",
-			link: "/subscriptions/coins"
+			text: "Tokens",
+			link: "/dashboard/tokens"
 		},
 		{ 
 			icon: <NftIcon width={30} height={30}/>,
 			text: "Nfts",
-			link: "/subscriptions/nfts"
+			link: "/dashboard/collections"
 		},
 		{
 			icon: <ArrowIcon width={30} height={30}/>,

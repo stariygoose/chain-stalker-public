@@ -1,5 +1,6 @@
 import { FC, ReactNode } from "react";
 import { DashboardTypesKeys } from "@/widgets/dashboard/model/types";
+import { NavLink } from "react-router-dom";
 
 interface IDashboardOption {
 	id: DashboardTypesKeys;
@@ -17,7 +18,8 @@ export const DashboardNavigationOption: FC<IDashboardOption> = ({
 	changeActiveTab
 }) => {
 	return (
-		<div id={id}
+		<NavLink to={id}>
+			<div id={id}
 			className={`flex items-center gap-1 p-2 
 				hover:bg-color-hover hover:rounded
 				transition-all duration-200 ease-linear
@@ -28,5 +30,6 @@ export const DashboardNavigationOption: FC<IDashboardOption> = ({
 			<div className="w-5 h-5">{icon}</div>
 			<p>{title}</p>
 		</div>
+		</NavLink>
 	);
 }
