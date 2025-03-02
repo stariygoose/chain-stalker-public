@@ -1,13 +1,7 @@
-import { Table } from "../../../shared/ui/Table/index";
+import { Table } from "@/shared/ui/";
 
-interface TokensPageProps {
-	content: IDashboardContentOption[];
-	handleSort: (key: keyof IDashboardContentOption) => void;
-}
 
-export const TokensPage = ({
-
-}) => {
+export const TokensPage = () => {
 	const columns = [
 		{ key: 'index', title: 'index', sortable: true, className: "font-light min-w-1 w-10" },
 		{ key: 'title', title: 'title', sortable: true, className: "font-light min-w-30 w-80" },

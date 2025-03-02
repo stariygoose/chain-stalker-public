@@ -1,7 +1,7 @@
 import { FC } from "react"
-import { IconProps } from "../../shared/types/icons"
-import { useTheme } from "../../shared/lib/hooks/useTheme"
-import { ThemeIcon } from "../../shared/assets/icons/ThemeIcon";
+import { IconProps } from "@/shared/types/icons"
+import { useTheme } from "@/shared/lib/hooks/useTheme"
+import { ThemeIcon } from "@/shared/assets/icons/ThemeIcon";
 
 export const ThemeToogler: FC<IconProps>= ({ width, height, color, className }) => {
 	const { theme, setTheme } = useTheme();

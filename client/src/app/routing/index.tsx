@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { MainLayout } from "../layouts/MainLayout/MainLayout";
-import { ProtectedRoutes } from "./ProtectedRoutes";
-import { DashboardPage, LoginPage, NotFoundPage } from "../../pages";
+import { MainLayout } from "@/app/layouts/MainLayout/MainLayout";
+import { ProtectedRoutes } from "@/app/routing/ProtectedRoutes";
+import { DashboardPage, LoginPage, NotFoundPage } from "@/pages";
 
 export const router = createBrowserRouter([
 	{

@@ -1,8 +1,9 @@
 import { FC } from "react";
-import { LogoIcon } from "../../../shared/assets/icons/LogoIcon";
-import { Button } from "../../../shared/ui/Button/index";
-import { ArrowIcon } from "../../../shared/assets/icons/ArrowIcon";
 import { Link } from "react-router-dom";
+
+import { LogoIcon } from "@/shared/assets/icons/LogoIcon";
+import { Button } from "@/shared/ui/";
+import { ArrowIcon } from "@/shared/assets/icons/ArrowIcon";
 
 export const NotFoundPage: FC = () => {
 	return (

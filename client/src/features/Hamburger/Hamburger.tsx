@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { MenuIcon } from "../../shared/assets/icons/MenuIcon";
+import { MenuIcon } from "@/shared/assets/icons/MenuIcon";
 
 interface HamburgerProps {
 	toogleMenu: () => void

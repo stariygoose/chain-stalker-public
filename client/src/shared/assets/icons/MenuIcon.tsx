@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { IconProps } from "../../types/icons";
+import { IconProps } from "@/shared/types/icons";
 
 export const MenuIcon: FC<IconProps> = ({className = ''}) => {
 	return (

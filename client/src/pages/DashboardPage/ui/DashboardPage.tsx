@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
-import { DashboardContent, DashboardInformation, DashboardNavigation } from "../../../widgets/index";
-import { DashboardTypesKeys, IDashboardContentOption } from "../../../widgets/dashboard/model/types";
-import { CoinIcon } from "../../../shared/assets/icons/CoinIcon";
-import { TokensPage } from "../../TokensPage/ui/TokensPage";
+import { DashboardContent, DashboardInformation, DashboardNavigation } from "@/widgets/";
+import { DashboardTypesKeys, IDashboardContentOption } from "@/widgets/dashboard/model/types";
+import { CoinIcon } from "@/shared/assets/icons/CoinIcon";
+import { TokensPage } from "@/pages/TokensPage/ui/TokensPage";
 
 
 export const DashboardPage: FC = () => {

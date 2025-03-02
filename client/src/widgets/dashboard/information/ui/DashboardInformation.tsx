@@ -1,9 +1,9 @@
 import { ChangeEvent, FC, ReactNode } from "react";
-import { Input } from "../../../../shared/ui/Input/Input";
-import { Button } from "../../../../shared/ui/Button/index";
-import { useComponentState } from "../../../../shared/lib/hooks/useComponentState";
-import { isValidPercentage } from "../lib/helper/isValidPercentage";
-import { addZeroAtStart } from "../lib/helper/addZeroAtStart";
+import { Input } from "@/shared/ui/";
+import { Button } from "@/shared/ui/";
+import { useComponentState } from "@/shared/lib/hooks/useComponentState";
+import { isValidPercentage } from "@/widgets/dashboard/information/lib/helper/isValidPercentage";
+import { addZeroAtStart } from "@/widgets/dashboard/information/lib/helper/addZeroAtStart";
 
 interface DashboardInformationProps {
 	icon: ReactNode,

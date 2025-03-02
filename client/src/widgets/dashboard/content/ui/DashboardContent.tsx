@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { IDashboardContentOption } from "../../model/types";
-import { DashboardContentOption } from "./DashboardContentOption";
+import { IDashboardContentOption } from "@/widgets/dashboard/model/types";
+import { DashboardContentOption } from "@/widgets/";
 
 interface IDashboardContent {
 	content: IDashboardContentOption[];

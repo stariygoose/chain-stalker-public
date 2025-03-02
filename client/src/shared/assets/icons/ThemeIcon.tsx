@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { IconProps } from "../../types/icons";
+import { IconProps } from "@/shared/types/icons";
 
 
 export const ThemeIcon: FC<IconProps> = ({ width = 50, height = 50, color, className = ''}) => {

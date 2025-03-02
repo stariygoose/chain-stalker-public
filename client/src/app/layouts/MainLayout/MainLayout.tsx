@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { Outlet } from "react-router-dom";
-import { ThemeProvider } from "../../providers/ThemeProvider";
+import { ThemeProvider } from "@/app/providers/ThemeProvider";
 
-import { Sidebar } from "../../../widgets";
-import { Eye } from "../../../features/EyeBackground/Eye";
+import { Sidebar } from "@/widgets/";
+import { Eye } from "@/features/";
 
 export const MainLayout: FC = () => {
 	return (

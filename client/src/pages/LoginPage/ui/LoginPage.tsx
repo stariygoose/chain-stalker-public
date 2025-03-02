@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from "react";
 
-import { LogoIcon } from "../../../shared/assets/icons/LogoIcon";
+import { LogoIcon } from "@/shared/assets/icons/LogoIcon";
 
 
 export const LoginPage: FC = () => {

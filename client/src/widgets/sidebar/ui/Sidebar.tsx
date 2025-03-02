@@ -1,42 +1,16 @@
 import { FC, useState } from 'react';
-
-import { SidebarOption, SidebarOptionProps } from './SidebarOption';
-import { LogoIcon } from '../../../shared/assets/icons/LogoIcon';
-import { ThemeToogler } from '../../../features/ThemeToogler/ThemeToogler';
-import { useTheme } from '../../../shared/lib/hooks/useTheme';
 import { Link } from 'react-router-dom';
-import { ArrowIcon } from '../../../shared/assets/icons/ArrowIcon';
-import { CoinIcon } from '../../../shared/assets/icons/CoinIcon';
-import { NftIcon } from '../../../shared/assets/icons/NftIcon';
-import { DashboardIcon } from '../../../shared/assets/icons/DashboardIcon';
-import { Hamburger } from '../../../features/Hamburger/Hamburger';
 
-
-const sidebarOptions: SidebarOptionProps[] = [
-	{ 
-		icon: <DashboardIcon width={30} height={30}/>,
-		text: "Dashboard",
-		link: "/dashboard"
-	},
-	{ 
-		icon: <CoinIcon width={30} height={30}/>,
-		text: "Coins",
-		link: "/subscriptions/coins"
-	},
-	{ 
-		icon: <NftIcon width={30} height={30}/>,
-		text: "Nfts",
-		link: "/subscriptions/nfts"
-	},
-	{
-		icon: <ArrowIcon width={30} height={30}/>,
-		text: "login",
-		link: "/login"
-	}
-];
+import { SidebarOption } from '@/widgets/sidebar/ui/SidebarOption';
+import { LogoIcon } from '@/shared/assets/icons/LogoIcon';
+import { ThemeToogler } from '@/features/';
+import { useTheme } from '@/shared/lib/hooks/useTheme';
+import { Hamburger } from '@/features/';
+import { useSidebarOptions } from '@/widgets/sidebar/lib/hooks/useSidebarOptions';
 
 
 export const Sidebar: FC = () => {
+	const { sidebarOptions } = useSidebarOptions();
 	const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
 	const { theme, setTheme } = useTheme();
 

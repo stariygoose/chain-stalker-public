@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { StorageKey, supportedThemes, Themes } from "../../shared/types/themes";
-import { ThemeContext } from "../../shared/lib/contexts/ThemeContext";
+import { StorageKey, supportedThemes, Themes } from "@/shared/types/themes";
+import { ThemeContext } from "@/shared/lib/contexts/ThemeContext";
 
 
 const getTheme = (): Themes => {

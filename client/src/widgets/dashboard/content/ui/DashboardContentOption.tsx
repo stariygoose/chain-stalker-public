@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { CoinIcon } from "../../../../shared/assets/icons/CoinIcon";
-import { IDashboardContentOption } from "../../model/types";
+import { CoinIcon } from "@/shared/assets/icons/CoinIcon";
+import { IDashboardContentOption } from "@/widgets/dashboard/model/types";
 
 
 export const DashboardContentOption: FC<IDashboardContentOption> = ({ title, price, percentage, symbol }) => {
