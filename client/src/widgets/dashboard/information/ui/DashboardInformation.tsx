@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, ReactNode } from "react";
 import { Input } from "../../../../shared/ui/Input/Input";
-import { Button } from "../../../../shared/ui/Button/Button";
+import { Button } from "../../../../shared/ui/Button/index";
 import { useComponentState } from "../../../../shared/lib/hooks/useComponentState";
 import { isValidPercentage } from "../lib/helper/isValidPercentage";
 import { addZeroAtStart } from "../lib/helper/addZeroAtStart";

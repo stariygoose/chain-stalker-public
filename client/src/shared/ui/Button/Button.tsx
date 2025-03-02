@@ -2,14 +2,17 @@ import { FC, ReactNode } from "react";
 
 interface ButtonProps {
 	children: ReactNode,
-	onClick: () => void,
-	className?: string
+	onClick?: () => void,
+	className?: string,
+	disabled?: boolean
 }
 
 export const Button: FC<ButtonProps> = ({
 	children,
 	className,
-	onClick }) => {
+	onClick,
+	disabled = false
+}) => {
 	return (
 		<button
 		className={`flex items-center justify-center bg-color-second p-3 mt-3 mr-3
@@ -18,6 +21,7 @@ export const Button: FC<ButtonProps> = ({
 			transition-all duration-100 ease-in-out
 			${className}`}
 		onClick={onClick}
+		disabled={disabled}
 		>
 			{children}
 		</button>

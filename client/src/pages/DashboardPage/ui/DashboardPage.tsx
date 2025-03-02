@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { DashboardContent, DashboardInformation, DashboardNavigation } from "../../../widgets/index";
 import { DashboardTypesKeys, IDashboardContentOption } from "../../../widgets/dashboard/model/types";
 import { CoinIcon } from "../../../shared/assets/icons/CoinIcon";
+import { TokensPage } from "../../TokensPage/ui/TokensPage";
 
 
 export const DashboardPage: FC = () => {
@@ -50,7 +51,7 @@ export const DashboardPage: FC = () => {
 	const renderContent = () => {
 		switch (activeTab) {
 			case 'collections': return <DashboardContent content={sortedContent} handleSort={handleSort}/>;
-			case 'tokens': return <h1>Tokens</h1>;
+			case 'tokens': return <TokensPage content={sortedContent} handleSort={handleSort}/>;
 			case 'all': return <h1>All</h1>;
 			default: return <h1>Default</h1>;
 		};
