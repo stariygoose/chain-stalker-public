@@ -1,23 +1,9 @@
 import { NftIcon } from "@/shared/assets";
 import { Table } from "@/shared/ui";
-import { ReactNode } from "react";
-
-interface Collection {
-	image: ReactNode,
-	title: string,
-	price: number,
-	percentage: number,
-	symbol: string
-}
+import { useCollectionHeader } from "../lib/hooks/useCollectionHeader";
 
 export const CollectionsPage = () => {
-	const columns = [
-		{ key: 'image', title: '', sortable: false, className: "min-w-6 max-w-10 w-10", render: (col:Collection) => {return col.image}},
-		{ key: 'title', title: 'title', sortable: true, className: "font-light min-w-30 w-80" },
-		{ key: 'price', title: 'price', sortable: true, className: "font-light min-w-30 w-80" },
-		{ key: 'percentage', title: 'percentage', sortable: true, className: "font-light min-w-30 w-80" },
-		{ key: 'symbol', title: 'symbol', sortable: true, className: "font-light min-w-30 w-80" },
-	]
+	const columns = useCollectionHeader();
 
 	const data = [
 		{ image: <NftIcon />, title: 'Collection 1', price: 100, percentage: 10, symbol: 'ETH' },
@@ -41,7 +27,6 @@ export const CollectionsPage = () => {
 		{ image: <NftIcon />, title: 'Collection 1', price: 100, percentage: 10, symbol: 'ZK' },
 		{ image: <NftIcon />, title: 'Collection 1', price: 100, percentage: 10, symbol: 'ZK' },
 	];
-
 
 	return(
 		<Table

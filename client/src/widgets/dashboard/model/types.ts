@@ -1,9 +1,9 @@
-const DashboardOptions = {
+export const DashboardOptions = {
 	collections: 'collections',
 	tokens: 'tokens',
-	all: 'all',
+	all: 'dashboard',
 } as const;
-export type DashboardTypesKeys = typeof DashboardOptions[keyof typeof DashboardOptions];
+export type DashboardOptionsTypes = typeof DashboardOptions[keyof typeof DashboardOptions];
 
 export interface IDashboardContentOption {
 	title: string;

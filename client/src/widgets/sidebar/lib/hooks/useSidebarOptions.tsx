@@ -1,8 +1,6 @@
 import { SidebarOptionProps } from "@/widgets/sidebar/ui/SidebarOption";
 import {
 	DashboardIcon,
-	CoinIcon,
-	NftIcon,
 	ArrowIcon
 } from "@/shared/assets";
 
@@ -11,17 +9,7 @@ export const useSidebarOptions = () => {
 		{ 
 			icon: <DashboardIcon width={30} height={30}/>,
 			text: "Dashboard",
-			link: "/dashboard/all"
-		},
-		{ 
-			icon: <CoinIcon width={30} height={30}/>,
-			text: "Tokens",
-			link: "/dashboard/tokens"
-		},
-		{ 
-			icon: <NftIcon width={30} height={30}/>,
-			text: "Nfts",
-			link: "/dashboard/collections"
+			link: "/dashboard"
 		},
 		{
 			icon: <ArrowIcon width={30} height={30}/>,

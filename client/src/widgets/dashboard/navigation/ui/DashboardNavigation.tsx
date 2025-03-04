@@ -1,37 +1,36 @@
 import { FC } from "react";
 import { NftIcon } from "@/shared/assets/icons/NftIcon";
 import { CoinIcon } from "@/shared/assets/icons/CoinIcon";
-import { DashboardTypesKeys } from "@/widgets/dashboard/model/types";
+import { DashboardOptions, DashboardOptionsTypes } from "@/widgets/dashboard/model/types";
 import { DashboardNavigationOption } from "@/widgets/";
 import { SubscriptionsIcon } from "@/shared/assets/icons/SubscriptionsIcon";
 
 interface IDashboardNavigation {
-	activeTab: DashboardTypesKeys,
-	changeActiveTab: (tab: DashboardTypesKeys) => void;
+	activeTab: DashboardOptionsTypes | null,
 }
 
-export const DashboardNavigation: FC<IDashboardNavigation> = ({ activeTab, changeActiveTab }) => {
+export const DashboardNavigation: FC<IDashboardNavigation> = ({ activeTab }) => {
 	const options = [
 		{
-			id: "all",
+			id: DashboardOptions.all,
+			path: "",
 			icon: <SubscriptionsIcon />,
 			title: "All",
 			activeTab: activeTab,
-			changeActiveTab: changeActiveTab
 		},
 		{
-			id: "collections",
-			icon: <NftIcon />,
-			title: "Collections",
-			activeTab: activeTab,
-			changeActiveTab: changeActiveTab
-		},
-		{
-			id: "tokens",
+			id: DashboardOptions.tokens,
+			path: "tokens",
 			icon: <CoinIcon />,
 			title: "Tokens",
 			activeTab: activeTab,
-			changeActiveTab: changeActiveTab
+		},
+		{
+			id: DashboardOptions.collections,
+			path: "collections",
+			icon: <NftIcon />,
+			title: "Collections",
+			activeTab: activeTab,
 		}
 	];
 
@@ -43,11 +42,11 @@ export const DashboardNavigation: FC<IDashboardNavigation> = ({ activeTab, chang
 				options.map((option, index) => (
 					<DashboardNavigationOption
 						key={index}
-						id={option.id}
+						id={option.id as DashboardOptionsTypes}
+						path={option.path}
 						icon={option.icon}
 						title={option.title}
 						activeTab={option.activeTab}
-						changeActiveTab={option.changeActiveTab}
 					/>
 				))
 			}

@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
-				element: <Navigate to={"/dashboard/all"} />
+				element: <Navigate to={"/dashboard"} />
 			},
 			{
 				path: 'login',
@@ -25,10 +25,6 @@ export const router = createBrowserRouter([
 				path: 'dashboard',
 				element: <DashboardPage />,
 				children: [
-					{
-						path: 'all',
-						element: 'TODO',
-					},
 					{
 						path: 'collections',
 						element: <CollectionsPage />,
