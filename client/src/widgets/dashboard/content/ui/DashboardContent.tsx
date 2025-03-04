@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { IDashboardContentOption } from "@/widgets/dashboard/model/types";
+import { IDashboardContentOption } from "@/widgets/dashboard/navigation/model/types";
 import { DashboardContentOption } from "@/widgets/";
 
 interface IDashboardContent {

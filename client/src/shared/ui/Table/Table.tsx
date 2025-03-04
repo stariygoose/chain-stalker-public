@@ -5,6 +5,7 @@ interface TableProps<T> {
 	columns: Column<T>[],
 	data: T[],
 	onSort?: ((key: string) => void),
+	onElementClick?: (el: T) => void,
 	rowClassName?: string,
 	headerClassName?: string,
 	tableClassName?: string
@@ -14,6 +15,7 @@ export function Table<T>({
 	columns,
 	data,
 	onSort,
+	onElementClick,
 	rowClassName = "",
 	headerClassName = "",
 	tableClassName = ""
@@ -29,6 +31,7 @@ export function Table<T>({
 				columns={columns}
 				data={data}
 				className={rowClassName}
+				onElementClick={onElementClick}
 			/>
 		</table>
 	);

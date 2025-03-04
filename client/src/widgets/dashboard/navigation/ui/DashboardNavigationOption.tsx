@@ -1,13 +1,13 @@
 import { FC, ReactNode } from "react";
-import { DashboardOptionsTypes } from "@/widgets/dashboard/model/types";
+import { DashboardNavigationOptionsTypes } from "@/widgets/dashboard/navigation/model/types";
 import { NavLink } from "react-router-dom";
 
 interface IDashboardOption {
-	id: DashboardOptionsTypes;
+	id: DashboardNavigationOptionsTypes;
 	path: string;
 	icon: ReactNode;
 	title: string;
-	activeTab: DashboardOptionsTypes | null;
+	activeTab: DashboardNavigationOptionsTypes | null;
 }
 
 export const DashboardNavigationOption: FC<IDashboardOption> = ({

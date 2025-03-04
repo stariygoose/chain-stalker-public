@@ -1,14 +1,14 @@
-import { ChangeEvent, FC, ReactNode } from "react";
-import { Input } from "@/shared/ui/";
-import { Button } from "@/shared/ui/";
+import { ChangeEvent, FC } from "react";
 import { useComponentState } from "@/shared/lib/hooks/useComponentState";
 import { isValidPercentage } from "@/widgets/dashboard/information/lib/helper/isValidPercentage";
 import { addZeroAtStart } from "@/widgets/dashboard/information/lib/helper/addZeroAtStart";
+import { DashboardSelectedElement } from "../model/types";
+import { EmptyPanel } from "./EmptyPanel";
+import { CollectionPanel } from "./CollectionPanel";
+import { TokenPanel } from "./TokenPanel";
 
 interface DashboardInformationProps {
-	icon: ReactNode,
-	title: string,
-	percentage: number
+	selectedElement: DashboardSelectedElement
 }
 
 interface DashboardInformationState {
@@ -16,9 +16,7 @@ interface DashboardInformationState {
 }
 
 export const DashboardInformation: FC<DashboardInformationProps> = ({
-	icon,
-	title,
-	percentage
+	selectedElement
 }) => {
 	const { 
 		state,
@@ -27,7 +25,9 @@ export const DashboardInformation: FC<DashboardInformationProps> = ({
 		error,
 		setError,
 		handleAction
-	} = useComponentState<DashboardInformationState>({ percentage });
+	} = useComponentState<DashboardInformationState>({
+		percentage: selectedElement !== null ? selectedElement.percentage : 0
+	});
 
 	const handlePercentageInput = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
@@ -48,32 +48,29 @@ export const DashboardInformation: FC<DashboardInformationProps> = ({
 		setError(null);
 	}
 
+	const renderPanel = (element: DashboardSelectedElement) => {
+		if (element === null) {
+			return <EmptyPanel />
+		}
+		switch (element.type) {
+			case "collection":
+				return <CollectionPanel
+					item={element}
+					error={error}
+					handleInput={handlePercentageInput}
+				/>
+			case "token":
+				return <TokenPanel
+					item={element}
+					error={error}
+					handleInput={handlePercentageInput}
+				/>
+			default:
+				break;
+		}
+	}
+
 	return (
-		<div className="border max-lg:hidden flex flex-col bg-color-second w-1/3 rounded-2xl
-		justify-around p-5 items-center mt-4">
-			<div className="size-25">
-				{icon}
-			</div>
-			<div className="text-center text-3xl font-extrabold">
-				{ title }
-			</div>
-			<Input title="Percentage %"
-				type="text" 
-				placeholder={percentage + '%'} 
-				className="w-full"
-				handleInput={handlePercentageInput}
-				error={error}/>
-			<div className="flex justify-around w-full">
-				<Button className="w-full">
-					<span>Update</span>
-				</Button>
-				<Button className="w-full">
-					<span>Reset</span>
-				</Button>
-				<Button className="bg-red-700 w-full">
-					<span>Delete</span>
-				</Button>
-			</div>
-		</div>
+		renderPanel(selectedElement)
 	);
 }

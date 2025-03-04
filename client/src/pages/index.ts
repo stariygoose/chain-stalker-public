@@ -1,3 +1,3 @@
-export { LoginPage } from "./LoginPage/ui/LoginPage";
-export { NotFoundPage } from "./NotFoundPage/ui/NotFoundPage";
-export { DashboardPage } from "./DashboardPage/ui/DashboardPage";
+export { LoginPage } from "@/pages/LoginPage/ui/LoginPage";
+export { NotFoundPage } from "@/pages/NotFoundPage/ui/NotFoundPage";
+export { DashboardPage } from "@/pages/dashboard/ui/DashboardPage";
