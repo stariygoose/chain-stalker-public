@@ -1,5 +1,5 @@
+import { ICollection } from "@/entities/Collection/model/types"
 import { Column } from "@/shared/ui/Table/TableHeaders"
-import { ICollection } from "@/pages/CollectionsPage/models/types"
 
 export const useCollectionHeader = (): Column<ICollection>[] => {
 	return [

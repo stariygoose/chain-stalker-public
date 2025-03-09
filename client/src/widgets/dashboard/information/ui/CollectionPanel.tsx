@@ -6,13 +6,15 @@ import { Input } from "@/shared/ui";
 interface CollectionPanelProps {
 	item: ICollection,
 	error: string | null,
-	handleInput: (e: ChangeEvent<HTMLInputElement>) => void
+	handleInput: (e: ChangeEvent<HTMLInputElement>) => void,
+	isUpdateButtonDisabled: boolean
 }
 
 export const CollectionPanel: FC<CollectionPanelProps> = ({
 	item,
 	error,
-	handleInput
+	handleInput,
+	isUpdateButtonDisabled
 }) => {
 	const {image, title, percentage} = item;
 	return (
@@ -31,7 +33,7 @@ export const CollectionPanel: FC<CollectionPanelProps> = ({
 				handleInput={handleInput}
 				error={error}
 			/>
-			<DashboardPanelButtonGroup />
+			<DashboardPanelButtonGroup disabled={isUpdateButtonDisabled}/>
 		</div>
 	);
 }

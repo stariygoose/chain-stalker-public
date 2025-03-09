@@ -6,13 +6,15 @@ import { DashboardPanelButtonGroup } from "./DashboardPanelButtonGroup";
 interface TokenPanelProps {
 	item: IToken,
 	error: string | null,
-	handleInput: (e: ChangeEvent<HTMLInputElement>) => void
+	handleInput: (e: ChangeEvent<HTMLInputElement>) => void,
+	isUpdateButtonDisabled: boolean
 }
 
 export const TokenPanel: FC<TokenPanelProps> = ({
 	item,
 	error,
-	handleInput
+	handleInput,
+	isUpdateButtonDisabled
 }) => {
 	const { symbol, percentage } = item;
 	return (
@@ -29,7 +31,7 @@ export const TokenPanel: FC<TokenPanelProps> = ({
 					handleInput={handleInput}
 					error={error}
 				/>
-				<DashboardPanelButtonGroup />
+				<DashboardPanelButtonGroup disabled={isUpdateButtonDisabled}/>
 			</div>
 		</div>
 	);

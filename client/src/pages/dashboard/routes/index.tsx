@@ -1,7 +1,7 @@
 import { RouteObject } from "react-router-dom";
 import { DashboardPage } from "@/pages/dashboard";
-import { CollectionsPage } from "@/pages/dashboardPage";
-import { TokensPage } from "@/pages/dashboardTokens";
+import { CollectionsPage } from "../collections/ui/CollectionsPage";
+import { TokensPage } from "../tokens/ui/TokensPage";
 
 export const dashboardRoutes: RouteObject[] = [
 	{

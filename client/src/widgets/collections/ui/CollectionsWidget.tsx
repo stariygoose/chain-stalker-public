@@ -1,11 +1,21 @@
+import { useOutletContext } from "react-router-dom";
+
 import { NftIcon } from "@/shared/assets";
-import { Table } from "@/shared/ui";
 import { useCollectionHeader } from "../lib/hooks/useCollectionHeader";
+import { Table } from "@/shared/ui";
+import { ICollection } from "@/entities/Collection/model/types";
+import { useSortData } from "@/shared/lib/hooks/useSortData";
 
-export const CollectionsPage = () => {
+interface IOutletContext {
+	setSelectedElement: () => void,
+}
+
+export const CollectionsWidget = () => {
+	const { handleSort, sortData } = useSortData('asc', 'index');
+	const { setSelectedElement } = useOutletContext<IOutletContext>();
 	const columns = useCollectionHeader();
-
-	const data = [
+	
+	const data: ICollection[] = [
 		{ type: "collection", image: <NftIcon />, title: 'Collection 1', price: 100, percentage: 10, symbol: 'ETH' },
 		{ type: "collection", image: <NftIcon />, title: 'Collection 1', price: 1232, percentage: 1, symbol: 'ETH' },
 		{ type: "collection", image: <NftIcon />, title: 'Collection 1', price: 100, percentage: 10, symbol: 'SOL' },
@@ -31,10 +41,12 @@ export const CollectionsPage = () => {
 	return(
 		<Table
 			columns={columns}
-			data={data}
+			data={sortData(data)}
 			headerClassName="bg-color-second w-full text-left text-lg sticky top-0 cursor-pointer"
 			rowClassName="text-left h-[50px] cursor-pointer hover:bg-color-hover"
 			tableClassName="border-collapse"
+			onSort={handleSort}
+			onElementClick={setSelectedElement}
 		/>
 	);
 }

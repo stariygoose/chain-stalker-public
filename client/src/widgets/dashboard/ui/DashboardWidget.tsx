@@ -1,4 +1,4 @@
-import { FC, memo, ReactNode, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { DashboardNavigationOptionsTypes } from "@/widgets/dashboard/navigation/model/types";

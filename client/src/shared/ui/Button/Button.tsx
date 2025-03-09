@@ -19,7 +19,7 @@ export const Button: FC<ButtonProps> = ({
 			border cursor-pointer
 			hover:bg-color-hover hover:rounded-xl
 			transition-all duration-100 ease-in-out
-			${className}`}
+			${className} ${disabled ? 'opacity-50' : ''}`}
 		onClick={onClick}
 		disabled={disabled}
 		>

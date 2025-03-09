@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { useComponentState } from "@/shared/lib/hooks/useComponentState";
 import { isValidPercentage } from "@/widgets/dashboard/information/lib/helper/isValidPercentage";
 import { addZeroAtStart } from "@/widgets/dashboard/information/lib/helper/addZeroAtStart";
@@ -28,6 +28,7 @@ export const DashboardInformation: FC<DashboardInformationProps> = ({
 	} = useComponentState<DashboardInformationState>({
 		percentage: selectedElement !== null ? selectedElement.percentage : 0
 	});
+	const [isUpdateButtonDisabled, setIsUpdateButtonDisabled] = useState<boolean>(true);
 
 	const handlePercentageInput = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
@@ -40,10 +41,12 @@ export const DashboardInformation: FC<DashboardInformationProps> = ({
 		const { isError, errorMessage } = isValidPercentage(numStr);
 		if (isError) {
 			setError(errorMessage);
+			setIsUpdateButtonDisabled(true);
 			return ;
 		}
 		const inputValue = parseFloat(numStr)
 
+		setIsUpdateButtonDisabled(false);
 		setState({ percentage: inputValue });
 		setError(null);
 	}
@@ -58,12 +61,14 @@ export const DashboardInformation: FC<DashboardInformationProps> = ({
 					item={element}
 					error={error}
 					handleInput={handlePercentageInput}
+					isUpdateButtonDisabled={isUpdateButtonDisabled}
 				/>
 			case "token":
 				return <TokenPanel
 					item={element}
 					error={error}
 					handleInput={handlePercentageInput}
+					isUpdateButtonDisabled={isUpdateButtonDisabled}
 				/>
 			default:
 				break;
