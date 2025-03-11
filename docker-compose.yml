@@ -13,7 +13,6 @@ services:
       - ./client/dist:/usr/share/nginx/html:ro
     ports:
       - ${TUNNEL_PORT}:${TUNNEL_PORT}
-      - "443:443"
     networks:
       - main
 
