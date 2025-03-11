@@ -1,7 +1,8 @@
 node_modules
 _volume
 .env
-.env.dev
+.env.*
+!.env.example
 mongod.conf
 nginx.conf
 ngrok.yml

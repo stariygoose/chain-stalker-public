@@ -1,4 +1,4 @@
-import Redis from "ioredis";
+import { Redis } from "ioredis";
 import { ICoin, ISubscription } from "../interfaces/interfaces.js";
 
 

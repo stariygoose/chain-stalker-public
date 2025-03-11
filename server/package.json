@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"start": "node dist/server.js",
+		"start": "node dist/v0/server.js",
 		"build": "npx tsc"
 	},
 	"type": "module",
@@ -21,6 +21,7 @@
 		"@types/cookie-parser": "^1.4.8",
 		"@types/cors": "^2.8.17",
 		"@types/express": "^5.0.0",
+		"@types/ioredis": "^4.28.10",
 		"@types/jsonwebtoken": "^9.0.8",
 		"@types/phoenix": "^1.6.5",
 		"@types/ws": "^8.5.13",
