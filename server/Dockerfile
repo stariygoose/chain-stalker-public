@@ -8,4 +8,4 @@ RUN npm i
 COPY . .
 
 RUN npm run build --verbose
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:v1"]

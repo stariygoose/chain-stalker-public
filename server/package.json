@@ -1,6 +1,13 @@
 {
+	"imports": {
+		"#*": {
+			"cs-dev": "./src/*",
+			"default": "./dist/*"
+		}
+	},
 	"scripts": {
-		"start": "node dist/v0/server.js",
+		"start:v0": "node dist/v0/server.js",
+		"start:v1": "node dist/v1/server.js",
 		"build": "npx tsc"
 	},
 	"type": "module",
@@ -14,17 +21,25 @@
 		"ioredis": "^5.4.2",
 		"jsonwebtoken": "^9.0.2",
 		"mongoose": "^8.8.0",
+		"winston": "^3.17.0",
 		"ws": "^8.18.0"
 	},
 	"devDependencies": {
 		"@opensea/stream-js": "^0.1.3",
 		"@types/cookie-parser": "^1.4.8",
 		"@types/cors": "^2.8.17",
+		"@types/dotenv": "^6.1.1",
 		"@types/express": "^5.0.0",
 		"@types/ioredis": "^4.28.10",
 		"@types/jsonwebtoken": "^9.0.8",
+		"@types/mongoose": "^5.11.96",
 		"@types/phoenix": "^1.6.5",
 		"@types/ws": "^8.5.13",
+		"@typescript-eslint/eslint-plugin": "^8.26.1",
+		"@typescript-eslint/parser": "^8.26.1",
+		"eslint": "^9.22.0",
+		"eslint-import-resolver-typescript": "^3.8.4",
+		"eslint-plugin-promise": "^7.2.1",
 		"typescript": "^5.6.3"
 	}
 }

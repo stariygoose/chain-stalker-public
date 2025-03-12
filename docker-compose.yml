@@ -14,7 +14,7 @@ services:
     ports:
       - ${TUNNEL_PORT}:${TUNNEL_PORT}
     networks:
-      - main
+      - ${NODE_MODE}
 
   ngrok:
     image: ngrok/ngrok:3.19.0-alpine
@@ -22,7 +22,7 @@ services:
       - ./ngrok.yml:/var/lib/ngrok/ngrok.yml
     command: ["start", "web", "--authtoken", "${NGROK_TOKEN}"]
     networks:
-      - main
+      - ${NODE_MODE}
 
   bot:
     build:
@@ -35,7 +35,7 @@ services:
       - SERVER_URL=http://server:${SERVER_PORT}
       - TG_BOT_PORT=${TG_BOT_PORT}
     networks:
-      - main
+      - ${NODE_MODE}
 
   server:
     build:
@@ -44,6 +44,8 @@ services:
       - mongodb
       - redis
     environment:
+      - NODE_MODE=${NODE_MODE}
+
       - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
       - SERVER_PORT=${SERVER_PORT}
 
@@ -59,14 +61,16 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - ./server/_logs:/server/_logs
     networks:
-      - main
+      - ${NODE_MODE}
 
   client:
     build:
       context: ./client
     networks:
-      - main
+      - ${NODE_MODE}
 
   mongodb:
     image: mongo:latest
@@ -83,7 +87,7 @@ services:
       - ./mongod.conf:/config/mongod.conf:ro
       - ./_volume/mongodb:/data/db
     networks:
-      - main
+      - ${NODE_MODE}
 
   redis:
     image: redis:latest
@@ -94,10 +98,14 @@ services:
     volumes: 
       - ./_volume/redis:/data
     networks:
-      - main
+      - ${NODE_MODE}
 
     
 networks:
-  main:
+  dev:
     driver: bridge
-    name: main
+    name: dev
+  prod:
+    driver: bridge
+    name: prod
+
