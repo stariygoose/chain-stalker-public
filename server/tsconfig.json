@@ -3,7 +3,7 @@
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "nodenext",
-		"rootDir": "./src",
+		"rootDir": ".",
 		"outDir": "./dist",
 		"customConditions": ["cs-dev"],
 

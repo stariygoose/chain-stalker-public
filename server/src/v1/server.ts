@@ -1,4 +1,4 @@
-import { startServer } from "#v1/config/app.js";
+import { startServer } from "#config/app.js";
 import dotenv from "dotenv";
 dotenv.config();
 

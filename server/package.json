@@ -1,7 +1,7 @@
 {
 	"imports": {
 		"#*": {
-			"cs-dev": "./src/*",
+			"cs-dev": "./src/v1/*",
 			"default": "./dist/*"
 		}
 	},

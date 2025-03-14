@@ -20,6 +20,7 @@ app.use(cors({
 
 export function startServer() {
 	app.listen(PORT, () => {
-		logger.info(`Server is running on PORT ${PORT}`);
+		logger.info(`Server was succesfully started.`);
+		logger.debug(`Server is running on PORT ${PORT}.`);
 	})	
 } 

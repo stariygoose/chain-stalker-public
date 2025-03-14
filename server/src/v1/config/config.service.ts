@@ -11,8 +11,7 @@ export class ConfigService implements IConfigService{
 	readonly isDevMode: boolean;
 
 	constructor() {
-		const mode = this.get(EnvVariables.NODE_MODE);
-		this.isDevMode = mode === 'dev' ? true : false;
+		this.isDevMode = this.getMode();
 	}
 
 	public static getInstance(): ConfigService {
@@ -28,5 +27,10 @@ export class ConfigService implements IConfigService{
 			throw new ConfigError(`Key <${key}> is not provided in .env file.`);
 		}
 		return value;
+	}
+
+	private getMode(): boolean {
+		const mode = this.get(EnvVariables.NODE_MODE);
+		return mode === 'dev' ? true : false;
 	}
 }

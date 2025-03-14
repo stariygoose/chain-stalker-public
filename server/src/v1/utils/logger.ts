@@ -1,7 +1,14 @@
+import { ConfigService } from "#config/config.service.js";
 import winston, { createLogger, format } from "winston";
 
+function getLoggerLevel() {
+	const config = ConfigService.getInstance();
+
+	return config.isDevMode ? 'debug' : 'info';
+}
+
 export const logger = createLogger({
-	level: 'info',
+	level: getLoggerLevel(),
 	format: format.combine(
 		format.errors({ stack: true }),
 		format.timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
