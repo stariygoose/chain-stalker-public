@@ -1,1 +1,1 @@
-export { ISubscription } from "./subscription.interface.js";
+export { ISubscription } from "./subscription.interface";

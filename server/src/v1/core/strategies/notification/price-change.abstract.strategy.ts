@@ -1,4 +1,4 @@
-import { IPriceChangeStrategy } from "#core/strategies/notification/index.js";
+import { IPriceChangeStrategy } from "#core/strategies/notification/index";
 
 /**
  * Abstract class for price change strategies.
@@ -9,6 +9,8 @@ export abstract class AbstractPriceChangeStrategy implements IPriceChangeStrateg
 	 * Type identifier for the strategy.  
 	 */
 	readonly type = "price-change";
+
+	constructor (readonly threshold: number) {}
 
 	/**
 	 * Determines whether a notification should be sent based on the price change.

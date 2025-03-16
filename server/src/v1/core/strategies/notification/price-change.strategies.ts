@@ -1,5 +1,5 @@
-import { DomainError } from "#core/errors/index.js";
-import { AbstractPriceChangeStrategy } from "./price-change.abstract.strategy.js";
+import { DomainError } from "#core/errors/index";
+import { AbstractPriceChangeStrategy } from "./price-change.abstract.strategy";
 
 /**
  * Strategy for determining whether a price change exceeds a percentage threshold.
@@ -20,8 +20,8 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 	 * @param {number} threshold - The percentage threshold that must be exceeded to trigger a notification.
 	 * @throws {DomainError.InvalidStrategyConfigurationError} If the threshold is invalid or out of bounds.
 	 */
-	constructor(private readonly threshold: number) {
-		super();
+	constructor(threshold: number) {
+		super(threshold);
 		this.verifyThreshold();
 	}
 
@@ -98,8 +98,8 @@ export class AbsoluteChangeStrategy extends AbstractPriceChangeStrategy {
 	 * @param {number} threshold - The absolute price difference required to trigger a notification.
 	 * @throws {DomainError.InvalidStrategyConfigurationError} If the threshold is invalid or out of bounds.
 	 */
-	constructor(private readonly threshold: number) {
-		super();
+	constructor(threshold: number) {
+		super(threshold);
 		this.verifyThreshold();
 	}
 

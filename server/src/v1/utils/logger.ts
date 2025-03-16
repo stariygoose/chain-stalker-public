@@ -1,4 +1,4 @@
-import { ConfigService } from "#config/config.service.js";
+import { ConfigService } from "#config/config.service";
 import winston, { createLogger, format } from "winston";
 
 function getLoggerLevel() {
@@ -22,8 +22,8 @@ export const logger = createLogger({
         return `|${timestamp}| [${level}]: ${message}`;
       }))
     }),
-    new winston.transports.File({ filename: './_logs/combined.log', format: format.uncolorize() }),
-		new winston.transports.File({ filename: './_logs/errors.log', format: format.uncolorize(), level: 'error' }),
-		new winston.transports.File({ filename: './_logs/warnings.log', format: format.uncolorize(), level: 'warn' }),
+    new winston.transports.File({ filename: './.logs/combined.log', format: format.uncolorize() }),
+		new winston.transports.File({ filename: './.logs/errors.log', format: format.uncolorize(), level: 'error' }),
+		new winston.transports.File({ filename: './.logs/warnings.log', format: format.uncolorize(), level: 'warn' }),
   ]
 });

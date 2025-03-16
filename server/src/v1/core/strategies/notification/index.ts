@@ -1,11 +1,11 @@
 export {
 	PercentageChangeStrategy, 
 	AbsoluteChangeStrategy
-} from "./price-change.strategies.js";
+} from "./price-change.strategies";
 
 export { 
 	INotificationStrategy,
 	IPriceChangeStrategy,
 	PriceStrategies
-} from "./notification-strategies.interface.js";
+} from "./notification-strategies.interface";
 

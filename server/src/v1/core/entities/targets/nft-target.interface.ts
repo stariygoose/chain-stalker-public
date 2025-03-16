@@ -1,4 +1,4 @@
-import { ISubscriptionTarget } from "#core/entities/targets/index.js";
+import { ISubscriptionTarget } from "#core/entities/targets/index";
 
 export interface INftTarget extends ISubscriptionTarget {
 	/**

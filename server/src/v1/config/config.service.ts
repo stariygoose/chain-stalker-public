@@ -1,5 +1,5 @@
-import { ConfigError } from "../utils/errors/index.js";
-import { EnvVariables } from "./env-variables.js";
+import { ConfigError } from "../utils/errors/index";
+import { EnvVariables } from "./env-variables";
 
 interface IConfigService {
 	isDevMode: boolean;

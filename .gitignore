@@ -7,4 +7,5 @@ _volume
 mongod.conf
 nginx.conf
 ngrok.yml
-_logs
+.logs
+coverage

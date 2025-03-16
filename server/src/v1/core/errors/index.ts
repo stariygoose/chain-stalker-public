@@ -1,6 +1,6 @@
-import * as StrategyErrors from "./strategy-errors.js";
-import * as SubscriptionErrors from "./subscription-errors.js";
-import * as TargetErrors from "./target-errors.js";
+import * as StrategyErrors from "./strategy-errors";
+import * as SubscriptionErrors from "./subscription-errors";
+import * as TargetErrors from "./target-errors";
 
 export const DomainError = {
 	...StrategyErrors,

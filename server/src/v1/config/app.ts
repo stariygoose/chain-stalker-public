@@ -1,9 +1,9 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
-import { ConfigService } from "./config.service.js";
-import { logger } from "../utils/logger.js";
-import { EnvVariables } from "./env-variables.js";
+import { ConfigService } from "./config.service";
+import { logger } from "../utils/logger";
+import { EnvVariables } from "./env-variables";
 
 const app = express();
 

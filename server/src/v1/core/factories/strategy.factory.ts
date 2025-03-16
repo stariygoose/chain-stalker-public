@@ -1,6 +1,6 @@
-import { DomainError } from "#core/errors/index.js";
-import { AbsoluteChangeStrategy, PercentageChangeStrategy } from "#core/strategies/notification/index.js";
-import { IPriceChangeStrategy, PriceStrategies } from "#core/strategies/notification/index.js";
+import { DomainError } from "#core/errors/index";
+import { AbsoluteChangeStrategy, PercentageChangeStrategy } from "#core/strategies/notification/index";
+import { IPriceChangeStrategy, PriceStrategies } from "#core/strategies/notification/index";
 
 export class StrategyFactory {
 	static createPriceStrategy(type: PriceStrategies, threshold: number): IPriceChangeStrategy {

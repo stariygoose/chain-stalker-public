@@ -1,1 +1,1 @@
-export { ConfigError } from "./config-error.js"
+export { ConfigError } from "./config-error"

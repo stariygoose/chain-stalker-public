@@ -1,4 +1,4 @@
-import { DomainError } from "./domain-error.abstract.js";
+import { DomainError } from "./domain-error.abstract";
 
 export class InvalidTargetError extends DomainError {
 	constructor(message: string) {
