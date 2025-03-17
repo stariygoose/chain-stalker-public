@@ -2,7 +2,7 @@ import { NftSubscription } from "#core/entities/subscription/nft-subscription.cl
 import { TokenSubscription } from "#core/entities/subscription/token-subscription.class.js";
 import { INftTarget, ITokenTarget } from "#core/entities/targets/index.js";
 import { PriceStrategies } from "#core/strategies/notification/index.js";
-import { StrategyFactory } from "./strategy.factory";
+import { StrategyFactory } from "#core/factories/strategy.factory.js";
 
 export class SubscriptionFactory {
 	public static createNftSubscription(

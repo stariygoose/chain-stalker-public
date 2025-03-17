@@ -1,4 +1,4 @@
-import { DomainError } from "./domain-error.abstract.js";
+import { DomainError } from "#core/errors/domain-error.abstract.js";
 
 export class InvalidSubscriptionError extends DomainError {
 	constructor(message: string) {

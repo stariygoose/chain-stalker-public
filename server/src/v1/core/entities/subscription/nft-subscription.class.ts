@@ -1,7 +1,7 @@
 import { INftTarget } from "#core/entities/targets/index.js";
 import { DomainError } from "#core/errors/index.js";
 import { IPriceChangeStrategy } from "#core/strategies/notification/index.js";
-import { AbstractSubscription } from "./subscription.abstract.js";
+import { AbstractSubscription } from "#core/entities/subscription/subscription.abstract.js";
 
 /**
  * Represents an NFT subscription that tracks changes in the floor price of an NFT collection.

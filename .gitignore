@@ -8,4 +8,5 @@ mongod.conf
 nginx.conf
 ngrok.yml
 .logs
+_logs
 coverage

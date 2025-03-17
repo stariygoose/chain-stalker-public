@@ -4,15 +4,15 @@
 			"cs-dev": "./src/v1/*",
 			"default": "./dist/v1/*"
 		}
-		
 	},
+	"type": "module",
 	"scripts": {
 		"start:v0": "node dist/v0/server.js",
 		"start:v1": "node dist/v1/server.js",
 		"dev": "npx ts-node ./src/v1/server.ts",
 		"build": "npx tsc -p tsconfig.build.json",
 		"compile": "npx tsc",
-		"test": "npx jest"
+		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
 	},
 	"dependencies": {
 		"axios": "^1.7.7",

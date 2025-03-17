@@ -1,5 +1,5 @@
 import { DomainError } from "#core/errors/index.js";
-import { AbstractPriceChangeStrategy } from "./price-change.abstract.strategy.js";
+import { AbstractPriceChangeStrategy } from "#core/strategies/notification/price-change.abstract.strategy.js";
 
 /**
  * Strategy for determining whether a price change exceeds a percentage threshold.

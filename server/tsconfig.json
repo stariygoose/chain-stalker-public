@@ -2,8 +2,12 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
+		"moduleResolution": "nodenext",
 
-		"customConditions": ["cs-dev"],
+		"paths": {
+			"#*": ["./src/v1/*"]
+		},
+		// "customConditions": ["cs-dev"],
 		"baseUrl": ".",
 		"rootDir": "./src",
 		"outDir": "./dist",
@@ -17,8 +21,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": true,
 		// "noUnusedLocals": true,
-		// "noUnusedParameters": true,
+		// "noUnusedParameters": true
   },
 	"include": ["src/v1/**/*"],
 	"exclude": ["dist", "node_modules"],

@@ -1,7 +1,7 @@
 import { ITokenTarget } from "#core/entities/targets/index.js";
 import { DomainError } from "#core/errors/index.js";
 import { IPriceChangeStrategy } from "#core/strategies/notification/notification-strategies.interface.js";
-import { AbstractSubscription } from "./subscription.abstract.js";
+import { AbstractSubscription } from "#core/entities/subscription/subscription.abstract.js";
 
 
 /**
