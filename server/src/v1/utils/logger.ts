@@ -1,4 +1,4 @@
-import { ConfigService } from "#config/config.service";
+import { ConfigService } from "#config/config.service.js";
 import winston, { createLogger, format } from "winston";
 
 function getLoggerLevel() {

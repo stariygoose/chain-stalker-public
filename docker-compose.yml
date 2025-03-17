@@ -62,7 +62,7 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
     volumes:
-      - ./server/_logs:/server/_logs
+      - ./server/.logs:/server/.logs
     networks:
       - ${NODE_MODE}
 

@@ -1,5 +1,5 @@
-import { DomainError } from "#core/errors/index";
-import { AbstractPriceChangeStrategy } from "./price-change.abstract.strategy";
+import { DomainError } from "#core/errors/index.js";
+import { AbstractPriceChangeStrategy } from "./price-change.abstract.strategy.js";
 
 /**
  * Strategy for determining whether a price change exceeds a percentage threshold.
@@ -49,13 +49,13 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 	 */
 	protected verifyThreshold(): void {
 		if (isNaN(this.threshold)) {
-			throw new DomainError.InvalidStrategyConfigurationError(
+			throw new DomainError.ThresholdStrategyConfigurationErrror(
 				this.constructor.name,
 				`The percentage threshold cannot be NaN.`
 			);
 		}
 		if (!this.isCorrectLimits()) {
-			throw new DomainError.InvalidStrategyConfigurationError(
+			throw new DomainError.RangeStrategyConfigurationError(
 				this.constructor.name,
 				`The percentage threshold must be between ${PercentageChangeStrategy.BASE_LIMIT} and ${PercentageChangeStrategy.TOP_LIMIT}`
 			);
@@ -127,13 +127,13 @@ export class AbsoluteChangeStrategy extends AbstractPriceChangeStrategy {
 	 */
 	protected verifyThreshold(): void {
 		if (isNaN(this.threshold)) {
-			throw new DomainError.InvalidStrategyConfigurationError(
+			throw new DomainError.ThresholdStrategyConfigurationErrror(
 				this.constructor.name,
 				`The absolute price difference threshold cannot be NaN.`
 			);
 		}
 		if (!this.isCorrectLimits()) {
-			throw new DomainError.InvalidStrategyConfigurationError(
+			throw new DomainError.RangeStrategyConfigurationError(
 				this.constructor.name,
 				`The absolute price difference threshold must be between ${AbsoluteChangeStrategy.BASE_LIMIT} and ${AbsoluteChangeStrategy.TOP_LIMIT}.`
 			);

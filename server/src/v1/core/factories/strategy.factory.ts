@@ -1,6 +1,6 @@
-import { DomainError } from "#core/errors/index";
-import { AbsoluteChangeStrategy, PercentageChangeStrategy } from "#core/strategies/notification/index";
-import { IPriceChangeStrategy, PriceStrategies } from "#core/strategies/notification/index";
+import { DomainError } from "#core/errors/index.js";
+import { AbsoluteChangeStrategy, PercentageChangeStrategy } from "#core/strategies/notification/index.js";
+import { IPriceChangeStrategy, PriceStrategies } from "#core/strategies/notification/index.js";
 
 export class StrategyFactory {
 	static createPriceStrategy(type: PriceStrategies, threshold: number): IPriceChangeStrategy {
@@ -11,7 +11,7 @@ export class StrategyFactory {
 				return new PercentageChangeStrategy(threshold);
 			default:
 				const exhaustiveCheck: never = type;
-				throw new DomainError.InvalidPriceStrategyError(exhaustiveCheck);
+				throw new DomainError.PriceStrategyTypeError(exhaustiveCheck);
 		}
 	}
 }

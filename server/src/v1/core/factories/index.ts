@@ -1,1 +1,1 @@
-export { SubscriptionFactory } from "./subscription.factory"
+export { SubscriptionFactory } from "./subscription.factory.js"

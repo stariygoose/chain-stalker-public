@@ -1,5 +1,5 @@
-import { ISubscriptionTarget } from "#core/entities/targets/index";
-import { INotificationStrategy } from "#core/strategies/notification/index";
+import { ISubscriptionTarget } from "#core/entities/targets/index.js";
+import { INotificationStrategy } from "#core/strategies/notification/index.js";
 
 /**
  * Represents a subscription that tracks changes in a specific target and determines 

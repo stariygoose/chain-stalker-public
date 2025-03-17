@@ -1,4 +1,4 @@
-import { IPriceChangeStrategy } from "#core/strategies/notification/index";
+import { IPriceChangeStrategy } from "#core/strategies/notification/index.js";
 
 /**
  * Abstract class for price change strategies.
@@ -27,12 +27,26 @@ export abstract class AbstractPriceChangeStrategy implements IPriceChangeStrateg
 	protected abstract verifyThreshold(): void;
 
 	/**
-	 * Calculates the percentage change between two prices.
+	 * Calculates the percentage change between two prices, handling edge cases.
+	 * 
 	 * @param {number} currentPrice - The initial price.
 	 * @param {number} newPrice - The updated price.
-	 * @returns {number} The percentage change from the current price to the new price.
+	 * @returns {number} The percentage change from the current price to the new price:
+	 *   - Returns 0 when both prices are zero (no change)
+	 *   - Returns 100 when price appears (from zero to some value)
+	 *   - Returns -100 when price disappears (from some value to zero)
+	 *   - Otherwise returns the standard percentage change calculation
 	 */
 	protected calculatePercentageChange(currentPrice: number, newPrice: number): number {
+		if (currentPrice === 0 && newPrice === 0) {
+			return 0;
+		}
+		if (currentPrice === 0) {
+			return 100;
+		}
+		if (newPrice === 0) {
+			return -100;
+		}
 		return ((newPrice - currentPrice) / currentPrice) * 100;
 	}
 

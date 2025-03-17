@@ -1,15 +1,12 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "NodeNext",
 
+		"customConditions": ["cs-dev"],
 		"baseUrl": ".",
 		"rootDir": "./src",
 		"outDir": "./dist",
-		"paths": {  
-			"#*": ["./src/v1/*"]  
-		},
 
 		"types": [
 			"node",
