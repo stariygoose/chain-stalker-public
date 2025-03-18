@@ -1,6 +1,4 @@
-import { DomainError } from "#core/errors/index.js";
 import { IPriceChangeStrategy } from "#core/strategies/notification/index.js";
-import { NumberValidator } from "#core/validator/number-validator.class.js";
 
 /**
  * Abstract class for price change strategies.
@@ -17,9 +15,4 @@ export abstract class AbstractPriceChangeStrategy implements IPriceChangeStrateg
 	public abstract calculateDifference(currentState: number, newState: number): number;
 	public abstract shouldNotify(currentState: number, newState: number): boolean;
 	protected abstract verifyThreshold(): void;
-
-	
-
-	
-
 }

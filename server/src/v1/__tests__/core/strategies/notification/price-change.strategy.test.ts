@@ -2,7 +2,7 @@ import { DomainError } from "#core/errors/index.js";
 import { AbsoluteChangeStrategy, PercentageChangeStrategy } from "#core/strategies/notification/price-change.strategies.js";
 
 
-describe('PercentageStrategy Integration Test', () => {
+describe('PercentageStrategy Unit Tests', () => {
 	describe('constructor', () => {
 		it('should create instance with valid threshold', () => {
 			const threshold = 5;
@@ -245,7 +245,7 @@ describe('PercentageStrategy Integration Test', () => {
 })
 
 
-describe('AbsoluteStrategy Integration Tests', () => {
+describe('AbsoluteStrategy Unit Tests', () => {
 	describe('constructor', () => {
 		it('should create instance with valid threshold', () => {
 			const threshold = 1000; // 1000$

@@ -7,7 +7,7 @@ export class InvalidSubscriptionError extends DomainError {
 }
 
 export class InvalidSubscriptionConfigurationError extends DomainError {
-	constructor(subscription: string, reason: string) {
+	constructor(readonly subscription: string, readonly reason: string) {
 		super(`Invalid configuration for subscription "${subscription}": ${reason}`);
 	}
 }

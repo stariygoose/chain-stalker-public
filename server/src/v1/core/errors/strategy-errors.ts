@@ -6,12 +6,6 @@ export class StrategyError extends DomainError {
 	}
 }
 
-export class InvalidNumberError extends DomainError {
-	constructor(instance: string, reason: string) {
-		super(`Invalid number input in "${instance}": ${reason}`);
-	}
-}
-
 export class StrategyConfigurationError extends DomainError {
 	constructor(readonly strategy: string, readonly reason: string) {
 		super(`Invalid configuration for strategy "${strategy}": ${reason}`);
@@ -19,21 +13,19 @@ export class StrategyConfigurationError extends DomainError {
 }
 
 export class ThresholdStrategyConfigurationErrror extends StrategyConfigurationError {
-	constructor(strategy: string, reason: string) {
+	constructor(readonly strategy: string, readonly reason: string) {
 		super(strategy, reason);
 	}
 }
 
-
-
 export class RangeStrategyConfigurationError extends StrategyConfigurationError {
-	constructor(strategy: string, reason: string) {
+	constructor(readonly strategy: string, readonly reason: string) {
 		super(strategy, reason);
 	}
 }
 
 export class PriceStrategyTypeError extends DomainError {
-	constructor(type: string) {
+	constructor(readonly type: string) {
 		super(`Unknown price strategy type: ${type}`);
 	}
 }
