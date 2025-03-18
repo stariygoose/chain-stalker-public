@@ -1,5 +1,6 @@
 import { DomainError } from "#core/errors/index.js";
 import { AbstractPriceChangeStrategy } from "#core/strategies/notification/price-change.abstract.strategy.js";
+import { NumberValidator } from "#core/validator/number-validator.class.js";
 
 /**
  * Strategy for determining whether a price change exceeds a percentage threshold.
@@ -18,7 +19,6 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 	 * The constructor verifies the validity of the provided threshold.
 	 * 
 	 * @param {number} threshold - The percentage threshold that must be exceeded to trigger a notification.
-	 * @throws {DomainError.InvalidStrategyConfigurationError} If the threshold is invalid or out of bounds.
 	 */
 	constructor(threshold: number) {
 		super(threshold);
@@ -37,24 +37,58 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 	 * @returns {boolean} Whether the price change exceeds the percentage threshold.
 	 */
 	public shouldNotify(currentState: number, newState: number): boolean {
-		const percentage = this.calculatePercentageChange(currentState, newState);
+		const percentage = this.calculatePercentageChange(currentState, newState, 2);
 		return Math.abs(percentage) >= this.threshold;
+	}
+
+	public calculateDifference(currentState: number, newState: number, precision: number = 2): number {
+		if (
+			NumberValidator.isInfinity(currentState) || 
+			NumberValidator.isInfinity(newState) ||
+			NumberValidator.isInfinity(precision)
+		) {
+			throw new DomainError.InvalidNumberError(
+				`${this.constructor.name}:${this.calculateDifference.name}`,
+				`Parameters cannot be Infinity.`
+			)
+		}
+
+		if (
+			NumberValidator.isNaN(currentState) ||
+			NumberValidator.isNaN(newState)
+		) {
+			throw new DomainError.InvalidNumberError(
+				`${this.constructor.name}:${this.calculateDifference.name}`,
+				`Parameters cannot be NaN.`
+			)
+		}
+		return this.calculatePercentageChange(currentState, newState, precision);
 	}
 
 	/**
 	 * Verifies if the percentage threshold is a valid value.
 	 * The threshold is checked for being a valid number and within the predefined limits.
-	 * 
-	 * @throws {DomainError.InvalidStrategyConfigurationError} If the threshold is NaN or out of bounds.
 	 */
 	protected verifyThreshold(): void {
-		if (isNaN(this.threshold)) {
+		if (NumberValidator.isNaN(this.threshold)) {
 			throw new DomainError.ThresholdStrategyConfigurationErrror(
 				this.constructor.name,
 				`The percentage threshold cannot be NaN.`
 			);
 		}
-		if (!this.isCorrectLimits()) {
+
+		if (NumberValidator.isInfinity(this.threshold)) {
+			throw new DomainError.RangeStrategyConfigurationError(
+				this.constructor.name,
+				`The percentage threshold cannot be Infinity.`
+			);
+		}
+
+		if (!NumberValidator.isInRange(
+			this.threshold,
+			PercentageChangeStrategy.BASE_LIMIT,
+			PercentageChangeStrategy.TOP_LIMIT
+		)) {
 			throw new DomainError.RangeStrategyConfigurationError(
 				this.constructor.name,
 				`The percentage threshold must be between ${PercentageChangeStrategy.BASE_LIMIT} and ${PercentageChangeStrategy.TOP_LIMIT}`
@@ -63,18 +97,29 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 	}
 
 	/**
-	 * Checks if the threshold is within the valid range.
+	 * Calculates the percentage change between two prices, handling edge cases.
 	 * 
-	 * @returns {boolean} `true` if the threshold is between the base and top limits, `false` otherwise.
+	 * @param {number} currentPrice - The initial price.
+	 * @param {number} newPrice - The updated price.
+	 * @returns {number} The percentage change from the current price to the new price:
+	 *   - Returns 0 when both prices are zero (no change)
+	 *   - Returns 100 when price appears (from zero to some value)
+	 *   - Returns -100 when price disappears (from some value to zero)
+	 *   - Otherwise returns the standard percentage change calculation
 	 */
-	private isCorrectLimits(): boolean {
-		if (
-			this.threshold <= PercentageChangeStrategy.BASE_LIMIT 
-			|| this.threshold > PercentageChangeStrategy.TOP_LIMIT
-		) {
-			return false;
+	private calculatePercentageChange(currentPrice: number, newPrice: number, precision: number): number {		
+		if (currentPrice === 0 && newPrice === 0) {
+			return 0;
 		}
-		return true;
+		if (currentPrice === 0) {
+			return 100;
+		}
+		if (newPrice === 0) {
+			return -100;
+		}
+
+		const differance = ((newPrice - currentPrice) / currentPrice) * 100;
+		return Number(differance.toFixed(precision));
 	}
 }
 
@@ -103,6 +148,30 @@ export class AbsoluteChangeStrategy extends AbstractPriceChangeStrategy {
 		this.verifyThreshold();
 	}
 
+	public calculateDifference(currentState: number, newState: number): number {
+		if (
+			NumberValidator.isInfinity(currentState) || 
+			NumberValidator.isInfinity(newState)
+		) {
+			throw new DomainError.InvalidNumberError(
+				`${this.constructor.name}:${this.calculateDifference.name}`,
+				`Parameters cannot be Infinity.`
+			)
+		}
+
+		if (
+			NumberValidator.isNaN(currentState) ||
+			NumberValidator.isNaN(newState)
+		) {
+			throw new DomainError.InvalidNumberError(
+				`${this.constructor.name}:${this.calculateDifference.name}`,
+				`Parameters cannot be NaN.`
+			)
+		}
+
+		return this.calculateAbsoluteChange(currentState, newState);
+	}
+
 	/**
 	 * Checks if the absolute price difference between the current and new price exceeds the threshold.
 	 * 
@@ -126,13 +195,25 @@ export class AbsoluteChangeStrategy extends AbstractPriceChangeStrategy {
 	 * @throws {DomainError.InvalidStrategyConfigurationError} If the threshold is NaN or out of bounds.
 	 */
 	protected verifyThreshold(): void {
-		if (isNaN(this.threshold)) {
+		if (NumberValidator.isNaN(this.threshold)) {
 			throw new DomainError.ThresholdStrategyConfigurationErrror(
 				this.constructor.name,
-				`The absolute price difference threshold cannot be NaN.`
+				`The absolute difference threshold cannot be NaN.`
 			);
 		}
-		if (!this.isCorrectLimits()) {
+
+		if (NumberValidator.isInfinity(this.threshold)) {
+			throw new DomainError.RangeStrategyConfigurationError(
+				this.constructor.name,
+				`The absolute difference threshold cannot be Infinity.`
+			);
+		}
+
+		if (!NumberValidator.isInRange(
+				this.threshold,
+				AbsoluteChangeStrategy.BASE_LIMIT,
+				AbsoluteChangeStrategy.TOP_LIMIT
+			)) {
 			throw new DomainError.RangeStrategyConfigurationError(
 				this.constructor.name,
 				`The absolute price difference threshold must be between ${AbsoluteChangeStrategy.BASE_LIMIT} and ${AbsoluteChangeStrategy.TOP_LIMIT}.`
@@ -141,17 +222,12 @@ export class AbsoluteChangeStrategy extends AbstractPriceChangeStrategy {
 	}
 
 	/**
-	 * Checks if the threshold is within the valid range.
-	 * 
-	 * @returns {boolean} `true` if the threshold is between the base and top limits, `false` otherwise.
+	 * Calculates the absolute difference between two prices.
+	 * @param {number} currentPrice - The initial price.
+	 * @param {number} newPrice - The updated price.
+	 * @returns {number} The absolute difference between the two prices.
 	 */
-	private isCorrectLimits(): boolean {
-		if (
-			this.threshold <= AbsoluteChangeStrategy.BASE_LIMIT 
-			|| this.threshold > AbsoluteChangeStrategy.TOP_LIMIT
-		) {
-			return false;
-		}
-		return true;
+	private calculateAbsoluteChange(currentPrice: number, newPrice: number): number {
+		return Math.abs(newPrice - currentPrice);
 	}
 }

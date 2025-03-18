@@ -6,6 +6,7 @@ export interface INotificationStrategy<T, U> {
 export interface IPriceChangeStrategy extends INotificationStrategy<number, number> {
 	readonly type: 'price-change';
 	readonly threshold: number;
+	calculateDifference(currentState: number, newState: number, precision?: number): number;
 }
 
 const PriceChangeStrategies = {

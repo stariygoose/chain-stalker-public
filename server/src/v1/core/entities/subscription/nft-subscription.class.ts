@@ -37,6 +37,10 @@ export class NftSubscription extends AbstractSubscription<INftTarget, IPriceChan
 		return this.strategy.shouldNotify(this.target.floorPrice, newState);
 	}
 
+	public calculateDifference(currentState: number, newState: number, precision?: number): number {
+		return this.strategy.calculateDifference(currentState, newState, precision);
+	}
+
 	/**
 	 * Creates a new subscription instance with an updated floor price.
 	 * 

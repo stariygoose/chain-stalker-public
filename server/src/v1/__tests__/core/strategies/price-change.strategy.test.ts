@@ -154,9 +154,94 @@ describe('PercentageStrategy Integration Test', () => {
       expect(newPriceNull).toBe(true);
       expect(bothNull).toBe(false);
     });
-
-
 	});
+
+	describe('calculateDifference', () => {
+		let strategy: PercentageChangeStrategy;
+		beforeEach(() => {
+			strategy = new PercentageChangeStrategy(5);
+		});
+
+		it('should return correct differance', () => {
+			const currentState = 100; // 100$
+			const newState = 200; // 200$
+			
+			const result = strategy.calculateDifference(currentState, newState);
+
+			expect(result).toBe(100); // 100%
+		});
+
+		it('should return correct differance between big numbers', () => {
+			const currentState = 1000000; // 1000000$
+			const newState = 1500000; // 1500000$
+
+			const result = strategy.calculateDifference(currentState, newState);
+
+			expect(result).toBe(50); // 50%
+		});
+
+		it('should return correct differance between small numbers', () => {
+			const currentState = 0.001; // 0.001$
+			const newState = 0.0011; // 0.0011$
+
+			const result = strategy.calculateDifference(currentState, newState);
+
+			expect(result).toBe(10); // 10%
+		});
+
+		it('should return correct differance between numbers when pricision is number', () => {
+			const currentState = 0.001; // 0.001$
+			const newState = 0.0011; // 0.0011$
+
+			const result = strategy.calculateDifference(currentState, newState, 15);
+
+			expect(result).toBe(10.000000000000005); // 10.000000000000005%
+		});
+
+		it('should return correct differance between numbers when pricision is NaN', () => {
+			const currentState = 0.001; // 0.001$
+			const newState = 0.0011; // 0.0011$
+
+			const result = strategy.calculateDifference(currentState, newState, NaN);
+
+			expect(result).toBe(10); // 10%
+		});
+
+		it('should throwerror when pricision is Infinity', () => {
+			const currentState = 0.001; // 0.001$
+			const newState = 0.0011; // 0.0011$
+
+			expect(() => {
+				strategy.calculateDifference(currentState, newState, Infinity);
+			}).toThrow(DomainError.InvalidNumberError);
+		});
+
+		it('should throw error when one of the parameters is NaN', () => {
+			const currentState = 0.001; // 0.001$
+			const newState = NaN;
+
+			expect(() => {
+				strategy.calculateDifference(currentState, newState);
+			}).toThrow(DomainError.InvalidNumberError);
+
+			expect(() => {
+				strategy.calculateDifference(newState, currentState);
+			}).toThrow(DomainError.InvalidNumberError);
+		});
+
+		it('should throw error when one of the parameters is Infinity', () => {
+			const currentState = 0.001; // 0.001$
+			const newState = Infinity;
+
+			expect(() => {
+				strategy.calculateDifference(currentState, newState);
+			}).toThrow(DomainError.InvalidNumberError);
+
+			expect(() => {
+				strategy.calculateDifference(newState, currentState);
+			}).toThrow(DomainError.InvalidNumberError);
+		});
+	})
 })
 
 
@@ -312,4 +397,64 @@ describe('AbsoluteStrategy Integration Tests', () => {
       expect(bothNull).toBe(false);
     });
 	});
+
+	describe('calculateDifference', () => {
+		let strategy: AbsoluteChangeStrategy;
+		beforeEach(() => {
+			strategy = new AbsoluteChangeStrategy(100);
+		});
+
+		it('should return correct differance', () => {
+			const currentState = 100; // 100$
+			const newState = 200; // 200$
+			
+			const result = strategy.calculateDifference(currentState, newState);
+
+			expect(result).toBe(100); // 100$
+		});
+
+		it('should return correct differance between big numbers', () => {
+			const currentState = 100000000000000; // 100000000000000$
+			const newState = 150000000000000; // 150000000000000$
+
+			const result = strategy.calculateDifference(currentState, newState);
+
+			expect(result).toBe(50000000000000); // 50000000000000$
+		});
+
+		it('should return correct differance between small numbers', () => {
+			const currentState = 0.001; // 0.001$
+			const newState = 0.0011; // 0.0011$
+
+			const result = strategy.calculateDifference(currentState, newState);
+
+			expect(result).toBeCloseTo(0.0001); // 0.0001$
+		});
+
+		it('should throw error when one of the parameters is NaN', () => {
+			const currentState = 0.001; // 0.001$
+			const newState = NaN;
+
+			expect(() => {
+				strategy.calculateDifference(currentState, newState);
+			}).toThrow(DomainError.InvalidNumberError);
+
+			expect(() => {
+				strategy.calculateDifference(newState, currentState);
+			}).toThrow(DomainError.InvalidNumberError);
+		});
+
+		it('should throw error when one of the parameters is Infinity', () => {
+			const currentState = 0.001; // 0.001$
+			const newState = Infinity;
+
+			expect(() => {
+				strategy.calculateDifference(currentState, newState);
+			}).toThrow(DomainError.InvalidNumberError);
+
+			expect(() => {
+				strategy.calculateDifference(newState, currentState);
+			}).toThrow(DomainError.InvalidNumberError);
+		});
+	})
 })
