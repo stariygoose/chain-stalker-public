@@ -1,7 +1,7 @@
 import { ITokenTarget } from "#core/entities/targets/index.js";
-import { DomainError } from "#core/errors/index.js";
 import { IPriceChangeStrategy } from "#core/strategies/notification/notification-strategies.interface.js";
 import { AbstractSubscription } from "#core/entities/subscription/subscription.abstract.js";
+import { TokenTargetValidator } from "#core/validators/targets/token-target.validator.js";
 
 
 /**
@@ -39,6 +39,10 @@ export class TokenSubscription extends AbstractSubscription<ITokenTarget, IPrice
 		return this.strategy.shouldNotify(this.target.price, newState);
 	}
 
+	public calculateDifference(newState: number, precision?: number): number {
+		return this.strategy.calculateDifference(this.target.price, newState, precision);
+	}
+
 	/**
 	 * Creates a new TokenSubscription instance with an updated token price.
 	 * 
@@ -67,11 +71,6 @@ export class TokenSubscription extends AbstractSubscription<ITokenTarget, IPrice
 	 * @throws {DomainError.InvalidSubscriptionConfigurationError} If the target's floor price is NaN.
 	 */
 	protected validateSubscription(): void {
-		if (isNaN(this.target.price)) {
-			throw new DomainError.InvalidSubscriptionConfigurationError(
-				this.constructor.name,
-				`The new price for subscription target cannot be NaN.`
-			);
-		}
+		new TokenTargetValidator(this.target).validate();
 	}
 }

@@ -7,7 +7,7 @@ const config = {
 	},
 
   collectCoverageFrom: [  
-		"dist/**/*.{js,jsx,ts,tsx}",
+		"src/v1/**/*.{js,jsx,ts,tsx}",
     "!src/v1/config/**/*.{ts,js}",
     "!src/v1/utils/**/*.{ts,js}",
     "!**/node_modules/**",

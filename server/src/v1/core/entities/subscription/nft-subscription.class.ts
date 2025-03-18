@@ -1,7 +1,7 @@
 import { INftTarget } from "#core/entities/targets/index.js";
-import { DomainError } from "#core/errors/index.js";
 import { IPriceChangeStrategy } from "#core/strategies/notification/index.js";
 import { AbstractSubscription } from "#core/entities/subscription/subscription.abstract.js";
+import { NftTargetValidator } from "#core/validators/targets/nft-target.validator.js";
 
 /**
  * Represents an NFT subscription that tracks changes in the floor price of an NFT collection.
@@ -37,8 +37,8 @@ export class NftSubscription extends AbstractSubscription<INftTarget, IPriceChan
 		return this.strategy.shouldNotify(this.target.floorPrice, newState);
 	}
 
-	public calculateDifference(currentState: number, newState: number, precision?: number): number {
-		return this.strategy.calculateDifference(currentState, newState, precision);
+	public calculateDifference(newState: number, precision?: number): number {
+		return this.strategy.calculateDifference(this.target.floorPrice, newState, precision);
 	}
 
 	/**
@@ -62,18 +62,7 @@ export class NftSubscription extends AbstractSubscription<INftTarget, IPriceChan
 		);
 	}
 
-	/**
-	 * Validates the configuration of a TokenSubscription instance.
-	 * Ensures that the target price is a valid number.
-	 * 
-	 * @throws {DomainError.InvalidSubscriptionConfigurationError} If the target's floor price is NaN.
-	 */
 	protected validateSubscription(): void {
-		if (isNaN(this.target.floorPrice)) {
-			throw new DomainError.InvalidSubscriptionConfigurationError(
-				this.constructor.name,
-				`The new price for subscription target cannot be NaN.`
-			);
-		}
+		new NftTargetValidator(this.target).validate();
 	}
 }

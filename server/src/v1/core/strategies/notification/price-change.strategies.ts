@@ -1,6 +1,6 @@
 import { DomainError } from "#core/errors/index.js";
 import { AbstractPriceChangeStrategy } from "#core/strategies/notification/price-change.abstract.strategy.js";
-import { NumberValidator } from "#core/validator/number-validator.class.js";
+import { NumberValidator } from "#core/validators/common/number-validator.class.js";
 
 /**
  * Strategy for determining whether a price change exceeds a percentage threshold.
@@ -37,7 +37,7 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 	 * @returns {boolean} Whether the price change exceeds the percentage threshold.
 	 */
 	public shouldNotify(currentState: number, newState: number): boolean {
-		const percentage = this.calculatePercentageChange(currentState, newState, 2);
+		const percentage = this.calculateDifference(currentState, newState);
 		return Math.abs(percentage) >= this.threshold;
 	}
 
@@ -58,7 +58,7 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 			NumberValidator.isNaN(newState)
 		) {
 			throw new DomainError.InvalidNumberError(
-				`${this.constructor.name}:${this.calculateDifference.name}`,
+				`${this.constructor.name}: ${this.calculateDifference.name}`,
 				`Parameters cannot be NaN.`
 			)
 		}
@@ -148,6 +148,22 @@ export class AbsoluteChangeStrategy extends AbstractPriceChangeStrategy {
 		this.verifyThreshold();
 	}
 
+	/**
+	 * Checks if the absolute price difference between the current and new price exceeds the threshold.
+	 * 
+	 * This method calculates the absolute difference between `currentState` and `newState`
+	 * and compares it to the threshold value. If the absolute difference is greater than or
+	 * equal to the threshold, it returns `true`; otherwise, it returns `false`.
+	 * 
+	 * @param {number} currentState - The previous recorded price.
+	 * @param {number} newState - The new updated price.
+	 * @returns {boolean} Whether the absolute change exceeds the threshold.
+	 */
+	public shouldNotify(currentState: number, newState: number): boolean {
+		const absolute = this.calculateDifference(currentState, newState);
+		return absolute >= this.threshold;
+	}
+
 	public calculateDifference(currentState: number, newState: number): number {
 		if (
 			NumberValidator.isInfinity(currentState) || 
@@ -164,28 +180,12 @@ export class AbsoluteChangeStrategy extends AbstractPriceChangeStrategy {
 			NumberValidator.isNaN(newState)
 		) {
 			throw new DomainError.InvalidNumberError(
-				`${this.constructor.name}:${this.calculateDifference.name}`,
+				`${this.constructor.name}: ${this.calculateDifference.name}`,
 				`Parameters cannot be NaN.`
 			)
 		}
 
 		return this.calculateAbsoluteChange(currentState, newState);
-	}
-
-	/**
-	 * Checks if the absolute price difference between the current and new price exceeds the threshold.
-	 * 
-	 * This method calculates the absolute difference between `currentState` and `newState`
-	 * and compares it to the threshold value. If the absolute difference is greater than or
-	 * equal to the threshold, it returns `true`; otherwise, it returns `false`.
-	 * 
-	 * @param {number} currentState - The previous recorded price.
-	 * @param {number} newState - The new updated price.
-	 * @returns {boolean} Whether the absolute change exceeds the threshold.
-	 */
-	public shouldNotify(currentState: number, newState: number): boolean {
-		const absolute = this.calculateAbsoluteChange(currentState, newState);
-		return absolute >= this.threshold;
 	}
 
 	/**
