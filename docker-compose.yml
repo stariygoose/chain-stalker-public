@@ -61,6 +61,11 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+
+      - MARKETPLACE_KEY_OPENSEA=${MARKETPLACE_KEY_OPENSEA}
+      - MARKETPLACE_KEY_BINANCE=${MARKETPLACE_KEY_BINANCE}
+    env_file:
+      - .env
     volumes:
       - ./server/.logs:/server/.logs
     networks:

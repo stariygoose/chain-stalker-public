@@ -21,7 +21,7 @@ export interface INftTarget extends ISubscriptionTarget {
 	 * The most recent floor price of the NFT collection that was sent to the user.
 	 * This value is used as a reference for further price change calculations.
 	 */
-	readonly floorPrice: number;
+	readonly lastNotifiedPrice: number;
 	/**
 	 * The cryptocurrency in which the NFT collection is traded.
 	 */

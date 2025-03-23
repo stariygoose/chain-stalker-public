@@ -34,11 +34,11 @@ export class NftSubscription extends AbstractSubscription<INftTarget, IPriceChan
 	 * @returns {boolean} Whether the floor price change meets the notification criteria.
 	 */
 	public shouldNotify(newState: number): boolean {
-		return this.strategy.shouldNotify(this.target.floorPrice, newState);
+		return this.strategy.shouldNotify(this.target.lastNotifiedPrice, newState);
 	}
 
 	public calculateDifference(newState: number, precision?: number): number {
-		return this.strategy.calculateDifference(this.target.floorPrice, newState, precision);
+		return this.strategy.calculateDifference(this.target.lastNotifiedPrice, newState, precision);
 	}
 
 	/**
@@ -50,7 +50,7 @@ export class NftSubscription extends AbstractSubscription<INftTarget, IPriceChan
 	public withUpdatedState(newState: number): NftSubscription {
 		const updatedState: INftTarget = {
 			...this.target,
-			floorPrice: newState
+			lastNotifiedPrice: newState
 		}; 
 
 		return new NftSubscription(

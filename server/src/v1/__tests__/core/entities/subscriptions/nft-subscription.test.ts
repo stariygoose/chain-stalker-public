@@ -12,7 +12,7 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 			const slug = "nft_slug";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = 2; // ETH
+			const lastNotifiedPrice = 2; // ETH
 			const symbol = 'ETH';
 
 			target = {
@@ -20,7 +20,7 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -52,14 +52,14 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 			const slug = "nft_slug";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = NaN; // ETH
+			const lastNotifiedPrice = NaN; // ETH
 			const symbol = 'ETH';
 			const target: INftTarget = {
 				type: 'nft',
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -80,14 +80,14 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 			const slug = "nft_slug";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = Infinity; // ETH
+			const lastNotifiedPrice = Infinity; // ETH
 			const symbol = 'ETH';
 			const target: INftTarget = {
 				type: 'nft',
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 	
@@ -108,14 +108,14 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 			const slug = "nft_slug_";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = 2; // ETH
+			const lastNotifiedPrice = 2; // ETH
 			const symbol = 'ETH';
 			const target: INftTarget = {
 				type: 'nft',
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 	
@@ -139,7 +139,7 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 			const slug = "nft_slug";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = 2; // ETH
+			const lastNotifiedPrice = 2; // ETH
 			const symbol = 'ETH';
 
 			target = {
@@ -147,7 +147,7 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -166,7 +166,7 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 
 			const res = subscription.withUpdatedState(newPrice);
 
-			expect(res.target.floorPrice).toBe(newPrice);
+			expect(res.target.lastNotifiedPrice).toBe(newPrice);
 		});
 
 		it('should throw error Nft Subscription when new price is NaN', () => {
@@ -195,7 +195,7 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 			const slug = "nft_slug";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = 100; // ETH
+			const lastNotifiedPrice = 100; // ETH
 			const symbol = 'ETH';
 
 			target = {
@@ -203,7 +203,7 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -225,8 +225,8 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 			expect(res).toBe(true);
 		});
 
-		it('should return true when price has been changed by (floorPrice / 2)', () => {
-			const newPrice = subscription.target.floorPrice / 2; // ETH
+		it('should return true when price has been changed by (lastNotifiedPrice / 2)', () => {
+			const newPrice = subscription.target.lastNotifiedPrice / 2; // ETH
 
 			const res = subscription.shouldNotify(newPrice);
 
@@ -267,7 +267,7 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 			const slug = "nft_slug";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = 100; // ETH
+			const lastNotifiedPrice = 100; // ETH
 			const symbol = 'ETH';
 
 			target = {
@@ -275,7 +275,7 @@ describe('NftSubscription with Percentage Strategy Unit Tests', () => {
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -341,7 +341,7 @@ describe('NftSubscription with Absolute Strategy Unit Tests', () => {
 			const slug = "nft_slug";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = 0.1; // ETH
+			const lastNotifiedPrice = 0.1; // ETH
 			const symbol = 'ETH';
 
 			target = {
@@ -349,7 +349,7 @@ describe('NftSubscription with Absolute Strategy Unit Tests', () => {
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -383,7 +383,7 @@ describe('NftSubscription with Absolute Strategy Unit Tests', () => {
 			const slug = "nft_slug";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = 0.1; // ETH
+			const lastNotifiedPrice = 0.1; // ETH
 			const symbol = 'ETH';
 
 			target = {
@@ -391,7 +391,7 @@ describe('NftSubscription with Absolute Strategy Unit Tests', () => {
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -413,8 +413,8 @@ describe('NftSubscription with Absolute Strategy Unit Tests', () => {
 			expect(res).toBe(true);
 		});
 
-		it('should return true when price has been changed by (floorPrice / 2)', () => {
-			const newPrice = subscription.target.floorPrice / 2; // ETH
+		it('should return true when price has been changed by (lastNotifiedPrice / 2)', () => {
+			const newPrice = subscription.target.lastNotifiedPrice / 2; // ETH
 
 			const res = subscription.shouldNotify(newPrice);
 
@@ -422,7 +422,7 @@ describe('NftSubscription with Absolute Strategy Unit Tests', () => {
 		});
 
 		it('should return false when price has been changed by (threshold - 0.00001)', () => {
-			const newPrice = subscription.target.floorPrice - (subscription.strategy.threshold - 0.00001); // ETH
+			const newPrice = subscription.target.lastNotifiedPrice - (subscription.strategy.threshold - 0.00001); // ETH
 
 			const res = subscription.shouldNotify(newPrice);
 
@@ -455,7 +455,7 @@ describe('NftSubscription with Absolute Strategy Unit Tests', () => {
 			const slug = "nft_slug";
 			const name = "Nft Name";
 			const chain = "ethereum";
-			const floorPrice = 0.1; // ETH
+			const lastNotifiedPrice = 0.1; // ETH
 			const symbol = 'ETH';
 
 			target = {
@@ -463,7 +463,7 @@ describe('NftSubscription with Absolute Strategy Unit Tests', () => {
 				slug,
 				name,
 				chain,
-				floorPrice,
+				lastNotifiedPrice,
 				symbol
 			};
 

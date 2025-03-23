@@ -36,11 +36,11 @@ export class TokenSubscription extends AbstractSubscription<ITokenTarget, IPrice
 	 * @returns {boolean} Whether the price change meets the notification criteria.
 	 */
 	public shouldNotify(newState: number): boolean {
-		return this.strategy.shouldNotify(this.target.price, newState);
+		return this.strategy.shouldNotify(this.target.lastNotifiedPrice, newState);
 	}
 
 	public calculateDifference(newState: number, precision?: number): number {
-		return this.strategy.calculateDifference(this.target.price, newState, precision);
+		return this.strategy.calculateDifference(this.target.lastNotifiedPrice, newState, precision);
 	}
 
 	/**
@@ -52,7 +52,7 @@ export class TokenSubscription extends AbstractSubscription<ITokenTarget, IPrice
 	public withUpdatedState(newState: number): TokenSubscription {
 		const updatedState: ITokenTarget = {
 			...this.target,
-			price: newState
+			lastNotifiedPrice: newState
 		};
 
 		return new TokenSubscription(

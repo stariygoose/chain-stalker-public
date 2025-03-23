@@ -9,12 +9,12 @@ describe('TokenSubscription with Percentage Strategy Unit Tests', () => {
 		let strategy: IPriceChangeStrategy;
 		
 		beforeEach(() => {
-			const price = 2000; // USD
+			const lastNotifiedPrice = 2000; // USD
 			const symbol = 'ETH';
 
 			target = {
 				type: 'token',
-				price,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -43,11 +43,11 @@ describe('TokenSubscription with Percentage Strategy Unit Tests', () => {
 			const id = '1';
 			const userId = 2032;
 
-			const price = NaN; // USD
+			const lastNotifiedPrice = NaN; // USD
 			const symbol = 'ETH';
 			const target: ITokenTarget = {
 				type: 'token',
-				price,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -65,11 +65,11 @@ describe('TokenSubscription with Percentage Strategy Unit Tests', () => {
 			const id = '1';
 			const userId = 2032;
 
-			const price = NaN; // USD
+			const lastNotifiedPrice = NaN; // USD
 			const symbol = 'ETH';
 			const target: ITokenTarget = {
 				type: 'token',
-				price,
+				lastNotifiedPrice,
 				symbol
 			};
 	
@@ -90,12 +90,12 @@ describe('TokenSubscription with Percentage Strategy Unit Tests', () => {
 		let subscription: TokenSubscription;
 
 		beforeEach(() => {
-			const price = 2000; // USD
+			const lastNotifiedPrice = 2000; // USD
 			const symbol = 'ETH';
 
 			target = {
 				type: 'token',
-				price,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -114,7 +114,7 @@ describe('TokenSubscription with Percentage Strategy Unit Tests', () => {
 
 			const res = subscription.withUpdatedState(newPrice);
 
-			expect(res.target.price).toBe(newPrice);
+			expect(res.target.lastNotifiedPrice).toBe(newPrice);
 		});
 
 		it('should throw error Token Subscription when new price is NaN', () => {
@@ -140,12 +140,12 @@ describe('TokenSubscription with Percentage Strategy Unit Tests', () => {
 		let subscription: TokenSubscription;
 
 		beforeEach(() => {
-			const price = 2400; // USD
+			const lastNotifiedPrice = 2400; // USD
 			const symbol = 'ETH';
 
 			target = {
 				type: 'token',
-				price,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -168,7 +168,7 @@ describe('TokenSubscription with Percentage Strategy Unit Tests', () => {
 		});
 
 		it('should return true when price has been changed by (price / 2)', () => {
-			const newPrice = subscription.target.price / 2; // ETH
+			const newPrice = subscription.target.lastNotifiedPrice / 2; // ETH
 
 			const res = subscription.shouldNotify(newPrice);
 
@@ -176,7 +176,7 @@ describe('TokenSubscription with Percentage Strategy Unit Tests', () => {
 		});
 
 		it('should return false when price has been changed by (threshold - 0.01)', () => {
-			const newPrice = subscription.target.price - (subscription.strategy.threshold - 0.00001); // ETH
+			const newPrice = subscription.target.lastNotifiedPrice - (subscription.strategy.threshold - 0.00001); // ETH
 
 			const res = subscription.shouldNotify(newPrice);
 
@@ -206,12 +206,12 @@ describe('TokenSubscription with Percentage Strategy Unit Tests', () => {
 		let subscription: TokenSubscription;
 
 		beforeEach(() => {
-			const price = 2400; // USD
+			const lastNotifiedPrice = 2400; // USD
 			const symbol = 'ETH';
 
 			target = {
 				type: 'token',
-				price,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -274,12 +274,12 @@ describe('TokenSubscription with Absolute Strategy Unit Tests', () => {
 		let strategy: IPriceChangeStrategy;
 		
 		beforeEach(() => {
-			const price = 2000; // USD
+			const lastNotifiedPrice = 2000; // USD
 			const symbol = 'ETH';
 
 			target = {
 				type: 'token',
-				price,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -310,12 +310,12 @@ describe('TokenSubscription with Absolute Strategy Unit Tests', () => {
 		let subscription: TokenSubscription;
 
 		beforeEach(() => {
-			const price = 2400; // USD
+			const lastNotifiedPrice = 2400; // USD
 			const symbol = 'ETH';
 
 			target = {
 				type: 'token',
-				price,
+				lastNotifiedPrice,
 				symbol
 			};
 
@@ -337,8 +337,8 @@ describe('TokenSubscription with Absolute Strategy Unit Tests', () => {
 			expect(res).toBe(true);
 		});
 
-		it('should return true when price has been changed by (floorPrice / 2)', () => {
-			const newPrice = subscription.target.price / 2; // ETH
+		it('should return true when price has been changed by (lastNotifiedPrice / 2)', () => {
+			const newPrice = subscription.target.lastNotifiedPrice / 2; // ETH
 
 			const res = subscription.shouldNotify(newPrice);
 
@@ -346,7 +346,7 @@ describe('TokenSubscription with Absolute Strategy Unit Tests', () => {
 		});
 
 		it('should return false when price has been changed by (threshold - 0.00001)', () => {
-			const newPrice = subscription.target.price - (subscription.strategy.threshold - 0.00001); // ETH
+			const newPrice = subscription.target.lastNotifiedPrice - (subscription.strategy.threshold - 0.00001); // ETH
 
 			const res = subscription.shouldNotify(newPrice);
 
@@ -376,12 +376,12 @@ describe('TokenSubscription with Absolute Strategy Unit Tests', () => {
 		let subscription: TokenSubscription;
 
 		beforeEach(() => {
-			const price = 2400; // USD
+			const lastNotifiedPrice = 2400; // USD
 			const symbol = 'ETH';
 
 			target = {
 				type: 'token',
-				price,
+				lastNotifiedPrice,
 				symbol
 			};
 

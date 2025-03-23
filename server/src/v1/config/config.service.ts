@@ -6,12 +6,19 @@ interface IConfigService {
 	get(key: string): string;
 }
 
+type Marketplace = string;
+type ApiKey = string;
+
 export class ConfigService implements IConfigService{
 	private static instance: ConfigService;
+	public readonly marketplaces: Record<Marketplace, ApiKey | null>;
+	
 	readonly isDevMode: boolean;
+	private readonly marketplacesRegex = /^MARKETPLACE_KEY_/;
 
 	constructor() {
 		this.isDevMode = this.getMode();
+		this.marketplaces = this.getMarketplaces();
 	}
 
 	public static getInstance(): ConfigService {
@@ -32,5 +39,19 @@ export class ConfigService implements IConfigService{
 	private getMode(): boolean {
 		const mode = this.get(EnvVariables.NODE_MODE);
 		return mode === 'dev' ? true : false;
+	}
+
+	private getMarketplaces(): Record<Marketplace, ApiKey | null> {
+		const obj: Record<Marketplace, ApiKey | null> = {};
+
+		Object.keys(process.env)
+			.filter(key => this.marketplacesRegex.test(key))
+			.reduce((acc, key) => {
+				const marketplace = key.replace(this.marketplacesRegex, '');
+				acc[marketplace] = process.env[key] ?? null;
+				return acc;
+			}, obj);
+
+		return obj;
 	}
 }

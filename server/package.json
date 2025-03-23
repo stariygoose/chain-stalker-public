@@ -10,6 +10,7 @@
 		"start:v0": "node dist/v0/server.js",
 		"start:v1": "node dist/v1/server.js",
 		"dev": "npx ts-node ./src/v1/server.ts",
+		"dev:env": "node -r dotenv/config -r ts-node/register src/v1/server.ts dotenv_config_path=../.env",
 		"build": "npx tsc -p tsconfig.build.json",
 		"compile": "npx tsc",
 		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"

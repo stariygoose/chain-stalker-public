@@ -26,7 +26,7 @@ export class SubscriptionFactory {
 	public static createTokenSubscription(
 		id: string | null = null,
 		userId: number,
-		instance: ITokenTarget,
+		target: ITokenTarget,
 		threshold: number,
 		strategyType: PriceStrategies = 'percentage'
 	): TokenSubscription {
@@ -35,7 +35,7 @@ export class SubscriptionFactory {
 		return new TokenSubscription(
 			id,
 			userId,
-			instance,
+			target,
 			strategy
 		);
 	}

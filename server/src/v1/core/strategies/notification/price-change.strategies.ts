@@ -21,7 +21,7 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 	 * @param {number} threshold - The percentage threshold that must be exceeded to trigger a notification.
 	 */
 	constructor(threshold: number) {
-		super(threshold);
+		super('percentage', threshold);
 		this.verifyThreshold();
 	}
 
@@ -144,7 +144,7 @@ export class AbsoluteChangeStrategy extends AbstractPriceChangeStrategy {
 	 * @throws {DomainError.InvalidStrategyConfigurationError} If the threshold is invalid or out of bounds.
 	 */
 	constructor(threshold: number) {
-		super(threshold);
+		super('absolute', threshold);
 		this.verifyThreshold();
 	}
 

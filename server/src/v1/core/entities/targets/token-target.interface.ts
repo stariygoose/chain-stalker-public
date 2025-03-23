@@ -13,5 +13,5 @@ export interface ITokenTarget extends ISubscriptionTarget {
 	 * The most recent price of the token that was sent to the user.
 	 * This value is used as a reference for further price change calculations.
 	 */
-	readonly price: number;
+	readonly lastNotifiedPrice: number;
 }

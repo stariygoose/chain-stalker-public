@@ -1,34 +1,37 @@
-import { NftSubscription } from "#core/entities/subscription/nft-subscription.class.js";
-import { INftTarget } from "#core/entities/targets/index.js";
-import { PercentageChangeStrategy } from "#core/strategies/notification/index.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-
-const id = '1';
-const userId = 2032;
-
-const slug = "nft_slug";
-const name = "Nft Name";
-const chain = "ethereum";
-const floorPrice = 14; // ETH
-const symbol = 'ETH';
-const target: INftTarget = {
-	type: 'nft',
-	slug,
-	name,
-	chain,
-	floorPrice,
-	symbol
-};
-const strategy = new PercentageChangeStrategy(5);
+import { startServer } from "#config/app.js";
+import { INftTarget } from "#core/entities/targets/nft-target.interface.js";
+import { SubscriptionFactory } from "#core/factories/subscription.factory.js";
+import { SubscriptionModel, UserModel } from "#infrastructure/database/mongodb/models/index.js";
 
 
-const sub = new NftSubscription(
-	id,
-	userId,
-	target,
-	strategy
-);
 
-console.log(sub.shouldNotify(Infinity));
+startServer().then(() => {
+	const userId = 123456;
+	UserModel.create({ userId }).then((res) => {
+	
+		const instance: INftTarget = {
+			type: 'nft',
+			slug: 'test_slug',
+			name: 'Test Name',
+			chain: 'ethereum',
+			lastNotifiedPrice: 0.11,
+			symbol: 'ETH'
+		};
+		const threshold = 5;
+		
+		const subscription = SubscriptionFactory.createNftSubscription(
+			null,
+			res.userId, 
+			instance,
+			threshold,
+			'absolute'
+		);
+		
+		SubscriptionModel.create(subscription).then((res) => console.log(res)).catch(err => console.log(err));
+	
+	}).catch(err => console.log(err));
+}).catch((err: unknown) => console.log(err));
+

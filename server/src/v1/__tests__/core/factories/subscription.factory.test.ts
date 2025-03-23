@@ -16,7 +16,7 @@ describe('Subscription Factory Unit Tests', () => {
 				slug: 'test_slug',
 				name: 'Test Name',
 				chain: 'ethereum',
-				floorPrice: 0.11,
+				lastNotifiedPrice: 0.11,
 				symbol: 'ETH'
 			};
 			const threshold = 5;
@@ -45,7 +45,7 @@ describe('Subscription Factory Unit Tests', () => {
 				slug: 'test_slug',
 				name: 'Test Name',
 				chain: 'ethereum',
-				floorPrice: 0.11,
+				lastNotifiedPrice: 0.11,
 				symbol: 'ETH'
 			};
 			const threshold = 5;
@@ -74,7 +74,7 @@ describe('Subscription Factory Unit Tests', () => {
 				slug: 'test_slug',
 				name: 'Test Name',
 				chain: 'ethereum',
-				floorPrice: 0.11,
+				lastNotifiedPrice: 0.11,
 				symbol: 'ETH'
 			};
 			let threshold = NaN;
@@ -120,7 +120,7 @@ describe('Subscription Factory Unit Tests', () => {
 				slug: 'test_slug',
 				name: 'Test Name',
 				chain: 'ethereum',
-				floorPrice: NaN,
+				lastNotifiedPrice: NaN,
 				symbol: 'ETH'
 			};
 			let threshold = 5;
@@ -144,7 +144,7 @@ describe('Subscription Factory Unit Tests', () => {
 			const userId = 123456;
 			const target: ITokenTarget = {
 				type: 'token',
-				price: 2345,
+				lastNotifiedPrice: 2345,
 				symbol: 'ETH'
 			};
 			const threshold = 5;
@@ -171,7 +171,7 @@ describe('Subscription Factory Unit Tests', () => {
 			const userId = 123456;
 			const target: ITokenTarget = {
 				type: 'token',
-				price: 2345,
+				lastNotifiedPrice: 2345,
 				symbol: 'ETH'
 			};
 			const threshold = 100;
@@ -198,7 +198,7 @@ describe('Subscription Factory Unit Tests', () => {
 			const userId = 123456;
 			const target: ITokenTarget = {
 				type: 'token',
-				price: 2345,
+				lastNotifiedPrice: 2345,
 				symbol: 'ETH'
 			};
 			let threshold = NaN;
@@ -241,7 +241,7 @@ describe('Subscription Factory Unit Tests', () => {
 			const userId = 123456;
 			const target: ITokenTarget = {
 				type: 'token',
-				price: NaN,
+				lastNotifiedPrice: NaN,
 				symbol: 'ETH'
 			};
 			let threshold = 100;

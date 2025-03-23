@@ -16,14 +16,14 @@ export class NftTargetValidator extends Validator<INftTarget> {
 			);
 		}
 
-		if (NumberValidator.isInfinity(this.objective.floorPrice)) {
+		if (NumberValidator.isInfinity(this.objective.lastNotifiedPrice)) {
 			throw new DomainError.PriceTargetConfigurationError(
 				this.constructor.name,
 				`Floor price cannot be Infinity.`
 			)
 		}
 
-		if (NumberValidator.isNaN(this.objective.floorPrice)) {
+		if (NumberValidator.isNaN(this.objective.lastNotifiedPrice)) {
 			throw new DomainError.PriceTargetConfigurationError(
 				this.constructor.name,
 				`Floor price cannot be NaN.`

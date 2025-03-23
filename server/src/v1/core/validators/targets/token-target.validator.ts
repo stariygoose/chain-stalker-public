@@ -9,14 +9,14 @@ export class TokenTargetValidator extends Validator<ITokenTarget> {
 	}
 
 	public validate(): void {
-		if (NumberValidator.isInfinity(this.objective.price)) {
+		if (NumberValidator.isInfinity(this.objective.lastNotifiedPrice)) {
 			throw new DomainError.PriceTargetConfigurationError(
 				this.constructor.name,
 				`Price cannot be Infinity.`
 			)
 		}
 
-		if (NumberValidator.isNaN(this.objective.price)) {
+		if (NumberValidator.isNaN(this.objective.lastNotifiedPrice)) {
 			throw new DomainError.PriceTargetConfigurationError(
 				this.constructor.name,
 				`Price cannot be NaN.`
