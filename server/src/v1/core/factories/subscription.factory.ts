@@ -4,11 +4,12 @@ import { INftTarget, ITokenTarget } from "#core/entities/targets/index.js";
 import { PriceStrategies } from "#core/strategies/notification/index.js";
 import { StrategyFactory } from "#core/factories/strategy.factory.js";
 
+
 export class SubscriptionFactory {
 	public static createNftSubscription(
 		id: string | null = null,
 		userId: number,
-		instance: INftTarget,
+		target: INftTarget,
 		threshold: number,
 		strategyType: PriceStrategies = 'percentage'
 	): NftSubscription {
@@ -17,7 +18,7 @@ export class SubscriptionFactory {
 		return new NftSubscription(
 			id,
 			userId,
-			instance,
+			target,
 			strategy
 		);
 	}
