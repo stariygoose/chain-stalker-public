@@ -1,3 +1,4 @@
+import { Target } from "#core/entities/targets/index.js";
 import { 
 	INftSubscriptionTarget, 
 	ISubscriptionTarget, 
@@ -6,7 +7,7 @@ import {
 import { Schema } from "mongoose";
 
 
-export const TargetSchema = new Schema<ISubscriptionTarget>(
+export const TargetSchema = new Schema<Target>(
 	{
 		type: { type: String, enum: ['nft', 'token'], required: true }
 	},

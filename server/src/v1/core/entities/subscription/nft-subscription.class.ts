@@ -2,11 +2,19 @@ import { INftTarget } from "#core/entities/targets/index.js";
 import { IPriceChangeStrategy } from "#core/strategies/notification/index.js";
 import { AbstractSubscription } from "#core/entities/subscription/subscription.abstract.js";
 import { NftTargetValidator } from "#core/validators/targets/nft-target.validator.js";
+import { ISubscription } from "#core/entities/subscription/index.js";
+
+export interface INftSubscription extends ISubscription {
+	readonly target: INftTarget;
+	readonly strategy: IPriceChangeStrategy;
+	calculateDifference(newState: number, precision?: number): number;
+}
 
 /**
  * Represents an NFT subscription that tracks changes in the floor price of an NFT collection.
  */
-export class NftSubscription extends AbstractSubscription<INftTarget, IPriceChangeStrategy> {
+export class NftSubscription extends AbstractSubscription<INftTarget, IPriceChangeStrategy> 
+	implements INftSubscription {
 	/**
 	 * Creates an instance of NftSubscription.
 	 * 

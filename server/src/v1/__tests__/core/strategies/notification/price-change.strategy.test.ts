@@ -10,7 +10,7 @@ describe('PercentageStrategy Unit Tests', () => {
 
 			expect(strategy).toBeInstanceOf(PercentageChangeStrategy);
 			expect(strategy.threshold).toEqual(threshold);
-			expect(strategy.type).toBe('price-change');
+			expect(strategy.type).toBe('percentage');
 		});
 
 		it('should throw error when treshold is NaN', () => {
@@ -46,7 +46,7 @@ describe('PercentageStrategy Unit Tests', () => {
 			
 			expect(equalToTopLimit).toBeInstanceOf(PercentageChangeStrategy);
 			expect(equalToTopLimit.threshold).toEqual(PercentageChangeStrategy.TOP_LIMIT);
-			expect(equalToTopLimit.type).toBe('price-change');
+			expect(equalToTopLimit.type).toBe('percentage');
 		});
 
 		it('should be correctly serialized and deserialized', () => {
@@ -253,7 +253,7 @@ describe('AbsoluteStrategy Unit Tests', () => {
 
 			expect(strategy).toBeInstanceOf(AbsoluteChangeStrategy);
 			expect(strategy.threshold).toEqual(threshold);
-			expect(strategy.type).toBe('price-change');
+			expect(strategy.type).toBe('absolute');
 		});
 
 		it('should throw error when treshold is NaN', () => {
@@ -289,7 +289,7 @@ describe('AbsoluteStrategy Unit Tests', () => {
 			
 			expect(equalToTopLimit).toBeInstanceOf(AbsoluteChangeStrategy);
 			expect(equalToTopLimit.threshold).toEqual(AbsoluteChangeStrategy.TOP_LIMIT);
-			expect(equalToTopLimit.type).toBe('price-change');
+			expect(equalToTopLimit.type).toBe('absolute');
 		})
 
 		it('should be correctly serialized and deserialized', () => {
@@ -298,7 +298,7 @@ describe('AbsoluteStrategy Unit Tests', () => {
 			const serialized = JSON.stringify(originalStrategy);
 			
 			const parsed = JSON.parse(serialized);
-			const deserializedStrategy = new PercentageChangeStrategy(parsed.threshold);
+			const deserializedStrategy = new AbsoluteChangeStrategy(parsed.threshold);
 			
 			expect(deserializedStrategy.threshold).toEqual(originalStrategy.threshold);
 			expect(deserializedStrategy.type).toEqual(originalStrategy.type);

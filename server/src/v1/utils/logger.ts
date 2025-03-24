@@ -8,7 +8,7 @@ function getLoggerLevel() {
 }
 
 export const logger = createLogger({
-	level: getLoggerLevel(),
+	level: 'debug',
 	format: format.combine(
 		format.errors({ stack: true }),
 		format.timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),

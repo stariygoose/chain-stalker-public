@@ -2,13 +2,20 @@ import { ITokenTarget } from "#core/entities/targets/index.js";
 import { IPriceChangeStrategy } from "#core/strategies/notification/notification-strategies.interface.js";
 import { AbstractSubscription } from "#core/entities/subscription/subscription.abstract.js";
 import { TokenTargetValidator } from "#core/validators/targets/token-target.validator.js";
+import { ISubscription } from "#core/entities/subscription/index.js";
 
+export interface ITokenSubscription extends ISubscription {
+	readonly target: ITokenTarget;
+	readonly strategy: IPriceChangeStrategy;
+	calculateDifference(newState: number, precision?: number): number;
+}
 
 /**
  * Represents a subscription for tracking changes in a token's price.
  * Determines when a notification should be sent based on a defined price change strategy.
  */
-export class TokenSubscription extends AbstractSubscription<ITokenTarget, IPriceChangeStrategy> {
+export class TokenSubscription extends AbstractSubscription<ITokenTarget, IPriceChangeStrategy>
+	implements ITokenSubscription {
 	/**
 	 * Creates an instance of TokenSubscription.
 	 * 

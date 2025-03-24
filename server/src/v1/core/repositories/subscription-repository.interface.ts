@@ -1,7 +1,8 @@
-import { ISubscription } from "#core/entities/subscription/subscription.interface.js";
+import { Subscription } from "#core/entities/subscription/index.js";
 
 export interface ISubscriptionRepository {
-	getById(id: string): ISubscription;
-	getAllByUserId(userId: number): ISubscription;
-	getAllByUserIdAndType(userId: number, type: 'nft' | 'token'): ISubscription;
+	create(subscription: Subscription): Promise<Subscription>;
+	getById(id: string): Promise<Subscription>;
+	// getAllByUserId(userId: number): Promise<ISubscription>;
+	// getAllByUserIdAndType(userId: number, type: 'nft' | 'token'): Promise<ISubscription>;
 }
