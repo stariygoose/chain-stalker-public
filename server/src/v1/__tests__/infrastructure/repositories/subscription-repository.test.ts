@@ -1,9 +1,9 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
+import { SubscriptionRepository } from '#infrastructure/database/mongodb/repositories/subscription.repository.js';
 import { INftTarget, ITokenTarget } from '#core/entities/targets/index.js';
 import { SubscriptionFactory } from '#core/factories/index.js';
-import { SubscriptionRepository } from '#infrastructure/database/mongodb/repositories/subscription.repository.js';
 import { TokenSubscription } from '#core/entities/subscription/token-subscription.class.js';
 import { LayerError } from '#infrastructure/errors/index.js';
 
@@ -42,7 +42,7 @@ describe('Subscription Repository Unit Tests', () => {
 				symbol: 'ETH'
 			};
 			const threshold = 5;
-			const subscription = SubscriptionFactory.createNftSubscription(
+			const subscription = SubscriptionFactory.create(
 				null,
 				userId, 
 				target,
@@ -67,7 +67,7 @@ describe('Subscription Repository Unit Tests', () => {
 				symbol: 'ETH'
 			};
 			const threshold = 5;
-			const subscription = SubscriptionFactory.createTokenSubscription(
+			const subscription = SubscriptionFactory.create(
 				null,
 				userId, 
 				target,
@@ -92,7 +92,7 @@ describe('Subscription Repository Unit Tests', () => {
 				symbol: 'ETH'
 			};
 			const threshold = 5;
-			const subscription = SubscriptionFactory.createTokenSubscription(
+			const subscription = SubscriptionFactory.create(
 				'123234',
 				userId, 
 				target,
@@ -120,7 +120,7 @@ describe('Subscription Repository Unit Tests', () => {
 				symbol: 'ETH'
 			};
 			const threshold = 5;
-			const subscription = SubscriptionFactory.createTokenSubscription(
+			const subscription = SubscriptionFactory.create(
 				'123234',
 				userId, 
 				target,
@@ -147,7 +147,7 @@ describe('Subscription Repository Unit Tests', () => {
 				symbol: 'ETH'
 			};
 			const threshold = 5;
-			const subscription = SubscriptionFactory.createTokenSubscription(
+			const subscription = SubscriptionFactory.create(
 				null,
 				userId, 
 				target,
@@ -173,7 +173,7 @@ describe('Subscription Repository Unit Tests', () => {
 				symbol: 'ETH'
 			};
 			const threshold = 5;
-			const subscription = SubscriptionFactory.createTokenSubscription(
+			const subscription = SubscriptionFactory.create(
 				null,
 				userId, 
 				target,

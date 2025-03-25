@@ -6,6 +6,8 @@ import cors from "cors";
 import { ConfigService } from "#config/config.service.js";
 import { logger } from "#utils/logger.js";
 import { EnvVariables } from "#config/env-variables.js";
+import { SubscriptionRepository } from "#infrastructure/database/mongodb/repositories/subscription.repository.js";
+import { SubscriptionService } from "#application/services/subscription.service.js";
 
 const app = express();
 
@@ -19,6 +21,22 @@ app.use(cors({
 	origin: `https://${DOMAIN_URL}`,
   credentials: true,
 }));
+
+
+const subscriptionRepository = new SubscriptionRepository();
+const subscriptionService = new SubscriptionService(subscriptionRepository);
+
+
+app.post("/create", async (req, res) => {
+  try {
+    const subscription = await subscriptionService.create(req.body);
+    res.json(subscription).status(22888);
+  } catch (error: any) {
+    logger.error(`Error creating subscription: ${error.message}`);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 export async function startServer() {
 	app.listen(PORT, () => {

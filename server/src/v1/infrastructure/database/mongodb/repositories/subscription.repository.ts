@@ -2,6 +2,8 @@ import { Types } from "mongoose";
 
 import { Subscription } from "#core/entities/subscription/index.js";
 import { ISubscriptionRepository } from "#core/repositories/subscription-repository.interface.js";
+import { Target } from "#core/entities/targets/index.js";
+
 import { SubscriptionModel } from "#infrastructure/database/mongodb/models/index.js";
 import { ISubscriptionDbDto } from "#infrastructure/dtos/subscription/subscription-dto.interfaces.js";
 import { SubscriptionDbRecord } from "#infrastructure/dtos/subscription/subscription.dto.js";
@@ -9,8 +11,8 @@ import { DatabaseError } from "#infrastructure/errors/database-errors/database-e
 import { LayerError } from "#infrastructure/errors/index.js";
 import { InfrastructureError } from "#infrastructure/errors/infrastructure-error.abstract.js";
 import { SubscriptionMapper } from "#infrastructure/mappers/subscription/subscription.mapper.js";
+
 import { logger } from "#utils/logger.js";
-import { Target } from "#core/entities/targets/index.js";
 
 
 export class SubscriptionRepository implements ISubscriptionRepository {

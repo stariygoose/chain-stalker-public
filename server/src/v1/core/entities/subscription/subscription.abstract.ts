@@ -1,6 +1,7 @@
 import { INotificationStrategy } from "#core/strategies/notification/index.js";
-import { ISubscriptionTarget } from "#core/entities/targets/index.js";
 import { ISubscription } from "#core/entities/subscription/index.js";
+import { Target } from "#core/entities/targets/subscription-target.interface.js";
+
 
 /**
  * Abstract class representing a subscription for tracking changes in a target entity.
@@ -9,7 +10,7 @@ import { ISubscription } from "#core/entities/subscription/index.js";
  * @template S - The type of the notification strategy.
  */
 export abstract class AbstractSubscription<
-	T extends ISubscriptionTarget,
+	T extends Target,
 	S extends INotificationStrategy<unknown, unknown>
 > implements ISubscription<T, S> {
 	/**

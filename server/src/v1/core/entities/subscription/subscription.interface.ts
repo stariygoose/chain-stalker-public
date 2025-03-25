@@ -1,5 +1,5 @@
-import { ISubscriptionTarget } from "#core/entities/targets/index.js";
 import { INotificationStrategy } from "#core/strategies/notification/index.js";
+import { Target } from "#core/entities/targets/subscription-target.interface.js";
 
 /**
  * Represents a subscription that tracks changes in a specific target and determines 
@@ -9,7 +9,7 @@ import { INotificationStrategy } from "#core/strategies/notification/index.js";
  * @template S - The type of the notification strategy used to evaluate state changes.
  */
 export interface ISubscription<
-	T extends ISubscriptionTarget = ISubscriptionTarget,
+	T extends Target = Target,
 	S extends INotificationStrategy<unknown, unknown> = INotificationStrategy<unknown, unknown>
 > {
 	/** The unique identifier of the subscription, or `null` if not assigned. */

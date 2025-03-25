@@ -22,9 +22,13 @@
 		"crypto": "^1.0.1",
 		"dotenv": "^16.4.5",
 		"express": "^4.21.0",
+		"install": "^0.13.0",
+		"inversify": "^7.0.0-alpha.5",
 		"ioredis": "^5.4.2",
 		"jsonwebtoken": "^9.0.2",
 		"mongoose": "^8.8.0",
+		"npm": "^11.2.0",
+		"reflect-metadata": "^0.2.2",
 		"winston": "^3.17.0",
 		"ws": "^8.18.0"
 	},

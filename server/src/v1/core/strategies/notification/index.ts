@@ -6,6 +6,5 @@ export {
 export { 
 	INotificationStrategy,
 	IPriceChangeStrategy,
-	PriceStrategies
+	PriceChangeStrategiesTypes
 } from "#core/strategies/notification/notification-strategies.interface.js";
-

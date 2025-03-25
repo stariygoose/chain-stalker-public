@@ -1,5 +1,8 @@
 import { DomainError } from "#core/errors/index.js";
-import { AbsoluteChangeStrategy, PercentageChangeStrategy } from "#core/strategies/notification/price-change.strategies.js";
+import { 
+	AbsoluteChangeStrategy, 
+	PercentageChangeStrategy 
+} from "#core/strategies/notification/price-change.strategies.js";
 
 
 describe('PercentageStrategy Unit Tests', () => {

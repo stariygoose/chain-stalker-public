@@ -15,32 +15,15 @@ export class SubscriptionMapper {
 		}
 
 		const target = SubscriptionMapper.convertTargetFromDb(dbSubscription.target);
-		const { type } = target;
-
-		switch (type) {
-			case "nft":
-				return SubscriptionFactory.createNftSubscription(
-					_id,
-					dbSubscription.userId,
-					target,
-					dbSubscription.strategy.threshold,
-					dbSubscription.strategy.type
-				);
-			case "token":
-				return SubscriptionFactory.createTokenSubscription(
-					_id,
-					dbSubscription.userId,
-					target,
-					dbSubscription.strategy.threshold,
-					dbSubscription.strategy.type
-				);
-			default:
-				const exhaustiveCheck: never = type;
-				throw new LayerError.MapperError(
-					this.constructor.name,
-					`Exhaustive check error. ${exhaustiveCheck} didn't handled by switch.`
-				);
-		}
+		
+		return SubscriptionFactory.create(
+			_id,
+			dbSubscription.userId,
+			target,
+			dbSubscription.strategy.threshold,
+			dbSubscription.strategy.type,
+			dbSubscription.isActive
+		);
 	}
 
 	public static toDb(subscription: Subscription): ISubscriptionDbDto {

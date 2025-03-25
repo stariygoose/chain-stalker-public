@@ -1,9 +1,10 @@
+import { Types } from "mongoose";
+
 import { 
 	ISubscriptionDbDto,
 	StrategyDbDto,
 	TargetDbDto
 } from "#infrastructure/dtos/subscription/subscription-dto.interfaces.js";
-import { Types } from "mongoose";
 
 
 export class SubscriptionDbRecord implements ISubscriptionDbDto {
