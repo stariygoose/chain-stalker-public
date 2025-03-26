@@ -92,7 +92,7 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./mongod.conf:/config/mongod.conf:ro
-      - ./_volume/mongodb:/data/db
+      - ./.volume/mongodb:/data/db
     networks:
       - ${NODE_MODE}
 
@@ -103,7 +103,7 @@ services:
       - ${REDIS_PORT}:${REDIS_PORT}
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes: 
-      - ./_volume/redis:/data
+      - ./.volume/redis:/data
     networks:
       - ${NODE_MODE}
 

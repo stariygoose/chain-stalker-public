@@ -1,6 +1,6 @@
 node_modules
 dist
-_volume
+.volume
 .env
 .env.*
 !.env.example

@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { inject, injectable } from "inversify";
 
 import { Subscription } from "#core/entities/subscription/index.js";
 import { ISubscriptionRepository } from "#core/repositories/subscription-repository.interface.js";
@@ -11,11 +12,17 @@ import { DatabaseError } from "#infrastructure/errors/database-errors/database-e
 import { LayerError } from "#infrastructure/errors/index.js";
 import { InfrastructureError } from "#infrastructure/errors/infrastructure-error.abstract.js";
 import { SubscriptionMapper } from "#infrastructure/mappers/subscription/subscription.mapper.js";
+import { TYPES } from "#di/types.js";
+import { ILogger } from "#utils/logger.js";
 
-import { logger } from "#utils/logger.js";
 
-
+@injectable()
 export class SubscriptionRepository implements ISubscriptionRepository {
+	constructor (
+		@inject(TYPES.Logger)
+		private readonly logger: ILogger
+	) {}
+
 	public async create(subscription: Subscription): Promise<Subscription> {
 		try {
 			const res = await SubscriptionModel.create({
@@ -36,11 +43,11 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 			return SubscriptionMapper.toDomain(record);
 		} catch (error: unknown) {
 			if (error instanceof Error) {
-				logger.error(`Unexpected Error: ${error.message}`);
+				this.logger.error(`Unexpected Error: ${error.message}`);
 				throw error;
 			}
-			logger.error('Unknown error occurred');
-			throw new Error('Unknown error occurred');
+			this.logger.error('Unknown error occurred.');
+			throw new Error('Unknown error occurred.');
 		}
 	}
 
@@ -67,22 +74,27 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 			));
 		} catch (error: unknown) {
 			if (error instanceof LayerError.NotFoundDbError) {
-				logger.warn(error.message);
+				this.logger.warn(error.message);
 			}
 			if (error instanceof DatabaseError || error instanceof InfrastructureError) {
-				logger.error(`Database Error: ${error.message}`);
+				this.logger.error(`${error.message}`);
 				throw error;
 			}
 			if (error instanceof Error) {
-				logger.error(`Unexpected Error: ${error.message}`);
+				this.logger.error(`Unexpected Error: ${error.message}`);
 				throw error;
 			}
-			logger.error('Unknown error occurred');
-			throw new Error('Unknown error occurred');
+			this.logger.error('Unknown error occurred.');
+			throw new Error('Unknown error occurred.');
 		}
 	}
 
 	public async drop(): Promise<void> {
-		await SubscriptionModel.deleteMany({});
+		try {
+			await SubscriptionModel.deleteMany({});
+		} catch (error: unknown) {
+			this.logger.error('Unexpected error while dropping a database.');
+			throw error;
+		}
 	}
 }

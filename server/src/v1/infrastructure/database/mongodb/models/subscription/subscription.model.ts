@@ -4,6 +4,7 @@ import { StrategySchema } from "#infrastructure/database/mongodb/models/subscrip
 import { ISubscriptionTarget } from "#infrastructure/database/mongodb/models/subscription/targets/targets.interfaces.js";
 import { TargetSchema } from "#infrastructure/database/mongodb/models/subscription/targets/targets.schemas.js";
 
+
 interface ISubscriptionSchema {
 	userId: number;
 	isActive: boolean;

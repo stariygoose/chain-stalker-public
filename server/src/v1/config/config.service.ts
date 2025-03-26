@@ -1,5 +1,6 @@
 import { ConfigError } from "#utils/errors/index.js";
 import { EnvVariables } from "#config/env-variables.js";
+import { injectable } from "inversify";
 
 interface IConfigService {
 	isDevMode: boolean;
@@ -9,6 +10,7 @@ interface IConfigService {
 type Marketplace = string;
 type ApiKey = string;
 
+@injectable()
 export class ConfigService implements IConfigService{
 	private static instance: ConfigService;
 	public readonly marketplaces: Record<Marketplace, ApiKey | null>;

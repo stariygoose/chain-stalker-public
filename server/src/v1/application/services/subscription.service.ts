@@ -2,16 +2,19 @@ import { injectable, inject } from "inversify";
 
 import { CreateSubscriptionRequestDto, ICreateSubscriptionRequest } from "#application/dtos/requests/subscription/create-request.dto.js";
 import { ISubscriptionRepository } from "#core/repositories/subscription-repository.interface.js";
-import { SubscriptionRepository } from "#infrastructure/database/mongodb/repositories/subscription.repository.js";
 import { SubscriptionFactory } from "#core/factories/subscription.factory.js";
 import { CreateSubscriptionResponseDto, ICreateSubscriptionResponse } from "#application/dtos/response/subscription/create-response.dto.js";
+import { TYPES } from "#di/types.js";
 
+export interface ISubscriptionService {
+	create(data: ICreateSubscriptionRequest): Promise<ICreateSubscriptionResponse>;
+}
 
 @injectable()
-export class SubscriptionService {
+export class SubscriptionService implements ISubscriptionService {
 	constructor (
-		@inject(SubscriptionRepository)
-		readonly repository: ISubscriptionRepository
+		@inject(TYPES.SubscriptionRepository)
+		private readonly repository: ISubscriptionRepository
 	) {}
 
 	public async create(data: ICreateSubscriptionRequest): Promise<ICreateSubscriptionResponse> {
