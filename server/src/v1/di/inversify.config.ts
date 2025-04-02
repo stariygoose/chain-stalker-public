@@ -2,10 +2,10 @@ import { Container } from "inversify";
 
 import { SubscriptionRepository } from "#infrastructure/database/mongodb/repositories/subscription.repository.js";
 import { TYPES } from "#di/types.js";
-import { SubscriptionController } from "#representation/controllers/subscription.controller.js";
+import { SubscriptionController } from "#presentation/controllers/subscription.controller.js";
 import { ISubscriptionService, SubscriptionService } from "#application/services/subscription.service.js";
 import { ConfigService } from "#config/config.service.js";
-import { IServerConfig, ServerConfig } from "#representation/config/server.config.js";
+import { IServerConfig, ServerConfig } from "#presentation/config/server.config.js";
 import { ILogger, Logger } from "#utils/logger.js";
 import { IMongoDbConfig, MongoDbConfig } from "#infrastructure/database/mongodb/config/mongo.config.js";
 

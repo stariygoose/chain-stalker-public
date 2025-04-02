@@ -1,7 +1,7 @@
 import { inject } from "inversify";
 import { InversifyExpressServer } from "inversify-express-utils";
 import { Logger } from "winston";
-import express from "express";
+import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -10,6 +10,7 @@ import { container } from "#di/inversify.config.js";
 import { TYPES } from "#di/types.js";
 import { EnvVariables } from "#config/env-variables.js";
 import { IMongoDbConfig } from "#infrastructure/database/mongodb/config/mongo.config.js";
+import { errorMiddleware } from "#presentation/middlewares/error.middleware.js";
 
 export interface IServerConfig {
 	start(): Promise<void>;
@@ -29,7 +30,7 @@ export class ServerConfig {
 		private readonly _mongo: IMongoDbConfig,
 
 	) {
-		this._server = new InversifyExpressServer(container);
+		this._server = new InversifyExpressServer(container, null, { rootPath: "/api/v1" });
 		this._baseUrl = this._config.get(EnvVariables.DOMAIN_URL);
 		this._PORT = this._config.get(EnvVariables.SERVER_PORT);
 	}
@@ -46,12 +47,17 @@ export class ServerConfig {
 
 	private initMiddlewares() {
 		this._server.setConfig((app) => {
-			app.use(express.json());
+			app.use(bodyParser.urlencoded({ extended: false }));
+			app.use(bodyParser.json());
 			app.use(cookieParser());
 			app.use(cors({
 				origin: `https://${this._baseUrl}`,
 				credentials: true,
 			}));
+		});
+
+		this._server.setErrorConfig((app) => {
+			app.use(errorMiddleware);
 		})
 	}
 }
