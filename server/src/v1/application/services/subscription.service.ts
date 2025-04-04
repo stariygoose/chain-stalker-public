@@ -5,6 +5,7 @@ import { ISubscriptionRepository } from "#core/repositories/subscription-reposit
 import { SubscriptionFactory } from "#core/factories/subscription.factory.js";
 import { CreateSubscriptionResponseDto, ICreateSubscriptionResponse } from "#application/dtos/response/subscription/create-response.dto.js";
 import { TYPES } from "#di/types.js";
+import { WebsocketManager } from "#infrastructure/websockets/websocket-manager.js";
 
 export interface ISubscriptionService {
 	create(data: ICreateSubscriptionRequest): Promise<ICreateSubscriptionResponse>;
@@ -14,7 +15,9 @@ export interface ISubscriptionService {
 export class SubscriptionService implements ISubscriptionService {
 	constructor (
 		@inject(TYPES.SubscriptionRepository)
-		private readonly repository: ISubscriptionRepository
+		private readonly repository: ISubscriptionRepository,
+		@inject(TYPES.WebsocketManager)
+		private readonly _wm: WebsocketManager
 	) {}
 
 	public async create(data: ICreateSubscriptionRequest): Promise<ICreateSubscriptionResponse> {
@@ -31,6 +34,21 @@ export class SubscriptionService implements ISubscriptionService {
 
 		const subscriptionFromDb = await this.repository.create(subscription);
 		const id: string = subscriptionFromDb.id!;
+
+		const { type } = subscriptionFromDb.target;
+		switch (type) {
+			case "nft":
+				this._wm.stalkFromOpensea(
+					subscriptionFromDb.userId,
+					subscriptionFromDb.target.slug
+				);
+				break;
+			case "token":
+				break;
+			default:
+				const exhaustiveCheck: never = type;
+				throw new Error(`Unhandled type ${exhaustiveCheck}`);
+		}
 
 		return new CreateSubscriptionResponseDto(
 			id,

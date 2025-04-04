@@ -22,7 +22,7 @@ export class Logger implements ILogger {
 	}
 
 	public warn(message: string): void {
-		this._logger.warning(message);
+		this._logger.warn(message);
 	}
 	
 	public error(message: string): void {

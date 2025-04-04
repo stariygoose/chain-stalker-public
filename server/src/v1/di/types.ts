@@ -1,3 +1,4 @@
+
 export const TYPES = {
 	Logger: Symbol.for('Logger'),
 	ConfigService: Symbol.for('ConfigService'),
@@ -7,5 +8,14 @@ export const TYPES = {
 
 	SubscriptionController: Symbol.for('SubscriptionController'),
 	SubscriptionService: Symbol.for('SubscriptionService'),
-	SubscriptionRepository: Symbol.for('SubscriptionRepository')
+	SubscriptionRepository: Symbol.for('SubscriptionRepository'),
+
+	OpenseaEventStream: Symbol.for('OpenseaEventStream'),
+	WebsocketManager: Symbol.for('WebsocketManager'),
+
+	RedisClient: Symbol.for('RedisClient'),
+	RedisCache: Symbol.for('RedisCache'),
+	RedisPubSub: Symbol.for('RedisPubSub'),
+
+	OpenSeaAPI: Symbol.for('OpenSeaAPI')
 }

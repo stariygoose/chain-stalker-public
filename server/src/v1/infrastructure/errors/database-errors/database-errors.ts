@@ -2,7 +2,7 @@ import { DatabaseError } from "#infrastructure/errors/database-errors/database-e
 
 export class NotFoundDbError extends DatabaseError {
 	constructor (message: string) {
-		super(`Database NotFound Error: ${message}`);
+		super(`Not found ${message}`);
 	}
 }
 
