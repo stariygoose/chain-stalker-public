@@ -45,3 +45,13 @@ export interface ISubscriptionDbDto {
 	readonly strategy: StrategyDbDto;
 	readonly isActive: boolean;
 }
+
+export interface INftSubscriptionDbDto extends ISubscriptionDbDto {
+	readonly target: NftTargetDbDto;
+}
+
+export interface ITokenSubscriptionDbDto extends ISubscriptionDbDto {
+	readonly target: TokenTargetDbDto;
+}
+
+export type SubscriptionDbDto = INftSubscriptionDbDto | ITokenSubscriptionDbDto;

@@ -12,16 +12,13 @@ import { fromWeiToEth } from "#infrastructure/helpers/index.js";
 import { INftEventStream } from "#infrastructure/websockets/interfaces/nft-event-stream.interface.js";
 import { ILogger } from "#utils/logger.js";
 import { IPubSub } from "#infrastructure/lib/redis/pubsub/pubsub.interface.js";
-import { OpenSeaAPI } from "#infrastructure/lib/opensea/opensea-api.class.js";
+import { OpenSeaAPI } from "#infrastructure/lib/apis/index.js";
 import { RedisPubSub } from "#infrastructure/lib/redis/pubsub/redis-pubsub.class.js";
 import { ICache } from "#infrastructure/lib/redis/index.js";
 
 
 @injectable()
 export class OpenseaEventStream implements INftEventStream {
-	public readonly maxEventsPerConnection: number = Infinity;
-	public currentEventsPerConnection: number = 0;
-
 	private readonly _client: OpenSeaStreamClient;
 	private readonly _token: string;
 

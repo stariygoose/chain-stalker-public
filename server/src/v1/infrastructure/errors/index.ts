@@ -3,11 +3,13 @@ import * as DataBaseErrors from "#infrastructure/errors/database-errors/database
 import * as NotFoundError from "#infrastructure/errors/infrastructure-errors/not-found.error.js";
 import * as UnexpectedError from "#infrastructure/errors/infrastructure-errors/unexpected-error.js"
 import * as ApiErrors from "#infrastructure/errors/api-errors/api-errors.js";
+import * as WebsokcetErrors from "#infrastructure/errors/websockets/index.js";
 
 export const LayerError = {
 	...DtoError,
 	...DataBaseErrors,
 	...NotFoundError,
 	...UnexpectedError,
-	...ApiErrors
+	...ApiErrors,
+	...WebsokcetErrors
 }

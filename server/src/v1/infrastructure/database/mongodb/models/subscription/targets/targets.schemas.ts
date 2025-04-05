@@ -1,7 +1,6 @@
 import { Target } from "#core/entities/targets/index.js";
 import { 
 	INftSubscriptionTarget, 
-	ISubscriptionTarget, 
 	ITokenSubscriptionTarget
 } from "#infrastructure/database/mongodb/models/subscription/targets/targets.interfaces.js";
 import { Schema } from "mongoose";

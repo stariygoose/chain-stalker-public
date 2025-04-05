@@ -16,3 +16,6 @@ export interface ITokenSubscriptionTarget extends ISubscriptionTarget {
 	symbol: string;
 	lastNotifiedPrice: number; 
 }
+
+type PriceSubscriptionTarget = INftSubscriptionTarget | ITokenSubscriptionTarget;
+export type TSubscriptionTarget = PriceSubscriptionTarget;

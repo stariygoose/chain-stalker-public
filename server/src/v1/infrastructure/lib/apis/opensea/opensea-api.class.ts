@@ -4,9 +4,9 @@ import { inject, injectable } from "inversify";
 import { ConfigService } from "#config/config.service.js";
 import { EnvVariables } from "#config/env-variables.js";
 import { TYPES } from "#di/types.js";
-import { CollectionMetadata, CollectionStats } from "#infrastructure/lib/opensea/requests.interfaces.js";
+import { CollectionMetadata, CollectionStats } from "#infrastructure/lib/apis/opensea/requests.interfaces.js";
 import { LayerError } from "#infrastructure/errors/index.js";
-import { CollectionFloorPrice } from "#infrastructure/lib/opensea/responses.interfaces.js";
+import { CollectionFloorPrice } from "#infrastructure/lib/apis/opensea/responses.interfaces.js";
 
 
 @injectable()
@@ -38,7 +38,7 @@ export class OpenSeaAPI {
 			return collection.data;
 		} catch (error: any) {
 			if (error.response.status === 400) {
-				throw new LayerError.NotFoundAPIError(`Cannot find the collection on Opensea. Did you write slug correctly?`);
+				throw new LayerError.NotFoundAPIError(`Cannot find the collection on Opensea.`);
 			}
 			throw new LayerError.UnexpectedExternalAPIError("OpenSea API", `Failed with status - ${error.status}`);
 		}

@@ -3,10 +3,8 @@ import { inject, injectable } from "inversify";
 
 import { Subscription } from "#core/entities/subscription/index.js";
 import { ISubscriptionRepository } from "#core/repositories/subscription-repository.interface.js";
-import { Target } from "#core/entities/targets/index.js";
 
 import { SubscriptionModel } from "#infrastructure/database/mongodb/models/index.js";
-import { ISubscriptionDbDto } from "#infrastructure/dtos/subscription/subscription-dto.interfaces.js";
 import { SubscriptionDbRecord } from "#infrastructure/dtos/subscription/subscription.dto.js";
 import { DatabaseError } from "#infrastructure/errors/database-errors/database-errors.abstract.js";
 import { LayerError } from "#infrastructure/errors/index.js";
@@ -14,6 +12,7 @@ import { InfrastructureError } from "#infrastructure/errors/infrastructure-error
 import { SubscriptionMapper } from "#infrastructure/mappers/subscription/subscription.mapper.js";
 import { TYPES } from "#di/types.js";
 import { ILogger } from "#utils/logger.js";
+import { SubscriptionDbDto } from "#infrastructure/dtos/subscription/subscription-dto.interfaces.js";
 
 
 @injectable()
@@ -25,22 +24,23 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
 	public async create(subscription: Subscription): Promise<Subscription> {
 		try {
-			const res = await SubscriptionModel.create({
+			const res = await SubscriptionModel.create<SubscriptionDbDto>({
 				userId: subscription.userId,
 				target: subscription.target,
 				strategy: subscription.strategy,
 				isActive: subscription.isActive
 			});
 
-			const record = new SubscriptionDbRecord(
-				res._id,
-				res.userId,
-				res.target as Target,
-				res.strategy,
-				res.isActive
-			)
+			const { _id, userId, target, strategy, isActive } = res;
 
-			return SubscriptionMapper.toDomain(record);
+			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+				_id,
+				userId,
+				target,
+				strategy,
+				isActive
+			));
+
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				this.logger.error(`Unexpected Error: ${error.message}`);
@@ -87,7 +87,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 				throw new LayerError.InvalidIdDbError(id);
 			}
 
-			const subscriptionFromDb = await SubscriptionModel.findById<ISubscriptionDbDto>(id);
+			const subscriptionFromDb = await SubscriptionModel.findById<SubscriptionDbDto>(id);
 			if (!subscriptionFromDb) {
 				throw new LayerError.NotFoundDbError(
 					`Subscription with id: ${id} doesn't exist.`
@@ -122,7 +122,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
 	public async getOneByUserIdAndSlug(userId: number, slug: string): Promise<Subscription> {
 		try {
-			const subscriptionFromDb = await SubscriptionModel.findOne({
+			const subscriptionFromDb = await SubscriptionModel.findOne<SubscriptionDbDto>({
 				userId: userId,
 				'target.slug': slug
 			});
@@ -137,7 +137,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
 				_id,
 				subscriptionFromDb.userId,
-				target as Target,
+				target,
 				strategy,
 				isActive
 			));

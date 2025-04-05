@@ -10,6 +10,9 @@ export const TYPES = {
 	SubscriptionService: Symbol.for('SubscriptionService'),
 	SubscriptionRepository: Symbol.for('SubscriptionRepository'),
 
+	TokenRepository: Symbol.for("TokenRepository"),
+
+	BinanceEventStream: Symbol.for('BinanceEventStream'),
 	OpenseaEventStream: Symbol.for('OpenseaEventStream'),
 	WebsocketManager: Symbol.for('WebsocketManager'),
 
@@ -17,5 +20,6 @@ export const TYPES = {
 	RedisCache: Symbol.for('RedisCache'),
 	RedisPubSub: Symbol.for('RedisPubSub'),
 
-	OpenSeaAPI: Symbol.for('OpenSeaAPI')
+	OpenSeaAPI: Symbol.for('OpenSeaAPI'),
+	BinanceAPI: Symbol.for('BinanceAPI')
 }
