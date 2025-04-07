@@ -10,7 +10,7 @@ import { container } from "#di/inversify.config.js";
 import { TYPES } from "#di/types.js";
 import { EnvVariables } from "#config/env-variables.js";
 import { IMongoDbConfig } from "#infrastructure/database/mongodb/config/mongo.config.js";
-import { errorMiddleware } from "#presentation/middlewares/error.middleware.js";
+import { errorMiddleware } from "#presentation/middlewares/errors/error.middleware.js";
 
 export interface IServerConfig {
 	start(): Promise<void>;

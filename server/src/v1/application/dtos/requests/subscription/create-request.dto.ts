@@ -19,9 +19,13 @@ export class CreateSubscriptionRequestDto {
 
 	constructor (data: ICreateSubscriptionRequest) {
 		const { userId, target, strategy } = data;
+		const { symbol } = target;
 		
 		this.userId = userId;
-		this.target = target;
+		this.target = {
+			...target,
+			symbol: symbol.toUpperCase()
+		};
 		this.strategyType = strategy.type;
 		this.threshold = strategy.threshold;
 	}

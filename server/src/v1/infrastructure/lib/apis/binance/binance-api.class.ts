@@ -35,9 +35,9 @@ export class BinanceAPI {
 			return token;
 		} catch (error: any) {
 			if (error.response.status === 400) {
-				throw new LayerError.NotFoundAPIError(`Cannot find the token on Binance Spot.`);
+				throw new LayerError.NotFoundError(`Cannot find a token by the provided symbol.`);
 			}
-			throw new LayerError.UnexpectedExternalAPIError("Binance API", `Failed with status - ${error.status}`);
+			throw new LayerError.ExternalApiError();
 		}
 	}
 }

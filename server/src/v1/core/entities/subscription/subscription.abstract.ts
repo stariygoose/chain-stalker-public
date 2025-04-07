@@ -1,5 +1,5 @@
 import { INotificationStrategy } from "#core/strategies/notification/index.js";
-import { ISubscription } from "#core/entities/subscription/index.js";
+import { ISubscription, Subscription } from "#core/entities/subscription/index.js";
 import { Target } from "#core/entities/targets/subscription-target.interface.js";
 
 
@@ -44,7 +44,7 @@ export abstract class AbstractSubscription<
 	 * @param {unknown} newState - The updated state of the tracked target.
 	 * @returns {ISubscription<T, S>} A new subscription instance reflecting the updated state.
 	 */
-	public abstract withUpdatedState(newState: unknown): ISubscription<T, S>;
+	public abstract withUpdatedState(newState: unknown): Subscription;
 
 	/**
 	 * Validates the configuration of a Subscription instance.

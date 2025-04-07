@@ -25,6 +25,7 @@
 		"inversify": "^6.2.2",
 		"inversify-express-utils": "^6.5.0",
 		"ioredis": "^5.6.0",
+		"joi": "^17.13.3",
 		"jsonwebtoken": "^9.0.2",
 		"mongoose": "^8.8.0",
 		"redis": "^4.7.0",

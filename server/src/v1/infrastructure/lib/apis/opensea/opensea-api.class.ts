@@ -38,9 +38,10 @@ export class OpenSeaAPI {
 			return collection.data;
 		} catch (error: any) {
 			if (error.response.status === 400) {
-				throw new LayerError.NotFoundAPIError(`Cannot find the collection on Opensea.`);
+				throw new LayerError.NotFoundError(`Cannot find a collection by this slug on Opensea.`);
 			}
-			throw new LayerError.UnexpectedExternalAPIError("OpenSea API", `Failed with status - ${error.status}`);
+	
+			throw new LayerError.ExternalApiError();
 		}
 	}
 
@@ -56,9 +57,10 @@ export class OpenSeaAPI {
 			};
 		} catch (error: any) {
 			if (error.response.status === 400) {
-				throw new LayerError.NotFoundAPIError(`Cannot find Floor Price for the collection on Opensea. Did you write slug correctly?`);
+				throw new LayerError.NotFoundError(`Cannot find a collection by this slug on Opensea.`);
 			}
-			throw new LayerError.UnexpectedExternalAPIError("OpenSea API", `Failed with status - ${error.status}`);
+	
+			throw new LayerError.ExternalApiError();
 		}
 	}
 }

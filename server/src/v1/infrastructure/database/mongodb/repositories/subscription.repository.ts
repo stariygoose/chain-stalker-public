@@ -6,155 +6,148 @@ import { ISubscriptionRepository } from "#core/repositories/subscription-reposit
 
 import { SubscriptionModel } from "#infrastructure/database/mongodb/models/index.js";
 import { SubscriptionDbRecord } from "#infrastructure/dtos/subscription/subscription.dto.js";
-import { DatabaseError } from "#infrastructure/errors/database-errors/database-errors.abstract.js";
+import { AbstractDatabaseError } from "#infrastructure/errors/database-errors/database-errors.abstract.js";
 import { LayerError } from "#infrastructure/errors/index.js";
-import { InfrastructureError } from "#infrastructure/errors/infrastructure-error.abstract.js";
 import { SubscriptionMapper } from "#infrastructure/mappers/subscription/subscription.mapper.js";
 import { TYPES } from "#di/types.js";
 import { ILogger } from "#utils/logger.js";
-import { SubscriptionDbDto } from "#infrastructure/dtos/subscription/subscription-dto.interfaces.js";
+import { ITokenSubscriptionDbDto, SubscriptionDbDto } from "#infrastructure/dtos/subscription/subscription-dto.interfaces.js";
+import { ITokenSubscription } from "#core/entities/subscription/token-subscription.class.js";
+import { Target } from "#core/entities/targets/index.js";
 
 
 @injectable()
 export class SubscriptionRepository implements ISubscriptionRepository {
 	constructor (
 		@inject(TYPES.Logger)
-		private readonly logger: ILogger
+		private readonly _logger: ILogger
 	) {}
 
-	public async create(subscription: Subscription): Promise<Subscription> {
+	public async createOrUpdate(subscription: Subscription): Promise<Subscription> {
 		try {
-			const res = await SubscriptionModel.create<SubscriptionDbDto>({
-				userId: subscription.userId,
-				target: subscription.target,
-				strategy: subscription.strategy,
-				isActive: subscription.isActive
-			});
-
-			const { _id, userId, target, strategy, isActive } = res;
-
+			const { id, userId, target, strategy, isActive } = subscription;
+	
+			const filter = id && Types.ObjectId.isValid(id)
+				? { _id: new Types.ObjectId(id) }
+				: this._buildTargetFilter(userId, target);
+	
+			const result = await SubscriptionModel.findOneAndUpdate(
+				filter,
+				{ $set: { userId, target, strategy, isActive } },
+				{ upsert: true, new: true, setDefaultsOnInsert: true }
+			).lean<SubscriptionDbDto>();
+	
 			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
-				_id,
-				userId,
-				target,
-				strategy,
-				isActive
+				result._id,
+				result.userId,
+				result.target,
+				result.strategy,
+				result.isActive
 			));
-
 		} catch (error: unknown) {
-			if (error instanceof Error) {
-				this.logger.error(`Unexpected Error: ${error.message}`);
-				throw error;
-			}
-			this.logger.error('Unknown error occurred.');
-			throw new Error('Unknown error occurred.');
+			this._handleDbError(error);
 		}
 	}
-
+	
 	public async updateById(_id: string, data: Partial<Subscription>): Promise<void> {
 		try {
 			if (!Types.ObjectId.isValid(_id)) {
 				throw new LayerError.InvalidIdDbError(_id);
 			}
-
+	
 			await SubscriptionModel.updateOne(
-				{ _id },
+				{ _id: new Types.ObjectId(_id) },
 				{ $set: data }
 			);
 		} catch (error: unknown) {
-			throw error;
+			this._handleDbError(error);
 		}
 	}
 
-	public async updateLastNotifiedPrice(_id: string, price: number): Promise<void> {
+	public async getById(id: string): Promise<Subscription | null> {
+		if (!Types.ObjectId.isValid(id)) {
+			throw new LayerError.InvalidIdDbError(id);
+		}
+	
 		try {
-			if (!Types.ObjectId.isValid(_id)) {
-				throw new LayerError.InvalidIdDbError(_id);
-			}
-
-			await SubscriptionModel.updateOne(
-				{ _id },
-				{ $set: { 'target.lastNotifiedPrice': price }}
-			);
-		} catch (error: unknown) {
-			throw error;
+			const subscriptionFromDb = await SubscriptionModel.findById(id).lean<SubscriptionDbDto>();
+			return subscriptionFromDb
+				? SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+						subscriptionFromDb._id,
+						subscriptionFromDb.userId,
+						subscriptionFromDb.target,
+						subscriptionFromDb.strategy,
+						subscriptionFromDb.isActive
+					))
+				: null;
+		} catch (error) {
+			this._handleDbError(error);
 		}
 	}
 
-	public async getById(id: string): Promise<Subscription> {
+	public async getOneByUserIdAndSlug(userId: number, slug: string): Promise<Subscription | null> {
 		try {
-			if (!Types.ObjectId.isValid(id)) {
-				throw new LayerError.InvalidIdDbError(id);
-			}
-
-			const subscriptionFromDb = await SubscriptionModel.findById<SubscriptionDbDto>(id);
-			if (!subscriptionFromDb) {
-				throw new LayerError.NotFoundDbError(
-					`Subscription with id: ${id} doesn't exist.`
-				);
-			}
-
-			const { _id, userId, target, strategy, isActive } = subscriptionFromDb;
-			
-			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
-				_id,
+			const subscriptionFromDb = await SubscriptionModel.findOne({
 				userId,
-				target,
-				strategy,
-				isActive
-			));
-		} catch (error: unknown) {
-			if (error instanceof LayerError.NotFoundDbError) {
-				this.logger.warn(error.message);
-			}
-			if (error instanceof DatabaseError || error instanceof InfrastructureError) {
-				this.logger.error(`${error.message}`);
-				throw error;
-			}
-			if (error instanceof Error) {
-				this.logger.error(`Unexpected Error: ${error.message}`);
-				throw error;
-			}
-			this.logger.error('Unknown error occurred.');
-			throw new Error('Unknown error occurred.');
+				'target.slug': slug
+			}).lean<SubscriptionDbDto>();
+	
+			return subscriptionFromDb
+				? SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+						subscriptionFromDb._id,
+						subscriptionFromDb.userId,
+						subscriptionFromDb.target,
+						subscriptionFromDb.strategy,
+						subscriptionFromDb.isActive
+					))
+				: null;
+		} catch (error) {
+			this._handleDbError(error);
 		}
 	}
 
-	public async getOneByUserIdAndSlug(userId: number, slug: string): Promise<Subscription> {
+	public async getAllTokensByUser(userId: number): Promise<ITokenSubscription[] | null> {
 		try {
-			const subscriptionFromDb = await SubscriptionModel.findOne<SubscriptionDbDto>({
-				userId: userId,
-				'target.slug': slug
-			});
-			if (!subscriptionFromDb) {
-				throw new LayerError.NotFoundDbError(
-					`Subscription for user: ${userId} with target: ${slug} doesn't exist.`
-				);
-			}
+			const subscriptions = await SubscriptionModel.find({
+				userId,
+				'target.type': 'token'
+			}).lean<ITokenSubscriptionDbDto[]>();
 
-			const { _id, target, strategy, isActive } = subscriptionFromDb;
+			if (subscriptions.length === 0) return null;
+
+			return subscriptions.map(sub => 
+				SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+					sub._id,
+					sub.userId,
+					sub.target,
+					sub.strategy,
+					sub.isActive
+				)) as ITokenSubscription
+			);
+		} catch (error) {
+			this._handleDbError(error);
+		}
+	}
+
+	public async getOneByUserAndToken(userId: number, symbol: string): Promise<ITokenSubscription | null> {
+		try {
+			const subscription = await SubscriptionModel.findOne({
+				userId,
+				'target.type': 'token',
+				'target.symbol': symbol
+			}).lean<ITokenSubscriptionDbDto>();
+
+			if (!subscription) return null;
 
 			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
-				_id,
-				subscriptionFromDb.userId,
-				target,
-				strategy,
-				isActive
-			));
-		} catch (error: unknown) {
-			if (error instanceof LayerError.NotFoundDbError) {
-				this.logger.warn(error.message);
-			}
-			if (error instanceof DatabaseError || error instanceof InfrastructureError) {
-				this.logger.error(`${error.message}`);
-				throw error;
-			}
-			if (error instanceof Error) {
-				this.logger.error(`Unexpected Error: ${error.message}`);
-				throw error;
-			}
-			this.logger.error('Unknown error occurred.');
-			throw new Error('Unknown error occurred.');
+				subscription._id,
+				subscription.userId,
+				subscription.target,
+				subscription.strategy,
+				subscription.isActive
+			)) as ITokenSubscription;
+		} catch (error) {
+			this._handleDbError(error);
 		}
 	}
 
@@ -162,8 +155,30 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 		try {
 			await SubscriptionModel.deleteMany({});
 		} catch (error: unknown) {
-			this.logger.error('Unexpected error while dropping a database.');
+			this._handleDbError(error);
+		}
+	}
+
+	private _handleDbError(error: unknown): never {
+		if (error instanceof AbstractDatabaseError) {
+			this._logger.error(error.message);
 			throw error;
+		}
+	
+		this._logger.error(`Unexpected Database Error. Reason: ${(error as Error).message}`);
+		throw new LayerError.DatabaseError('Unexpected Database Error.');
+	}
+
+	private _buildTargetFilter(userId: number, target: Target): Record<string, any> {
+		const { type } = target;
+		switch (type) {
+			case 'nft':
+				return { userId, 'target.type': 'nft', 'target.slug': target.slug };
+			case 'token':
+				return { userId, 'target.type': 'token', 'target.symbol': target.symbol };
+			default:
+				const exhaustiveCheck: never = type;
+				throw new LayerError.InvalidDbTargetTypeError(exhaustiveCheck);
 		}
 	}
 }

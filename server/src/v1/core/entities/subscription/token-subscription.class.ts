@@ -7,6 +7,7 @@ import { ISubscription } from "#core/entities/subscription/index.js";
 export interface ITokenSubscription extends ISubscription {
 	readonly target: ITokenTarget;
 	readonly strategy: IPriceChangeStrategy;
+	
 	calculateDifference(newState: number, precision?: number): number;
 }
 

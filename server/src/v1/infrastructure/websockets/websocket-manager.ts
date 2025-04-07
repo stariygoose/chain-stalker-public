@@ -29,7 +29,12 @@ export class WebsocketManager {
 	public stalkFromBinance(userId: number, symbol: string): void {
 		let socket = this._binanceMap.get(symbol);
 		if (!socket) {
-			socket = container.get<BinanceEventStream>(TYPES.BinanceEventStream);
+			try {
+				socket = container.get<BinanceEventStream>(TYPES.BinanceEventStream);
+			} catch (error) {
+				throw error;
+			}
+
 			this._binanceMap.set(symbol, socket);
 		}
 

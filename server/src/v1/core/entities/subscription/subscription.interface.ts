@@ -1,5 +1,6 @@
 import { INotificationStrategy } from "#core/strategies/notification/index.js";
 import { Target } from "#core/entities/targets/subscription-target.interface.js";
+import { Subscription } from "#core/entities/subscription/index.js";
 
 /**
  * Represents a subscription that tracks changes in a specific target and determines 
@@ -41,5 +42,5 @@ export interface ISubscription<
 	 * @param {unknown} newState - The updated state of the tracked target.
 	 * @returns {ISubscription} A new subscription instance reflecting the updated state.
 	 */
-	withUpdatedState(newState: unknown): ISubscription;
+	withUpdatedState(newState: unknown): Subscription;
 }

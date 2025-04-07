@@ -53,13 +53,13 @@ export class SubscriptionMapper {
 					slug: target.slug,
 					chain: target.chain,
 					lastNotifiedPrice: target.lastNotifiedPrice,
-					symbol: target.symbol
+					symbol: target.symbol.toUpperCase()
 				}
 			case "token":
 				return {
 					type: 'token',
 					lastNotifiedPrice: target.lastNotifiedPrice,
-					symbol: target.symbol
+					symbol: target.symbol.toUpperCase()
 				}
 			default:
 				const exhaustiveCheck: never = type;
@@ -80,13 +80,13 @@ export class SubscriptionMapper {
 					slug: target.slug,
 					chain: target.chain,
 					lastNotifiedPrice: target.lastNotifiedPrice,
-					symbol: target.symbol
+					symbol: target.symbol.toUpperCase()
 				}
 			case "token":
 				return {
 					type: 'token',
 					lastNotifiedPrice: target.lastNotifiedPrice,
-					symbol: target.symbol
+					symbol: target.symbol.toUpperCase()
 				}
 			default:
 				const exhaustiveCheck: never = type;

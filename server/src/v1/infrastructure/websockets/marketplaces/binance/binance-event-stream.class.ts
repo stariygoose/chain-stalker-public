@@ -5,8 +5,9 @@ import { ITokenEventStream } from "#infrastructure/websockets/interfaces/token-e
 import { TYPES } from "#di/types.js";
 import { Logger } from "#utils/logger.js";
 import { LayerError } from "#infrastructure/errors/index.js";
-import { ITokenRepository } from "#core/repositories/token-repository.interface.js";
 import { RedisPubSub } from "#infrastructure/lib/redis/index.js";
+import { ISubscriptionRepository } from "#core/repositories/subscription-repository.interface.js";
+import { AbstractDatabaseError } from "#infrastructure/errors/database-errors/database-errors.abstract.js";
 
 
 interface TokenEventMessage {
@@ -18,17 +19,19 @@ interface TokenEventMessage {
 export class BinanceEventStream implements ITokenEventStream {
 	private readonly _wsUrl: string = 'wss://stream.binance.com:9443/ws';
 	public readonly client: WebSocket;
-	private ticks: number = 0;
 
 	private _symbol: string = "";
+	private _pendingSymbols: string[] = [];
+
+	private _ticks: number = 0;
 
 	public readonly users: Set<number> = new Set<number>();
 
 	constructor (
 		@inject(TYPES.Logger)
 		private readonly _logger: Logger,
-		@inject(TYPES.TokenRepository)
-		private readonly _db: ITokenRepository,
+		@inject(TYPES.SubscriptionRepository)
+		private readonly _db: ISubscriptionRepository,
 		@inject(TYPES.RedisPubSub)
 		private readonly _redisPubSub: RedisPubSub
 	) {
@@ -49,23 +52,27 @@ export class BinanceEventStream implements ITokenEventStream {
 	}
 
 	public stalk(symbol: string): void {
-		if (!this._symbol) {
-			throw new LayerError.SymbolLackError();
+		if (this.client.readyState !== this.client.OPEN) {
+			this._logger.debug(`WebSocket not open yet. Queuing ${symbol}...`);
+			this._pendingSymbols.push(symbol);
+			return;
 		}
 
-		this._symbol = symbol
+		this._symbol = symbol.toLowerCase();
 
 		const subscribeParams = JSON.stringify({
 			method: "SUBSCRIBE",
-			params: [`${this._symbol.toLowerCase()}@ticker`],
+			params: [`${this._symbol}usdt@ticker`],
 			id: 1,
 		});
 
 		this.client.send(subscribeParams, (err) => {
 			if (err) {
-				throw new LayerError.SubscribeEventError(err.message);
+				throw new LayerError.SubscribeEventError('Binance Event Stream', err.message);
 			}
 		});
+
+		this._logger.debug(`Stalk request for token <${this._symbol}> was successfuly sent to Binance Stream API`);
 	}
 
 	private createClient(): WebSocket {
@@ -73,34 +80,48 @@ export class BinanceEventStream implements ITokenEventStream {
 	}
 
 	private processEvents(): void {
-		this.client.on('open', () => {
-			this._logger.debug(`New websocket connection to Binance.`);
+		this.client.on('open', () => {			
+			for (const symbol of this._pendingSymbols) {
+				this.stalk(symbol);
+			}
+
+			this._pendingSymbols = [];
 		});
 
 		this.client.on('close', () => {
-			this._logger.debug('Websocket connection to Binance was closed.')
+			this._logger.warn(`Websocket connection to Binance was closed for token ${this._symbol}.`);
 		});
 
 		this.client.on("error", (err: Error) => {
-			this._logger.error(`BinanceEventStream Error: ${err.message}`);
+			this._logger.error(`Error on Binance Event Stream. Reason: ${err.message}`);
 		})
 
 		this.client.on("message", (msg) => {
-			this.ticks++;
-			if (this.ticks >= 4) {
-				this.ticks = 0;
-				return;
-			}
+			this._ticks++;
+			if (this._ticks < 5) return;
+
+			this._ticks = 0;
 
 			const message = JSON.parse(msg.toString());
+			if (message.result === null) {
+				return ;
+			}
+
+			const symbol: string = message.s.split('USDT').join('').toUpperCase();
+
 			const token: TokenEventMessage = {
-				symbol: message.s,
+				symbol: symbol,
 				price: Number(message.c)
 			};
 
-			this.handleTokenPriceUpdate(token).catch((err) => {
-				this._logger.error(`Unhandled error in handleTokenPriceUpdate: ${err}`);
-			});
+			this._logger.debug(`Received message from Binance Stream API. ${token.symbol}:${token.price}`);
+
+			this
+				.handleTokenPriceUpdate(token)
+				.catch((err) => {
+					this._logger.error(`Unhandled error in handleTokenPriceUpdate: ${err}`);
+				});
+			
 		})
 	}
 
@@ -110,9 +131,8 @@ export class BinanceEventStream implements ITokenEventStream {
 		const tasks = Array.from(this.users).map(async (userId: number) => {
 			try {
 				const userTokenSubscription = await this._db.getOneByUserAndToken(userId, symbol);
-
 				if (!userTokenSubscription) {
-					this._logger.debug(`No token subscription found for user ${userId}, token ${symbol}`);
+					this._logger.debug(`No token subscription found [${userId}:${symbol}]`);
 					return;
 				}
 
@@ -124,7 +144,7 @@ export class BinanceEventStream implements ITokenEventStream {
 				const updated = userTokenSubscription.withUpdatedState(price);
 
 				await Promise.all([
-					this._db.updateLastNotifiedPrice(updated.id!, updated.target.lastNotifiedPrice),
+					this._db.createOrUpdate(updated),
 					this._redisPubSub.publish(RedisPubSub.UpdatePriceChannel, {
 						...updated,
 						difference,
@@ -133,12 +153,13 @@ export class BinanceEventStream implements ITokenEventStream {
 				
 				this._logger.debug(`Updated price of [${this._symbol}] was successfuly saved and published for user <${userId}>`);
 				
-			} catch (error: unknown) {
-				if (error instanceof Error) {
-					this._logger.error(
-						`Error while processing user ${userId} for token ${symbol}. Reason: ${error.message}`
-					);
+			} catch (error: any) {
+				if (error instanceof AbstractDatabaseError) {
+					throw error;
 				}
+				
+				this._logger.error(`Unknown error in Binance Event Stream. Reason: ${error.message}`);
+				throw new Error(`Unknown error`);
 			}
 		});
 

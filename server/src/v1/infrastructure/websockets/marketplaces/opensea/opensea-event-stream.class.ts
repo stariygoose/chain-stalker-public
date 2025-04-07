@@ -5,8 +5,6 @@ import { ConfigService } from "#config/config.service.js";
 import { EnvVariables } from "#config/env-variables.js";
 import { ISubscriptionRepository } from "#core/repositories/subscription-repository.interface.js";
 import { TYPES } from "#di/types.js";
-import { DatabaseError } from "#infrastructure/errors/database-errors/database-errors.abstract.js";
-import { NotFoundDbError } from "#infrastructure/errors/database-errors/database-errors.js";
 import { LayerError } from "#infrastructure/errors/index.js";
 import { fromWeiToEth } from "#infrastructure/helpers/index.js";
 import { INftEventStream } from "#infrastructure/websockets/interfaces/nft-event-stream.interface.js";
@@ -15,6 +13,7 @@ import { IPubSub } from "#infrastructure/lib/redis/pubsub/pubsub.interface.js";
 import { OpenSeaAPI } from "#infrastructure/lib/apis/index.js";
 import { RedisPubSub } from "#infrastructure/lib/redis/pubsub/redis-pubsub.class.js";
 import { ICache } from "#infrastructure/lib/redis/index.js";
+import { AbstractDatabaseError } from "#infrastructure/errors/database-errors/database-errors.abstract.js";
 
 
 @injectable()
@@ -52,7 +51,7 @@ export class OpenseaEventStream implements INftEventStream {
         await this.handleEvent(userId, slug, price);
       });
 
-      this._logger.info(`New subscription for [${slug}]`);
+      this._logger.info(`New subscription for collection [${slug}]`);
     } catch (error) {
       throw error;
     }
@@ -72,7 +71,10 @@ export class OpenseaEventStream implements INftEventStream {
 			},
 			logLevel: 50,
 			onError: (error) => {
-				this._logger.error(`OpenSeaEventStream Error: ${error}`);
+				if (error instanceof Error) {
+					this._logger.error(`Failed connect to Opensea Stream Event. Reason: ${error.message}`);
+					throw new LayerError.SubscribeEventError('OpenseaEventStream', error.message);
+				}
 			}
 		});
 	}
@@ -80,6 +82,11 @@ export class OpenseaEventStream implements INftEventStream {
 	private async handleEvent(userId: number, slug: string, price: number): Promise<void> {
     try {
       const subscription = await this._db.getOneByUserIdAndSlug(userId, slug);
+			if (!subscription) {
+				this._logger.warn(`Subscription for user ${userId} with target's slug ${slug} doesnt exist.`);
+				return ;
+			}
+
       const { lastNotifiedPrice } = subscription.target;
 
       const shouldNotify = subscription.strategy.shouldNotify(lastNotifiedPrice, price);
@@ -105,7 +112,7 @@ export class OpenseaEventStream implements INftEventStream {
       const updated = subscription.withUpdatedState(floorPrice);
 
       await Promise.all([
-        this._db.updateLastNotifiedPrice(updated.id!, updated.target.lastNotifiedPrice),
+        this._db.createOrUpdate(updated),
         this._redisPubSub.publish(RedisPubSub.UpdatePriceChannel, {
           ...updated,
           difference
@@ -115,16 +122,12 @@ export class OpenseaEventStream implements INftEventStream {
       this._logger.debug(`Updated subscription for [${userId}:${slug}] and published update.`);
 
     } catch (error: any) {
-			if (error instanceof NotFoundDbError) {
-				throw new LayerError.SubscriptionNotFound(
-					`Subscription for user ${userId} with target's slug ${slug} doesnt exist.`
-				);
+			if (error instanceof AbstractDatabaseError) {
+				throw error;
 			}
-			if (error instanceof DatabaseError) {
-				throw new LayerError.UnexpectedError();
-			}
-			this._logger.error(`${error.name} | Message: ${error.message}`);
-			throw new Error(`Unhandled Error`);
+
+			this._logger.error(`Unknown error in Opensesa Event Stream. Reason: ${error.message}`);
+			throw new Error(`Unknown error`);
 		}
 	}
 }

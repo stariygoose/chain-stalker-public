@@ -2,11 +2,9 @@ export type PriceChangeStrategiesTypes = 'percentage' | 'absolute';
 
 export type StrategyType = PriceChangeStrategiesTypes;
 
-export interface BaseStrategy {
+export interface INotificationStrategy<T, U> {
 	readonly type: StrategyType;
-}
-
-export interface INotificationStrategy<T, U> extends BaseStrategy {
+	
 	shouldNotify(currentState: T, newState: U): boolean;
 }
 

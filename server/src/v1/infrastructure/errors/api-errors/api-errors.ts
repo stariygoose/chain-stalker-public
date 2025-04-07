@@ -1,13 +1,14 @@
-import { InfrastructureError } from "#infrastructure/errors/infrastructure-error.abstract.js";
+import { ApiError } from "#infrastructure/errors/api-errors/api-error.abstract.js";
 
-export class NotFoundAPIError extends InfrastructureError {
+
+export class NotFoundError extends ApiError {
 	constructor (message: string) {
-		super(message);
+		super(404, message);
 	}
 }
 
-export class UnexpectedExternalAPIError extends InfrastructureError {
-	constructor (instance: string, reason: string) {
-		super(`Failed to fetch ${instance}. Reason: ${reason}`);
+export class ExternalApiError extends ApiError {
+	constructor () {
+		super(503, `Failed to fetch external API.`);
 	}
 }
