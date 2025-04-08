@@ -53,7 +53,7 @@ export class BinanceEventStream implements ITokenEventStream {
 
 	public stalk(symbol: string): void {
 		if (this.client.readyState !== this.client.OPEN) {
-			this._logger.debug(`WebSocket not open yet. Queuing ${symbol}...`);
+			this._logger.info(`WebSocket not open yet. Queuing ${symbol}...`);
 			this._pendingSymbols.push(symbol);
 			return;
 		}
