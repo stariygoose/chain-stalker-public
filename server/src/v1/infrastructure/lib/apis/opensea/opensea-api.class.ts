@@ -5,7 +5,7 @@ import { ConfigService } from "#config/config.service.js";
 import { EnvVariables } from "#config/env-variables.js";
 import { TYPES } from "#di/types.js";
 import { CollectionMetadata, CollectionStats } from "#infrastructure/lib/apis/opensea/requests.interfaces.js";
-import { LayerError } from "#infrastructure/errors/index.js";
+import { ApiError, LayerError } from "#infrastructure/errors/index.js";
 import { CollectionFloorPrice } from "#infrastructure/lib/apis/opensea/responses.interfaces.js";
 
 
@@ -38,10 +38,10 @@ export class OpenSeaAPI {
 			return collection.data;
 		} catch (error: any) {
 			if (error.response.status === 400) {
-				throw new LayerError.NotFoundError(`Cannot find a collection by this slug on Opensea.`);
+				throw new ApiError.ExternalApiError(`A collection <${slug}> may not be supported by Opensea`);
 			}
 	
-			throw new LayerError.ExternalApiError();
+			throw new ApiError.ExternalApiError();
 		}
 	}
 
@@ -57,10 +57,10 @@ export class OpenSeaAPI {
 			};
 		} catch (error: any) {
 			if (error.response.status === 400) {
-				throw new LayerError.NotFoundError(`Cannot find a collection by this slug on Opensea.`);
+				throw new ApiError.ExternalApiError(`A collection <${slug}> may not be supported by Opensea`);
 			}
 	
-			throw new LayerError.ExternalApiError();
+			throw new ApiError.ExternalApiError();
 		}
 	}
 }

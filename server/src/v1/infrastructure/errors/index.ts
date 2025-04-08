@@ -6,6 +6,9 @@ import * as WebsokcetErrors from "#infrastructure/errors/websockets/index.js";
 export const LayerError = {
 	...DtoError,
 	...DataBaseErrors,
-	...ApiErrors,
 	...WebsokcetErrors
+}
+
+export const ApiError = {
+	...ApiErrors,
 }

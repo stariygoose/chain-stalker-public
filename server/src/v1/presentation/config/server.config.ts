@@ -1,6 +1,5 @@
 import { inject } from "inversify";
 import { InversifyExpressServer } from "inversify-express-utils";
-import { Logger } from "winston";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -11,12 +10,13 @@ import { TYPES } from "#di/types.js";
 import { EnvVariables } from "#config/env-variables.js";
 import { IMongoDbConfig } from "#infrastructure/database/mongodb/config/mongo.config.js";
 import { errorMiddleware } from "#presentation/middlewares/errors/error.middleware.js";
+import { Logger } from "#utils/logger.js";
 
 export interface IServerConfig {
 	start(): Promise<void>;
 }
 
-export class ServerConfig {
+export class ServerConfig implements IServerConfig {
 	private readonly _server: InversifyExpressServer;
 	private readonly _baseUrl: string;
 	private readonly _PORT: string;

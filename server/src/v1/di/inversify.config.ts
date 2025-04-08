@@ -15,6 +15,12 @@ import { ICache, IPubSub, RedisCache, RedisClient, RedisPubSub } from "#infrastr
 import { OpenSeaAPI, BinanceAPI } from "#infrastructure/lib/apis/index.js";
 import { ITokenEventStream } from "#infrastructure/websockets/interfaces/token-event-stream.interface.js";
 import { BinanceEventStream } from "#infrastructure/websockets/marketplaces/binance/binance-event-stream.class.js";
+import { IStrategyService, StrategyService } from "#application/services/strategy.service.js";
+import { StrategyController } from "#presentation/controllers/strategy.controller.js";
+import { CollectionController } from "#presentation/controllers/collection.controller.js";
+import { CollectionService, ICollectionService } from "#application/services/collection.service.js";
+import { TokenController } from "#presentation/controllers/token.controller.js";
+import { ITokenService, TokenService } from "#application/services/token.service.js";
 
 
 export let container = new Container();
@@ -26,6 +32,14 @@ container.bind<ISubscriptionService>(TYPES.SubscriptionService).to(SubscriptionS
 container.bind<SubscriptionController>(TYPES.SubscriptionController).to(SubscriptionController).inSingletonScope();
 container.bind<SubscriptionRepository>(TYPES.SubscriptionRepository).to(SubscriptionRepository).inSingletonScope();
 
+container.bind<StrategyController>(TYPES.StrategyController).to(StrategyController).inSingletonScope();
+container.bind<IStrategyService>(TYPES.StrategyService).to(StrategyService).inSingletonScope();
+
+container.bind<CollectionController>(TYPES.CollectionController).to(CollectionController).inSingletonScope();
+container.bind<ICollectionService>(TYPES.CollectionService).to(CollectionService).inSingletonScope();
+
+container.bind<TokenController>(TYPES.TokenController).to(TokenController).inSingletonScope();
+container.bind<ITokenService>(TYPES.TokenService).to(TokenService).inSingletonScope();
 
 container.bind<IServerConfig>(TYPES.ServerConfig).to(ServerConfig).inSingletonScope();
 container.bind<IMongoDbConfig>(TYPES.MongoDbConfig).to(MongoDbConfig).inSingletonScope();

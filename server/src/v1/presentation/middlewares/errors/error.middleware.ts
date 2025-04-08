@@ -1,5 +1,4 @@
-import { DomainError } from "#core/errors/domain-error.abstract.js";
-import { InfrastructureError } from "#infrastructure/errors/infrastructure-error.abstract.js";
+import { ApiError } from "#infrastructure/errors/api-errors/api-error.abstract.js";
 import { ErrorRequestHandler } from "express";
 
 export const errorMiddleware: ErrorRequestHandler = (
@@ -8,12 +7,9 @@ export const errorMiddleware: ErrorRequestHandler = (
 	res, 
 	next
 ) => {
-	if (error instanceof DomainError) {
-		res.status(400).json({ error: error.message });
+	if (error instanceof ApiError) {
+		res.status(error.status).json({ error: error.message });
 		return ;
-	}
-	if (error instanceof InfrastructureError) {
-		res.status(502).json({ error: "External service failed" });
 	}
 
 	res.status(500).json({ error: 'Internal Server Error' });

@@ -10,7 +10,14 @@ export const TYPES = {
 	SubscriptionService: Symbol.for('SubscriptionService'),
 	SubscriptionRepository: Symbol.for('SubscriptionRepository'),
 
-	TokenRepository: Symbol.for("TokenRepository"),
+	StrategyController: Symbol.for('StrategyController'),
+	StrategyService: Symbol.for('StrategyService'),
+
+	CollectionController: Symbol.for('CollectionController'),
+	CollectionService: Symbol.for('CollectionService'),
+
+	TokenController: Symbol.for('TokenController'),
+	TokenService: Symbol.for('TokenService'),
 
 	BinanceEventStream: Symbol.for('BinanceEventStream'),
 	OpenseaEventStream: Symbol.for('OpenseaEventStream'),

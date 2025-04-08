@@ -6,5 +6,7 @@ export abstract class ApiError extends Error {
 		public readonly error: string
 	) {
 		super(error);
+		this.name = this.constructor.name;
+		Error.captureStackTrace(this, this.constructor);
 	}
 }
