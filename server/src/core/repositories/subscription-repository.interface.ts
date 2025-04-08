@@ -13,4 +13,6 @@ export interface ISubscriptionRepository {
 
 	getAll(filter: Partial<Record<string, unknown>>): Promise<Subscription[] | null>;
   getAllTokensByUser(userId: number): Promise<ITokenSubscription[] | null>;
+
+	drop(): Promise<void>;
 }

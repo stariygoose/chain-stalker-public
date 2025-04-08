@@ -30,10 +30,22 @@ services:
     depends_on:
       - server
     environment:
+      - NODE_MODE=${NODE_MODE}
+
       - TG_TOKEN=${TG_BOT_TOKEN}
+      - TG_BOT_PORT=${TG_BOT_PORT}
+
       - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
       - SERVER_URL=http://server:${SERVER_PORT}
-      - TG_BOT_PORT=${TG_BOT_PORT}
+
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    env_file:
+      - .env
+    ports:
+      - ${TG_BOT_PORT}:${TG_BOT_PORT}
+    volumes:
+      - ./bot/.logs:/bot/.logs
     networks:
       - ${NODE_MODE}
 

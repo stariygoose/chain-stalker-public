@@ -1,6 +1,7 @@
+import { injectable } from "inversify";
+
 import { ConfigError } from "#utils/errors/index.js";
 import { EnvVariables } from "#config/env-variables.js";
-import { injectable } from "inversify";
 
 interface IConfigService {
 	isDevMode: boolean;

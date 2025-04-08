@@ -7,7 +7,6 @@
 		"paths": {
 			"#*": ["./src/*"]
 		},
-		// "customConditions": ["cs-dev"],
 		"baseUrl": ".",
 		"rootDir": "./src",
 		"outDir": "./dist",

@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import winston, { createLogger, format } from "winston";
 
-import { ConfigService } from "#config/config.service.js";
+import { IConfigService } from "#config/config/config.service.js";
 import { TYPES } from "#di/types.js";
 
 
@@ -17,7 +17,7 @@ export class Logger implements ILogger {
 	private readonly _logger: winston.Logger;
 	constructor (
 		@inject(TYPES.ConfigService)
-		private readonly _config: ConfigService
+		private readonly _config: IConfigService
 	) {
 		this._logger = this.setupLogger();
 	}

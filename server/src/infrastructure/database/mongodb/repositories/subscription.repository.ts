@@ -182,6 +182,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 	public async drop(): Promise<void> {
 		try {
 			await SubscriptionModel.deleteMany({});
+			this._logger.warn(`DATABASE WAS DROPPED.`);
 		} catch (error: unknown) {
 			this._handleDbError(error);
 		}
