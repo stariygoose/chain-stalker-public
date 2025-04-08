@@ -12,6 +12,7 @@ import { IMongoDbConfig } from "#infrastructure/database/mongodb/config/mongo.co
 import { errorMiddleware } from "#presentation/middlewares/errors/error.middleware.js";
 import { Logger } from "#utils/logger.js";
 
+
 export interface IServerConfig {
 	start(): Promise<void>;
 }
@@ -27,8 +28,7 @@ export class ServerConfig implements IServerConfig {
 		@inject(TYPES.ConfigService)
 		private readonly _config: ConfigService,
 		@inject(TYPES.MongoDbConfig)
-		private readonly _mongo: IMongoDbConfig,
-
+		private readonly _mongo: IMongoDbConfig
 	) {
 		this._server = new InversifyExpressServer(container, null, { rootPath: "/api/v1" });
 		this._baseUrl = this._config.get(EnvVariables.DOMAIN_URL);
@@ -43,6 +43,8 @@ export class ServerConfig implements IServerConfig {
 
 		app.listen(this._PORT);
 		this._logger.info(`Server is running on PORT: ${this._PORT}`);
+
+		await this._mongo.initEventStreams();
 	}
 
 	private initMiddlewares() {
