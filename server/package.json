@@ -1,16 +1,15 @@
 {
 	"imports": {
 		"#*": {
-			"cs-dev": "./src/v1/*",
-			"default": "./dist/v1/*"
+			"cs-dev": "./src/*",
+			"default": "./dist/*"
 		}
 	},
 	"type": "module",
 	"scripts": {
-		"start:v0": "node dist/v0/server.js",
-		"start:v1": "node dist/v1/server.js",
-		"dev": "npx ts-node ./src/v1/server.ts",
-		"dev:env": "node -r dotenv/config -r ts-node/register src/v1/server.ts dotenv_config_path=../.env",
+		"start:v1": "node dist/server.js",
+		"dev": "npx ts-node ./src/server.ts",
+		"dev:env": "node -r dotenv/config -r ts-node/register src/server.ts dotenv_config_path=../.env",
 		"build": "npx tsc -p tsconfig.build.json",
 		"compile": "npx tsc",
 		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"

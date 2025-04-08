@@ -5,7 +5,7 @@
 		"moduleResolution": "nodenext",
 
 		"paths": {
-			"#*": ["./src/v1/*"]
+			"#*": ["./src/*"]
 		},
 		// "customConditions": ["cs-dev"],
 		"baseUrl": ".",
@@ -26,6 +26,6 @@
 		"experimentalDecorators": true,  
     "emitDecoratorMetadata": true
   },
-	"include": ["src/v1/**/*"],
+	"include": ["src/**/*", "src/utils", "src/server.ts", "src/__tests__", "src/application", "src/presentation", "src/infrastructure", "src/di", "src/core", "src/config"],
 	"exclude": ["dist", "node_modules"],
 }

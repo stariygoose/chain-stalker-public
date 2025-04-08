@@ -3,13 +3,13 @@ const config = {
 	preset: 'ts-jest/presets/default-esm',
 
 	moduleNameMapper: {
-		"^#(.*)\\.js$": '<rootDir>/src/v1/$1.ts',
+		"^#(.*)\\.js$": '<rootDir>/src/$1.ts',
 	},
 
   collectCoverageFrom: [  
-		"src/v1/**/*.{js,jsx,ts,tsx}",
-    "!src/v1/config/**/*.{ts,js}",
-    "!src/v1/utils/**/*.{ts,js}",
+		"src/**/*.{js,jsx,ts,tsx}",
+    "!src/config/**/*.{ts,js}",
+    "!src/utils/**/*.{ts,js}",
     "!**/node_modules/**",
   ],  
   
