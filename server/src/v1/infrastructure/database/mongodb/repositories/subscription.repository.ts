@@ -14,6 +14,7 @@ import { ILogger } from "#utils/logger.js";
 import { ITokenSubscriptionDbDto, SubscriptionDbDto } from "#infrastructure/dtos/subscription/subscription-dto.interfaces.js";
 import { ITokenSubscription } from "#core/entities/subscription/token-subscription.class.js";
 import { Target } from "#core/entities/targets/index.js";
+import { Strategy } from "#core/strategies/notification/notification-strategies.interface.js";
 
 
 @injectable()
@@ -48,38 +49,45 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 			this._handleDbError(error);
 		}
 	}
-	
-	public async updateById(_id: string, data: Partial<Subscription>): Promise<void> {
+
+	public async updateStrategy(
+		filter: Partial<Record<string, any>>, 
+		payload: Partial<Strategy>
+	): Promise<Subscription | null> {
 		try {
-			if (!Types.ObjectId.isValid(_id)) {
-				throw new LayerError.InvalidIdDbError(_id);
-			}
-	
-			await SubscriptionModel.updateOne(
-				{ _id: new Types.ObjectId(_id) },
-				{ $set: data }
-			);
+			const result = await SubscriptionModel.findOneAndUpdate(
+				filter,
+				{ $set: payload },
+				{ new: true }
+			).lean<SubscriptionDbDto | null>();
+		
+			if (!result) return null;
+		
+			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+				result._id,
+				result.userId,
+				result.target,
+				result.strategy,
+				result.isActive
+			));
 		} catch (error: unknown) {
 			this._handleDbError(error);
 		}
 	}
 
 	public async getById(id: string): Promise<Subscription | null> {
-		if (!Types.ObjectId.isValid(id)) {
-			throw new LayerError.InvalidIdDbError(id);
-		}
-	
 		try {
 			const subscriptionFromDb = await SubscriptionModel.findById(id).lean<SubscriptionDbDto>();
-			return subscriptionFromDb
-				? SubscriptionMapper.toDomain(new SubscriptionDbRecord(
-						subscriptionFromDb._id,
-						subscriptionFromDb.userId,
-						subscriptionFromDb.target,
-						subscriptionFromDb.strategy,
-						subscriptionFromDb.isActive
-					))
-				: null;
+
+			if (!subscriptionFromDb) return null;
+
+			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+				subscriptionFromDb._id,
+				subscriptionFromDb.userId,
+				subscriptionFromDb.target,
+				subscriptionFromDb.strategy,
+				subscriptionFromDb.isActive
+			));
 		} catch (error) {
 			this._handleDbError(error);
 		}
@@ -92,38 +100,15 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 				'target.slug': slug
 			}).lean<SubscriptionDbDto>();
 	
-			return subscriptionFromDb
-				? SubscriptionMapper.toDomain(new SubscriptionDbRecord(
-						subscriptionFromDb._id,
-						subscriptionFromDb.userId,
-						subscriptionFromDb.target,
-						subscriptionFromDb.strategy,
-						subscriptionFromDb.isActive
-					))
-				: null;
-		} catch (error) {
-			this._handleDbError(error);
-		}
-	}
+			if (!subscriptionFromDb) return null;
 
-	public async getAllTokensByUser(userId: number): Promise<ITokenSubscription[] | null> {
-		try {
-			const subscriptions = await SubscriptionModel.find({
-				userId,
-				'target.type': 'token'
-			}).lean<ITokenSubscriptionDbDto[]>();
-
-			if (subscriptions.length === 0) return null;
-
-			return subscriptions.map(sub => 
-				SubscriptionMapper.toDomain(new SubscriptionDbRecord(
-					sub._id,
-					sub.userId,
-					sub.target,
-					sub.strategy,
-					sub.isActive
-				)) as ITokenSubscription
-			);
+			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+				subscriptionFromDb._id,
+				subscriptionFromDb.userId,
+				subscriptionFromDb.target,
+				subscriptionFromDb.strategy,
+				subscriptionFromDb.isActive
+			));
 		} catch (error) {
 			this._handleDbError(error);
 		}
@@ -146,6 +131,49 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 				subscription.strategy,
 				subscription.isActive
 			)) as ITokenSubscription;
+		} catch (error) {
+			this._handleDbError(error);
+		}
+	}
+
+	public async getAll(filter: Partial<Record<string, unknown>>): Promise<Subscription[] | null> {
+		try {
+			const subscriptions = await SubscriptionModel.find(filter).lean<SubscriptionDbDto[]>();
+
+			if (subscriptions.length <= 0) return null;
+
+			return subscriptions.map(sub => {
+				return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+					sub._id,
+					sub.userId,
+					sub.target,
+					sub.strategy,
+					sub.isActive
+				));
+			});
+		} catch (error: unknown) {
+			this._handleDbError(error);
+		}
+	}
+
+	public async getAllTokensByUser(userId: number): Promise<ITokenSubscription[] | null> {
+		try {
+			const subscriptions = await SubscriptionModel.find({
+				userId,
+				'target.type': 'token'
+			}).lean<ITokenSubscriptionDbDto[]>();
+
+			if (subscriptions.length === 0) return null;
+
+			return subscriptions.map(sub => 
+				SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+					sub._id,
+					sub.userId,
+					sub.target,
+					sub.strategy,
+					sub.isActive
+				)) as ITokenSubscription
+			);
 		} catch (error) {
 			this._handleDbError(error);
 		}

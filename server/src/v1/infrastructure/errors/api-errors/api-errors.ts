@@ -8,7 +8,13 @@ export class NotFoundError extends ApiError {
 }
 
 export class ExternalApiError extends ApiError {
-	constructor () {
-		super(503, `Failed to fetch external API.`);
+	constructor (message?: string) {
+		super(503, message ?? `Failed to fetch external API.`);
+	}
+}
+
+export class BadRequestError extends ApiError {
+	constructor(message: string) {
+		super(400, message)
 	}
 }

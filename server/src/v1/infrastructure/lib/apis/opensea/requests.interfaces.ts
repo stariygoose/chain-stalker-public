@@ -20,6 +20,7 @@ export interface CollectionMetadata {
   instagram_username: string;
   contracts: {
     address: string;
+		chain: string;
   }[];
   editors: string[];
   fees: {
