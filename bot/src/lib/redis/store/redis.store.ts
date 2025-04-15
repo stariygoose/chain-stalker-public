@@ -4,14 +4,14 @@ import { AsyncSessionStore } from "telegraf/session";
 
 import { RedisConfig } from "#lib/redis/redis.config.js";
 import { TYPES } from "#di/types.js";
-import { IStore } from "#context/context.interface.js";
+import { MySession } from "#context/context.interface.js";
 
 
-export interface IRedisStore extends AsyncSessionStore<IStore>{
-	store: IRedisStore;
+export interface IRedisStore extends AsyncSessionStore<MySession>{
+	store: Omit<IRedisStore, 'store'>;
 
-	get(key: string): Promise<IStore | undefined>;
-	set(key: string, value: IStore): Promise<void>;
+	get(key: string): Promise<MySession | undefined>;
+	set(key: string, value: MySession): Promise<void>;
 	delete(key: string): Promise<void>;
 }
 
@@ -33,12 +33,12 @@ export class RedisStore implements IRedisStore {
 		return this._store;
 	}
 
-	async get(key: string): Promise<IStore | undefined> {
+	async get(key: string): Promise<MySession | undefined> {
     const data = await this._client.get(key);
     return data ? JSON.parse(data) : undefined;
   }
 
-  async set(key: string, value: IStore): Promise<void> {
+  async set(key: string, value: MySession): Promise<void> {
     await this._client.set(key, JSON.stringify(value));
   }
 
