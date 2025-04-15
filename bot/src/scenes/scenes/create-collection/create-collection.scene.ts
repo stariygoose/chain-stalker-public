@@ -7,18 +7,18 @@ import { MyContext } from "#context/context.interface.js";
 import { checkStrategy } from "#lib/helpers/helpers.js";
 
 
-interface ICreateTokenSceneWizard extends Scenes.WizardSessionData { 
-	symbol: string;
+interface ICreateCollectionSceneWizard extends Scenes.WizardSessionData { 
+	slug: string;
 	strategy: 'percentage' | 'absolute';
 	threshold: number;
 }
 
-export const createTokenScene = SceneBuilder
-	.create<ICreateTokenSceneWizard>(SceneTitle.CREATE_TOKEN)
-	.step(`Get Token Symbol`, async (ctx) => {
+export const createCollectionScene = SceneBuilder
+	.create<ICreateCollectionSceneWizard>(SceneTitle.CREATE_COLLECTION)
+	.step(`Get Collection Slug`, async (ctx) => {
 		const message = [
-			`What's the token symbol ?`,
-			`Currently, i work only with Binance.`
+			`What's the collection slug ?`,
+			`Currently, i work only with OpensSea.`
 		];
 
 		await ctx.reply(message.join("\n"), {
@@ -29,8 +29,22 @@ export const createTokenScene = SceneBuilder
 
 		return ctx.wizard.next();
 	})
-	.step(`Get Strategy`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/.*/, async (ctx) => {
-		ctx.wizard.state.symbol = ctx.message.text;
+	.step(`Get Strategy`, new Composer<MyContext<ICreateCollectionSceneWizard>>().hears(/.*/, async (ctx) => {
+		const slug = ctx.message.text;
+
+		if (!/^[a-z0-9]+(?:[_-][a-z0-9]+)*$/.test(slug)) {
+			const message = [
+				`⚠️ This slug is not valid.`,
+				`Examples of valid slugs: gemesis, pirate-apes`
+			]
+			await ctx.reply(message.join('\n'), {
+				...Markup.inlineKeyboard([
+					[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
+				])
+			})
+			return ;
+		}
+		ctx.wizard.state.slug = slug;
 
 		const message = [
 			`Which strategy to notify would you like to use ?`
@@ -47,7 +61,7 @@ export const createTokenScene = SceneBuilder
 
 		return ctx.wizard.next();
 	}))
-	.step(`Get Threshold`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/.*/, async (ctx) => {
+	.step(`Get Threshold`, new Composer<MyContext<ICreateCollectionSceneWizard>>().hears(/.*/, async (ctx) => {
 
 		try {
 			const strategy = ctx.message.text.split(' ')[1].toLowerCase();
@@ -81,7 +95,7 @@ export const createTokenScene = SceneBuilder
 
 		return ctx.wizard.next();
 	}))
-	.step(`Accept Token Data`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/^\d+$/, async (ctx) => {
+	.step(`Accept Collection Data`, new Composer<MyContext<ICreateCollectionSceneWizard>>().hears(/^\d+$/, async (ctx) => {
 		const threshold = Number(ctx.message.text);
 		if (isNaN(threshold)) {
 			await ctx.reply(`⚠️ Please provide a valid positive number.`, {
@@ -96,7 +110,7 @@ export const createTokenScene = SceneBuilder
 
 		const message = [
 			`Your information:`,
-			`Symbol: ${ctx.wizard.state.symbol}`,
+			`Slug: ${ctx.wizard.state.slug}`,
 			`Strategy: ${ctx.wizard.state.strategy}`,
 			`Threshold: ${ctx.wizard.state.threshold}`
 		];

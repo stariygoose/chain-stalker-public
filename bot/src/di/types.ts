@@ -11,11 +11,14 @@ export const TYPES = {
 
 export const ACTION_TYPES = {
 	CreateTokenAction: Symbol.for("CreateTokenAction"),
+	CreateCollectionAction: Symbol.for("CreateCollectionAction"),
 	CancelAction: Symbol.for("CancelAction")
 }
 
 export const COMMAND_TYPES = {
 	StartCommand: Symbol.for("StartCommand"),
 	MenuCommand: Symbol.for("MenuCommand"),
+
 	CreateToken: Symbol.for("CreateTokenCommand"),
+	CreateColection: Symbol.for("CreateColectionCommand")
 }

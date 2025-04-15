@@ -7,9 +7,11 @@ import { RedisConfig } from "#lib/redis/redis.config.js";
 import { IRedisStore, RedisStore } from "#lib/index.js";
 import { Bot, IBot } from "#bot/bot.js";
 import { CreateTokenCommand, StartCommand } from "#handlers/index.js";
-import { CreateTokenAction } from "#handlers/actions/actions/create-command.action.js";
+import { CreateTokenAction } from "#handlers/actions/actions/create-token.action.js";
 import { CancelAction } from "#handlers/actions/actions/cancel.action.js";
 import { MenuCommand } from "#handlers/commands/commands/menu.command.js";
+import { CreateCollectionCommand } from "#handlers/commands/commands/create-collection.command.js";
+import { CreateCollectionAction } from "#handlers/actions/actions/create-collection.action.js";
 
 
 export let container = new Container();
@@ -24,9 +26,12 @@ container.bind<IBot>(TYPES.Bot).to(Bot).inSingletonScope();
 // COMANDS
 container.bind<StartCommand>(COMMAND_TYPES.StartCommand).to(StartCommand);
 container.bind<MenuCommand>(COMMAND_TYPES.MenuCommand).to(MenuCommand);
+
 container.bind<CreateTokenCommand>(COMMAND_TYPES.CreateToken).to(CreateTokenCommand);
+container.bind<CreateCollectionCommand>(COMMAND_TYPES.CreateColection).to(CreateCollectionCommand);
 
 // ACTION
 container.bind<CreateTokenAction>(ACTION_TYPES.CreateTokenAction).to(CreateTokenAction);
+container.bind<CreateCollectionAction>(ACTION_TYPES.CreateCollectionAction).to(CreateCollectionAction);
 container.bind<CancelAction>(ACTION_TYPES.CancelAction).to(CancelAction);
 

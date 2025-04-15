@@ -8,11 +8,13 @@ import { Command } from "#handlers/commands/command.abstract.js";
 import { createSceneStage } from "#scenes/index.js";
 import { CreateTokenCommand, StartCommand } from "#handlers/index.js";
 import { container } from "#di/containers.js";
-import { CreateTokenAction } from "#handlers/actions/actions/create-command.action.js";
+import { CreateTokenAction } from "#handlers/actions/actions/create-token.action.js";
 import { Action } from "#handlers/actions/action.abstract.js";
 import { MyContext, MySession } from "#context/context.interface.js";
 import { CancelAction } from "#handlers/actions/actions/cancel.action.js";
 import { MenuCommand } from "#handlers/commands/commands/menu.command.js";
+import { CreateCollectionCommand } from "#handlers/commands/commands/create-collection.command.js";
+import { CreateCollectionAction } from "#handlers/actions/actions/create-collection.action.js";
 
 
 export interface IBot {
@@ -101,13 +103,17 @@ export class Bot implements IBot {
 		return [
 			container.get<StartCommand>(COMMAND_TYPES.StartCommand),
 			container.get<MenuCommand>(COMMAND_TYPES.MenuCommand),
+
 			container.get<CreateTokenCommand>(COMMAND_TYPES.CreateToken),
+			container.get<CreateCollectionCommand>(COMMAND_TYPES.CreateColection)
 		];
 	}
 
 	private registerActions() {
 		return [
 			container.get<CreateTokenAction>(ACTION_TYPES.CreateTokenAction),
+			container.get<CreateCollectionAction>(ACTION_TYPES.CreateCollectionAction),
+
 			container.get<CancelAction>(ACTION_TYPES.CancelAction)
 		]
 	}
