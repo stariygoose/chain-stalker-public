@@ -1,4 +1,3 @@
-
 export const TYPES = {
 	Logger: Symbol.for('Logger'),
 	ConfigService: Symbol.for('ConfigService'),
@@ -18,6 +17,14 @@ export const TYPES = {
 
 	TokenController: Symbol.for('TokenController'),
 	TokenService: Symbol.for('TokenService'),
+
+	JwtService: Symbol.for('JwtService'),
+	JwtTokenRepository: Symbol.for('JwtTokenRepository'),
+
+	UserRepository: Symbol.for('UserRepository'),
+	
+	AuthController: Symbol.for('AuthController'),
+	AuthService: Symbol.for('AuthService'),
 
 	BinanceEventStream: Symbol.for('BinanceEventStream'),
 	OpenseaEventStream: Symbol.for('OpenseaEventStream'),

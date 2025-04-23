@@ -21,6 +21,13 @@ import { CollectionController } from "#presentation/controllers/collection.contr
 import { CollectionService, ICollectionService } from "#application/services/collection.service.js";
 import { TokenController } from "#presentation/controllers/token.controller.js";
 import { ITokenService, TokenService } from "#application/services/token.service.js";
+import { IJwtTokenRepository } from "#application/repository/jwt.repository.js";
+import { JwtTokenRepository } from "#infrastructure/database/mongodb/repositories/jwt-token.repository.js";
+import { IJwtService, JwtService } from "#application/services/jwt.service.js";
+import { IUserRepository } from "#application/repository/user.repository.js";
+import { UserRepository } from "#infrastructure/database/mongodb/repositories/user.repository.js";
+import { AuthService, IAuthService } from "#application/services/auth.service.js";
+import { AuthController } from "#presentation/controllers/user.controller.js";
 
 
 export let container = new Container();
@@ -40,6 +47,14 @@ container.bind<ICollectionService>(TYPES.CollectionService).to(CollectionService
 
 container.bind<TokenController>(TYPES.TokenController).to(TokenController).inSingletonScope();
 container.bind<ITokenService>(TYPES.TokenService).to(TokenService).inSingletonScope();
+
+container.bind<IJwtService>(TYPES.JwtService).to(JwtService).inSingletonScope();
+container.bind<IJwtTokenRepository>(TYPES.JwtTokenRepository).to(JwtTokenRepository).inSingletonScope();
+
+container.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository).inSingletonScope();
+
+container.bind<AuthController>(TYPES.AuthController).to(AuthController).inSingletonScope();
+container.bind<IAuthService>(TYPES.AuthService).to(AuthService).inSingletonScope();
 
 container.bind<IServerConfig>(TYPES.ServerConfig).to(ServerConfig).inSingletonScope();
 container.bind<IMongoDbConfig>(TYPES.MongoDbConfig).to(MongoDbConfig).inSingletonScope();

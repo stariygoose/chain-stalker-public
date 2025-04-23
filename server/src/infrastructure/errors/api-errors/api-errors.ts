@@ -18,3 +18,9 @@ export class BadRequestError extends ApiError {
 		super(400, message)
 	}
 }
+
+export class UnauthorizedError extends ApiError {
+	constructor(message: string) {
+		super(401, message)
+	}
+}

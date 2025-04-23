@@ -11,6 +11,7 @@ import { EnvVariables } from "#config/env-variables.js";
 import { IMongoDbConfig } from "#infrastructure/database/mongodb/config/mongo.config.js";
 import { errorMiddleware } from "#presentation/middlewares/errors/error.middleware.js";
 import { Logger } from "#utils/logger.js";
+import { authenticateJWT } from "#presentation/middlewares/auth/auth.middleware.js";
 
 
 export interface IServerConfig {
@@ -56,6 +57,11 @@ export class ServerConfig implements IServerConfig {
 				origin: `https://${this._baseUrl}`,
 				credentials: true,
 			}));
+
+			app.use((req, res, next) => {
+				authenticateJWT(req, next);
+			});
+			
 		});
 
 		this._server.setErrorConfig((app) => {

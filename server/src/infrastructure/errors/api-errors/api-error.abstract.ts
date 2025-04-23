@@ -1,4 +1,4 @@
-type HttpCode = 400 | 404 | 503;
+type HttpCode = 400 | 404 | 503 | 401;
 
 export abstract class ApiError extends Error {
 	constructor (
