@@ -22,14 +22,14 @@ export class AuthService implements IAuthService {
 
 	public async botLogin(userId: number): Promise<IJwtTokens> {
 		try {
-			// TODO 1.Create user instance
+			const userMetaData = await this._userRepository.createUser(userId);
 
-			const tokens = this._jwtService.generatePair({ userId });
+			const tokens = this._jwtService.generatePair({ ...userMetaData });
 
 			await this._jwtService.saveToken(userId, tokens.refreshToken);
 
 			return tokens;
-
+			
 		} catch (error: unknown) {
 			throw error;
 		}

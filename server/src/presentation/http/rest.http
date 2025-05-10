@@ -1,0 +1,6 @@
+POST http://localhost:25001/api/v1/auth/bot-login 
+Content-Type: application/json
+
+{
+    "userId": 123456
+}

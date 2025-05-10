@@ -7,6 +7,7 @@ import { IUserRepository } from "#application/repository/user.repository.js";
 import { AbstractDatabaseError } from "#infrastructure/errors/database-errors/database-errors.abstract.js";
 import { LayerError } from "#infrastructure/errors/index.js";
 import { UserDbRecord } from "#infrastructure/dtos/user/user.dto.js";
+import { JwtMapper } from "#infrastructure/mappers/jwt/jwt.mapper.js";
 
 
 @injectable()
@@ -23,6 +24,18 @@ export class UserRepository implements IUserRepository {
 			if (!user) return null;
 
 			return user;
+		} catch (error: unknown) {
+			this._handleDbError(error);
+		}
+	}
+
+	public async createUser(userId: number): Promise<UserDbRecord> {
+		try {
+			const user = await UserModel.create({ userId });
+
+			if (!user) throw new LayerError.DatabaseError(`User creation with id ${userId} failed`);
+
+			return JwtMapper.toDomain(user);
 		} catch (error: unknown) {
 			this._handleDbError(error);
 		}
