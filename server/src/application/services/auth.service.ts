@@ -51,6 +51,8 @@ export class AuthService implements IAuthService {
 
 			const tokens = this._jwtService.generatePair({ userId: userMetaData.userId });
 			
+			await this._jwtService.saveToken(userMetaData.userId, tokens.refreshToken);
+			
 			return tokens;
 		} catch (error: unknown) {
 			throw error;

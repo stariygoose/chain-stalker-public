@@ -17,6 +17,13 @@ export class StartCommand extends Command {
 
 	public handle(): void {
 		this.bot.command('start', async (ctx) => {
+			if (!ctx.session.jwt) {
+				await ctx.reply(
+					'You are not logged in.\nPlease, use the command /login to log in.',
+				);
+				return ;
+			}
+
 			const user = ctx.from?.username ?? 'hunter';
 
 			const message = [

@@ -1,7 +1,7 @@
 import { Context, Scenes } from "telegraf";
 
 
-interface Jwt {
+export interface Jwt {
 	refreshToken?: string;
 	accessToken?: string;
 }

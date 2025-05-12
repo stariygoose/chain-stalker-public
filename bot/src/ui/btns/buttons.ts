@@ -1,10 +1,13 @@
-
 export const backBtn = {
 	text: '❮❮ Back', callback_data: 'action:back'
 };
 
 export const cancelBtn = {
 	text: '❌ Cancel', callback_data: 'action:cancel'
+}
+
+export const yesBtn = {
+	text: '✅ Yes'
 }
 
 export const percentageStrategy = {
@@ -16,13 +19,13 @@ export const absoluteStrategy = {
 }
 
 export const tokenCommand = { 
-	text: '🪙 Token', callback_data: 'command:token'
+	text: '🪙 Token', callback_data: 'scene:token'
 }
 
 export const collectionCommand = {
-	text: '🖼️ Collection', callback_data: 'command:collection'
+	text: '🖼️ Collection', callback_data: 'scene:collection'
 }
 
 export const myStalksCommand = {
-	text: 'My Stalks', callback_data: 'command:stalks'
+	text: 'My Stalks', callback_data: 'scene:stalks'
 }

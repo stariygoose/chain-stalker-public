@@ -4,11 +4,18 @@ import { SceneBuilder } from "#scenes/scenes/scene.builder.js";
 import { SceneTitle } from "#scenes/scenes/scene.types.js";
 import { Buttons } from '#ui/index.js';
 import { MyContext } from "#context/context.interface.js";
-import { checkStrategy } from "#lib/helpers/helpers.js";
+import { checkStrategy, checkYesCancel } from "#lib/helpers/helpers.js";
+import { container } from "#di/containers.js";
+import { ApiService } from "#lib/api/api.service.js";
+import { TYPES } from "#di/types.js";
+import { ApiError } from "#errors/errors/api.error.js";
+import { menuOption } from "#ui/menu/menu.js";
+import { ResponseToken } from "#lib/api/response.js";
 
 
 interface ICreateTokenSceneWizard extends Scenes.WizardSessionData { 
 	symbol: string;
+	price: number;
 	strategy: 'percentage' | 'absolute';
 	threshold: number;
 }
@@ -48,13 +55,25 @@ export const createTokenScene = SceneBuilder
 		return ctx.wizard.next();
 	}))
 	.step(`Get Threshold`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/.*/, async (ctx) => {
-
 		try {
 			const strategy = ctx.message.text.split(' ')[1].toLowerCase();
 
 			if (!checkStrategy(strategy)) throw new Error();
 
 			ctx.wizard.state.strategy = strategy;
+
+			const message = [
+				`Provide you threshold.`,
+				`You will be notified when price cross this value.`
+			];
+
+			await ctx.reply(message.join("\n"), {
+				...Markup.inlineKeyboard([
+					[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
+				])
+			})
+
+			return ctx.wizard.next();
 		} catch (error) {
 			await ctx.reply("⚠️ Please choose a valid strategy from your keyboard.", {
 				...Markup.keyboard([
@@ -67,19 +86,6 @@ export const createTokenScene = SceneBuilder
 			
 			return;
 		}
-
-		const message = [
-			`Provide you threshold.`,
-			`You will be notified when price cross this value.`
-		];
-
-		await ctx.reply(message.join("\n"), {
-			...Markup.inlineKeyboard([
-				[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
-			])
-		})
-
-		return ctx.wizard.next();
 	}))
 	.step(`Accept Token Data`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/^\d+$/, async (ctx) => {
 		const threshold = Number(ctx.message.text);
@@ -94,15 +100,109 @@ export const createTokenScene = SceneBuilder
 
 		ctx.wizard.state.threshold = threshold;
 
-		const message = [
-			`Your information:`,
-			`Symbol: ${ctx.wizard.state.symbol}`,
-			`Strategy: ${ctx.wizard.state.strategy}`,
-			`Threshold: ${ctx.wizard.state.threshold}`
-		];
+		try {
+			const apiService = container.get<ApiService>(TYPES.ApiService);
 
-		await ctx.reply(message.join("\n"));
+			const tokenData = await apiService.get<ResponseToken>(
+				ApiService.TOKEN_URL + '/' + ctx.wizard.state.symbol,
+				ctx.session
+			);
 
-		return await ctx.scene.leave();
+
+			ctx.wizard.state.symbol = tokenData.symbol;
+			ctx.wizard.state.price = tokenData.price;
+
+			const endingForThreshold = ctx.wizard.state.strategy === "percentage" ? "%" : "$";
+
+			const message = [
+				`Shall we lock this in... or retrace our steps?`,
+				`Symbol: <strong>${ctx.wizard.state.symbol}</strong>`,
+				`Price: <strong>${ctx.wizard.state.price}</strong>`,
+				`Strategy: <strong>${ctx.wizard.state.strategy}</strong>`,
+				`Threshold: <strong>${ctx.wizard.state.threshold} ${endingForThreshold}</strong>`
+			];
+	
+			await ctx.reply(message.join("\n"), {
+				parse_mode: "HTML",
+				...Markup.keyboard([
+					[ 
+						Markup.button.text(Buttons.yesBtn.text),
+						Markup.button.text(Buttons.cancelBtn.text)
+					]
+				]).oneTime().resize()
+			});
+		} catch (error: any) {
+			if (error instanceof ApiError) {
+				await ctx.reply(
+					error.botMessage,
+					menuOption.options
+				);
+				return ctx.scene.leave();
+			}
+
+			await ctx.reply(
+				error.message,
+				menuOption.options
+			);
+
+			return ctx.scene.leave();
+		}
+	
+		return ctx.wizard.next();
+	}))
+	.step(`Send Token Data to Server`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/.*/, async (ctx) => {
+		try {
+			const answer = ctx.message.text.split(' ')[1].toLowerCase();
+			if (!checkYesCancel(answer)) throw new Error();
+	
+			const apiService = container.get<ApiService>(TYPES.ApiService);
+
+			switch (answer) {
+				case "yes":
+					await apiService.post(
+						ApiService.CREATE_URL, 
+						{
+							userId: ctx.from.id,
+							target: {
+								type: "token",
+								symbol: ctx.wizard.state.symbol,
+								lastNotifiedPrice: ctx.wizard.state.price
+							},
+							strategy: {
+								type: ctx.wizard.state.strategy,
+								threshold: ctx.wizard.state.threshold
+							}
+						}, 
+						ctx.session
+					);
+	
+					await ctx.reply(
+						`✅ Token created successfully.`, 
+						menuOption.options
+					);
+					break;
+				case "cancel":
+					await ctx.reply(menuOption.text, menuOption.options);
+					break;
+				default:
+					break;
+			}
+	
+			return ctx.scene.leave();
+		} catch (error) {
+			if (error instanceof ApiError) {
+				await ctx.reply(
+					error.message,
+					menuOption.options
+				);
+				return ctx.scene.leave();
+			}
+			
+			await ctx.reply(
+				`⚠️ An error occurred while creating the token. Please try again later.`,
+				menuOption.options
+			);
+			return ctx.scene.leave();
+		}	
 	}))
 	.build();

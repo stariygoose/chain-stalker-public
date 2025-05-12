@@ -2,6 +2,7 @@ import { Composer, Scenes } from "telegraf";
 
 import { MyContext } from "#context/context.interface.js";
 import { SceneKey } from "#scenes/scenes/scene.types.js";
+import { Container } from "inversify";
 
 
 type ActionHandler<T extends Scenes.WizardSessionData> = {
@@ -13,7 +14,9 @@ export class SceneBuilder<T extends Scenes.WizardSessionData> {
 	private _steps: Composer<MyContext<T>>[] = [];
 	private _actions: ActionHandler<T>[] = [];
 
-	constructor (private name: SceneKey) {}
+	constructor (
+		public readonly name: SceneKey
+	) {}
 
 	public step(
 		_stepName: string,

@@ -38,10 +38,7 @@ export class BinanceAPI {
 			
 			return token;
 		} catch (error: any) {
-			if (error.response.status === 400) {
-				throw new ApiError.ExternalApiError(`A token <${s}> may not be supported by Binance.`);
-			}
-			throw new ApiError.ExternalApiError();
+			throw new ApiError.ExternalApiError(`A token <${s}> may not be supported by Binance.`);
 		}
 	}
 }

@@ -7,6 +7,7 @@ import { ILogger } from "#config/index.js";
 import { Command } from "#handlers/commands/command.abstract.js";
 import { ApiService } from "#lib/api/api.service.js";
 import { ApiError } from "#errors/errors/api.error.js";
+import { ResponseJwt } from '#lib/api/response.js';
 
 
 @injectable()
@@ -28,13 +29,20 @@ export class LoginCommand extends Command {
 		this.bot.command(LoginCommand.handler, async (ctx) => {
 			try {
 				const user = ctx.from?.id;
-				const request = await this._apiService.post(ApiService.LOGIN_URL, {
-					userId: user
-				});
+				const request = await this._apiService.post<ResponseJwt>(
+					ApiService.LOGIN_URL,
+					{
+						userId: user
+					},
+					ctx.session
+				);
 
-				ctx.session.jwt = request.data;
+				ctx.session.jwt = request;
 
-				await ctx.reply(`You have been successfully logged in.\n${menuOption.text}`, menuOption.options);
+				await ctx.reply(
+					`You have been successfully logged in.\n${menuOption.text}`, 
+					menuOption.options
+				);
 			} catch (error: unknown) {
 				if (error instanceof ApiError) {
 					await ctx.reply(error.botMessage, menuOption.options);

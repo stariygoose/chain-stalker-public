@@ -17,3 +17,18 @@ export class DuplicateApiError extends ApiError {
 		super(message);
 	}
 }
+
+export class BadRequestApiError extends ApiError {
+	constructor(
+		message: string,
+		public readonly botMessage: string
+	) {
+		super(message);
+	}
+}
+
+export class NotAuthorizedApiError extends ApiError {
+	constructor(message: string) {
+		super (message);
+	}
+}

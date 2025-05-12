@@ -14,8 +14,8 @@ export const authenticateJWT = (
 	if (url.includes('/auth/bot-login') || url.includes('/auth/refresh')) {
 		return next();
 	}
-  const authHeader = req.headers.authorization;
 
+  const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     throw new ApiError.UnauthorizedError('Missing or invalid Authorization header');
   }
@@ -24,7 +24,7 @@ export const authenticateJWT = (
 
 	const jwtService = container.get<IJwtService>(TYPES.JwtService);
 
-	const isValid  = jwtService.validateAccessToken(token);
+	const isValid = jwtService.validateAccessToken(token);
 
 	if (!isValid) throw new ApiError.UnauthorizedError('Invalid access token');
 
