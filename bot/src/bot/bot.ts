@@ -15,6 +15,7 @@ import { CancelAction } from "#handlers/actions/actions/cancel.action.js";
 import { MenuCommand } from "#handlers/commands/commands/menu.command.js";
 import { CreateCollectionCommand } from "#handlers/commands/commands/create-collection.command.js";
 import { CreateCollectionAction } from "#handlers/actions/actions/create-collection.action.js";
+import { LoginCommand } from "#handlers/commands/commands/login.command.js";
 
 
 export interface IBot {
@@ -101,6 +102,7 @@ export class Bot implements IBot {
 
 	private registerCommands() {
 		return [
+			container.get<LoginCommand>(COMMAND_TYPES.LoginCommand),
 			container.get<StartCommand>(COMMAND_TYPES.StartCommand),
 			container.get<MenuCommand>(COMMAND_TYPES.MenuCommand),
 

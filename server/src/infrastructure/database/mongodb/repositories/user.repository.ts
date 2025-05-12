@@ -8,6 +8,7 @@ import { AbstractDatabaseError } from "#infrastructure/errors/database-errors/da
 import { LayerError } from "#infrastructure/errors/index.js";
 import { UserDbRecord } from "#infrastructure/dtos/user/user.dto.js";
 import { JwtMapper } from "#infrastructure/mappers/jwt/jwt.mapper.js";
+import { MongooseError } from "mongoose";
 
 
 @injectable()
@@ -36,18 +37,23 @@ export class UserRepository implements IUserRepository {
 			if (!user) throw new LayerError.DatabaseError(`User creation with id ${userId} failed`);
 
 			return JwtMapper.toDomain(user);
-		} catch (error: unknown) {
+		} catch (error: any) {
+			if (error.code === 11000) {
+				this._logger.error(`Database error: User with id ${userId} already exists in User Database.`);
+				throw new LayerError.DuplicateKeyDbError(userId);
+			}
+
 			this._handleDbError(error);
 		}
 	}
 
-	private _handleDbError(error: unknown): never {
-			if (error instanceof AbstractDatabaseError) {
-				this._logger.error(error.message);
-				throw error;
-			}
-		
-			this._logger.error(`Unexpected Database Error. Reason: ${(error as Error).message}`);
-			throw new LayerError.DatabaseError('Unexpected Database Error.');
+	private _handleDbError(error: any): never {
+		if (error instanceof AbstractDatabaseError) {
+			this._logger.error(error.message);
+			throw error;
 		}
+	
+		this._logger.error(`Unexpected Database Error. Reason: ${(error as Error).message}`);
+		throw new LayerError.DatabaseError('Unexpected Database Error.');
+	}
 }

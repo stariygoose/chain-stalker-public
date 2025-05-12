@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 
 import { IJwtService, IJwtTokens } from "#application/services/jwt.service.js";
 import { TYPES } from "#di/types.js";
-import { ApiError } from '#infrastructure/errors/index.js';
+import { ApiError, LayerError } from '#infrastructure/errors/index.js';
 import { IUserRepository } from '#application/repository/user.repository.js';
 
 
@@ -31,6 +31,9 @@ export class AuthService implements IAuthService {
 			return tokens;
 			
 		} catch (error: unknown) {
+			if (error instanceof LayerError.DuplicateKeyDbError) {
+				throw new ApiError.ConflictError(`User with id ${error.key} already exists`);
+			}
 			throw error;
 		}
 	}

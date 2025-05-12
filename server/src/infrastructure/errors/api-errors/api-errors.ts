@@ -24,3 +24,9 @@ export class UnauthorizedError extends ApiError {
 		super(401, message)
 	}
 }
+
+export class ConflictError extends ApiError {
+	constructor(message: string) {
+		super(409, message)
+	}
+}

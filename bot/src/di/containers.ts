@@ -12,11 +12,14 @@ import { CancelAction } from "#handlers/actions/actions/cancel.action.js";
 import { MenuCommand } from "#handlers/commands/commands/menu.command.js";
 import { CreateCollectionCommand } from "#handlers/commands/commands/create-collection.command.js";
 import { CreateCollectionAction } from "#handlers/actions/actions/create-collection.action.js";
+import { LoginCommand } from "#handlers/commands/commands/login.command.js";
+import { ApiService } from "#lib/api/api.service.js";
 
 
 export let container = new Container();
 container.bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
 container.bind<ILogger>(TYPES.Logger).to(Logger).inSingletonScope();
+container.bind<ApiService>(TYPES.ApiService).to(ApiService).inSingletonScope();
 
 container.bind<RedisConfig>(TYPES.RedisConfig).to(RedisConfig).inTransientScope();
 container.bind<IRedisStore>(TYPES.RedisStore).to(RedisStore).inSingletonScope();
@@ -24,6 +27,7 @@ container.bind<IRedisStore>(TYPES.RedisStore).to(RedisStore).inSingletonScope();
 container.bind<IBot>(TYPES.Bot).to(Bot).inSingletonScope();
 
 // COMANDS
+container.bind<LoginCommand>(COMMAND_TYPES.LoginCommand).to(LoginCommand);
 container.bind<StartCommand>(COMMAND_TYPES.StartCommand).to(StartCommand);
 container.bind<MenuCommand>(COMMAND_TYPES.MenuCommand).to(MenuCommand);
 

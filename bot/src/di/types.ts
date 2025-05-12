@@ -1,6 +1,7 @@
 export const TYPES = {
 	ConfigService: Symbol.for("ConfigService"),
 	Logger: Symbol.for("Logger"),
+	ApiService: Symbol.for("ApiService"),
 
 	Bot: Symbol.for("Bot"),
 
@@ -17,6 +18,7 @@ export const ACTION_TYPES = {
 
 export const COMMAND_TYPES = {
 	StartCommand: Symbol.for("StartCommand"),
+	LoginCommand: Symbol.for("LoginCommand"),
 	MenuCommand: Symbol.for("MenuCommand"),
 
 	CreateToken: Symbol.for("CreateTokenCommand"),

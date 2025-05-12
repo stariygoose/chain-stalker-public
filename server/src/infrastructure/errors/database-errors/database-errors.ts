@@ -17,3 +17,9 @@ export class InvalidDbTargetTypeError extends AbstractDatabaseError {
 		super(`Unhandled type of target <${type}>`);
 	}
 }
+
+export class DuplicateKeyDbError extends AbstractDatabaseError {
+	constructor (public readonly key: number) {
+		super(`Duplicate key error: ${key}`);
+	}
+}
