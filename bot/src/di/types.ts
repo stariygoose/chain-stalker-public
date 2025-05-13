@@ -13,6 +13,7 @@ export const TYPES = {
 export const ACTION_TYPES = {
 	CreateTokenAction: Symbol.for("CreateTokenAction"),
 	CreateCollectionAction: Symbol.for("CreateCollectionAction"),
+	MyStalksAction: Symbol.for("MyStalksAction"),
 	CancelAction: Symbol.for("CancelAction")
 }
 

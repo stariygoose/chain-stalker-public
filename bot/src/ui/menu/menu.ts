@@ -16,10 +16,7 @@ export const menuOption = {
 			],
 			[
 				Markup.button.callback(Buttons.myStalksCommand.text, Buttons.myStalksCommand.callback_data) 
-			],
-			// [
-			// 	Markup.button.url("🌐 Open in browser", url)
-			// ]
+			]
 		])
 	}
 }

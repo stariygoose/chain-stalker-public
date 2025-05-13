@@ -17,3 +17,41 @@ export interface ResponseCollection {
 	symbol: string;
 	floorPrice: number;
 }
+
+export interface NftSubscription {
+	id: string;
+	target: {
+		type: 'nft';
+		name: string;
+		slug: string;
+		chain: string;
+		lastNotifiedPrice: number;
+		symbol: string;
+	};
+	strategy: {
+		type: 'percentage' | 'absolute';
+		threshold: number;
+	};
+	isActive: boolean;
+}
+
+export interface TokenSubscription {
+	id: string;
+	target: {
+		type: 'token';
+		symbol: string;
+		lastNotifiedPrice: number;
+	};
+	strategy: {
+		type: 'percentage' | 'absolute';
+		threshold: number;
+	};
+	isActive: boolean;
+}
+
+type Subscription = NftSubscription | TokenSubscription;
+
+export interface ResponseMyStalks {
+	userId: number;
+	subscriptions: Subscription[];
+}

@@ -16,6 +16,7 @@ import { MenuCommand } from "#handlers/commands/commands/menu.command.js";
 import { CreateCollectionCommand } from "#handlers/commands/commands/create-collection.command.js";
 import { CreateCollectionAction } from "#handlers/actions/actions/create-collection.action.js";
 import { LoginCommand } from "#handlers/commands/commands/login.command.js";
+import { MyStalktsAction } from "#handlers/actions/actions/mystalks.action.js";
 
 
 export interface IBot {
@@ -115,6 +116,7 @@ export class Bot implements IBot {
 		return [
 			container.get<CreateTokenAction>(ACTION_TYPES.CreateTokenAction),
 			container.get<CreateCollectionAction>(ACTION_TYPES.CreateCollectionAction),
+			container.get<MyStalktsAction>(ACTION_TYPES.MyStalksAction),
 
 			container.get<CancelAction>(ACTION_TYPES.CancelAction)
 		]

@@ -17,6 +17,8 @@ export class ApiService {
 	public static readonly TOKEN_URL: string = `${ApiService.V1_URL}/token`;
 	public static readonly COLLECTION_URL: string = `${ApiService.V1_URL}/collection`;
 
+	public static readonly SUBSCRIPTIONS_URL: string = `${ApiService.V1_URL}/subscriptions`;
+
 	private readonly BASE_URL: string;
 
 	constructor (
