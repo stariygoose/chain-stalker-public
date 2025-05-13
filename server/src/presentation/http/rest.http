@@ -1,6 +1,15 @@
 POST http://localhost:25001/api/v1/auth/bot-login 
 Content-Type: application/json
-
 {
     "userId": 123456
 }
+
+POST http://localhost:25001/api/v1/auth/refresh
+Content-Type: application/json
+{
+
+}
+
+GET http://localhost:25001/api/v1/collection/gemesis
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODIzMGY2OThhZTZiMWU3YTdhMTZlMGUiLCJ1c2VySWQiOjEyMzQ1NiwiY3JlYXRlZEF0IjoiMjAyNS0wNS0xM1QwOToyMjo0OS41MTZaIiwidXBkYXRlZEF0IjoiMjAyNS0wNS0xM1QwOToyMjo0OS41MTZaIiwiX192IjowLCJpYXQiOjE3NDcxMjgxODksImV4cCI6MTc0NzEyOTk4OX0.wAUHxrzblq0EdaHIvOZco1e5Ejof5RHVAvmoC0tVbOc

@@ -108,7 +108,6 @@ export const createTokenScene = SceneBuilder
 				ctx.session
 			);
 
-
 			ctx.wizard.state.symbol = tokenData.symbol;
 			ctx.wizard.state.price = tokenData.price;
 
@@ -177,7 +176,7 @@ export const createTokenScene = SceneBuilder
 					);
 	
 					await ctx.reply(
-						`✅ Token created successfully.`, 
+						`✅ Token Subscription created successfully.`, 
 						menuOption.options
 					);
 					break;
@@ -199,7 +198,7 @@ export const createTokenScene = SceneBuilder
 			}
 			
 			await ctx.reply(
-				`⚠️ An error occurred while creating the token. Please try again later.`,
+				`⚠️ An error occurred while creating the token subscription. Please try again later.`,
 				menuOption.options
 			);
 			return ctx.scene.leave();

@@ -41,10 +41,9 @@ export class AuthController {
 	) {
 		try {
 			const { refreshToken } = req.body;
-			console.log(`Received a refresh token: ${refreshToken}`);
 
 			const tokens = await this._authService.refreshToken(refreshToken);
-			console.log(`Tokens: ${JSON.stringify(tokens)}`);
+			
 			return res.status(201).json(tokens);
 		} catch (error) {
 			next(error);

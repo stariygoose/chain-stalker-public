@@ -22,7 +22,10 @@ export class AuthService implements IAuthService {
 
 	public async botLogin(userId: number): Promise<IJwtTokens> {
 		try {
-			const userMetaData = await this._userRepository.createUser(userId);
+			let userMetaData = await this._userRepository.findByUserId(userId);
+			if (!userMetaData) {
+				userMetaData = await this._userRepository.createUser(userId);
+			}
 
 			const tokens = this._jwtService.generatePair({ ...userMetaData });
 
@@ -49,11 +52,12 @@ export class AuthService implements IAuthService {
 			const userMetaData = await this._userRepository.findByUserId(session.userId);
 			if (!userMetaData) throw new ApiError.NotFoundError('User not found');
 
-			const tokens = this._jwtService.generatePair({ userId: userMetaData.userId });
+			const newTokens = this._jwtService.generatePair({ userId: userMetaData.userId });
 			
-			await this._jwtService.saveToken(userMetaData.userId, tokens.refreshToken);
+			await this._jwtService.updateRefreshToken(session.refreshToken, newTokens.refreshToken);
 			
-			return tokens;
+			return newTokens;
+			
 		} catch (error: unknown) {
 			throw error;
 		}

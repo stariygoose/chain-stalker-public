@@ -4,7 +4,7 @@ import { injectable, inject } from "inversify";
 import { TYPES } from "#di/types.js";
 import { EnvVariables, IConfigService, ILogger } from "#config/index.js";
 import { ApiError, BadRequestApiError, DuplicateApiError, NotAuthorizedApiError } from '#errors/errors/api.error.js';
-import { Jwt, MyContext, MySession } from '#context/context.interface.js';
+import { Jwt, MySession } from '#context/context.interface.js';
 
 @injectable()
 export class ApiService {
@@ -15,6 +15,7 @@ export class ApiService {
 
 	public static readonly CREATE_URL: string = `${ApiService.V1_URL}/subscriptions/create`;
 	public static readonly TOKEN_URL: string = `${ApiService.V1_URL}/token`;
+	public static readonly COLLECTION_URL: string = `${ApiService.V1_URL}/collection`;
 
 	private readonly BASE_URL: string;
 
@@ -40,18 +41,15 @@ export class ApiService {
 		};
 
 		try {
-			console.log(`Sending request to: ${url}`)
 			const response = await axios.get<T>(url, {
 				headers
 			});
 
 			return response.data;
+
 		} catch (error: any) {
-			console.log(`Result: ${error.response.status === 401 && retry}`)
 			if (error.response.status === 401 && retry) {
-				console.log(`I'm in retry block`);
 				const tokens = await this.refreshToken(session);
-				console.log(`Tokens refreshed: ${JSON.stringify(tokens)}`)
 				session.jwt = tokens;
 
 				return await this.get<T>(endpoint, session, false);
@@ -141,9 +139,6 @@ export class ApiService {
 		};
 
 		try {
-			console.log(`Refreshing token...`);
-			console.log(session.jwt);
-
 			const response = await axios.post<Jwt>(
 				url,
 				{
@@ -154,7 +149,6 @@ export class ApiService {
 				}
 			);
 
-			console.log(`New tokens: ${response.data}`)
 			return response.data;
 		} catch (error: any) {
 			if (error.response.status === 400) {
@@ -163,7 +157,7 @@ export class ApiService {
 			if (error.response.status === 404) {
 				throw new ApiError(
 					error.response.data.error,
-					`Server can't find your refresh token. Please log in again.`
+					`Your session has expired. Please log in again.\n /login`
 				);
 			}
 			throw new ApiError(
