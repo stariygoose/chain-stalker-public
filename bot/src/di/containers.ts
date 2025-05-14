@@ -17,6 +17,7 @@ import { ApiService } from "#lib/api/api.service.js";
 import { MyStalksAction } from "#handlers/actions/actions/my-stalks/mystalks.action.js";
 import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
 import { MenuAction } from "#handlers/actions/actions/menu/menu.action.js";
+import { DeactivateSubscriptionAction } from "#handlers/actions/actions/edit-subscription/deactivate.action.js";
 
 
 export let container = new Container();
@@ -45,4 +46,7 @@ container.bind<CreateCollectionAction>(ACTION_TYPES.CreateCollectionAction).to(C
 container.bind<MyStalksAction>(ACTION_TYPES.MyStalksAction).to(MyStalksAction);
 container.bind<MenuAction>(ACTION_TYPES.MenuAction).to(MenuAction);
 container.bind<CancelAction>(ACTION_TYPES.CancelAction).to(CancelAction);
+
+container.bind<DeactivateSubscriptionAction>(ACTION_TYPES.DeactivateSubscription).to(DeactivateSubscriptionAction);
+
 

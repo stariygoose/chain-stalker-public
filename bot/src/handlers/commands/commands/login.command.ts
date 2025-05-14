@@ -40,12 +40,12 @@ export class LoginCommand extends Command {
 				ctx.session.jwt = request;
 
 				await ctx.reply(
-					`You have been successfully logged in.\n${menuOption.text}`, 
-					menuOption.options
+					`You have been successfully logged in.\n${menuOption().text}`, 
+					menuOption().options
 				);
 			} catch (error: unknown) {
 				if (error instanceof ApiError) {
-					await ctx.reply(error.botMessage, menuOption.options);
+					await ctx.reply(error.botMessage, menuOption().options);
 					return ;
 				}
 				throw error;

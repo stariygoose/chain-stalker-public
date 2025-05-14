@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import { nanoid } from "nanoid";
 
 import { IBot } from "#bot/bot.js";
 import { ILogger } from "#config/index.js";
@@ -9,12 +8,13 @@ import { Buttons } from "#ui/index.js";
 import { ApiService } from "#lib/api/api.service.js";
 import { ResponseMyStalks, Subscription } from "#lib/api/response.js";
 import { MyContext } from '#context/context.interface.js';
+import { safeNanoId } from "#lib/helpers/helpers.js";
 
 
 
 @injectable()
 export class MyStalksAction extends Action {
-	public static readonly handler: string = Buttons.myStalksCommand.callback_data;
+	public static readonly handler = Buttons.myStalksCommand.callback_data;
 
 	constructor(
 		@inject(TYPES.Bot) public readonly bot: IBot,
@@ -27,20 +27,19 @@ export class MyStalksAction extends Action {
 	public handle(): void {
 		this.bot.action(MyStalksAction.handler, async (ctx) => {
 			try {
-				await ctx.answerCbQuery();
-
 				const userId = ctx.from?.id;
 				const response = await this._apiService.get<ResponseMyStalks>(
 					`${ApiService.SUBSCRIPTIONS_URL}?userId=${userId}`,
-					ctx.session,
+					ctx.session
 				);
 
 				const { subscriptions } = response;
+
 				this.cacheSubscriptionIds(ctx, subscriptions);
 
 				if (subscriptions.length === 0) {
-					const message = this.buildEmptyMessage();
-					await ctx.reply(message.text, message.options);
+					const { text, options } = this.buildEmptyMessage();
+					await ctx.reply(text, options);
 					return;
 				}
 
@@ -48,72 +47,59 @@ export class MyStalksAction extends Action {
 					.map((sub) => this.formatSubscriptionMessage(ctx, sub))
 					.join('\n\n');
 
-				await ctx.reply(
-					message,
-					{
-						parse_mode: "HTML",
-						reply_markup: {
-							inline_keyboard: [
-								[
-									{ text: Buttons.menuBtn.text, callback_data: Buttons.menuBtn.callback_data }
-								]
-							]
-						}
+				await ctx.reply(message, {
+					parse_mode: "HTML",
+					reply_markup: {
+						inline_keyboard: [[
+							{ text: Buttons.menuBtn.text, callback_data: Buttons.menuBtn.callback_data }
+						]]
 					}
-				);
-
+				});
 			} catch (error) {
 				this._logger.error((error as Error).message);
 			}
 		});
 	}
 
-	private cacheSubscriptionIds(
-		ctx: MyContext,
-		subscriptions: Subscription[]
-	): void {
-		if (!ctx.session.subsIdsHashTable) ctx.session.subsIdsHashTable = {};
+	private cacheSubscriptionIds(ctx: MyContext, subscriptions: Subscription[]): void {
+		ctx.session.subsIdsHashTable = {};
 
 		for (const sub of subscriptions) {
-			const shortId = nanoid(6);
+			const shortId = safeNanoId();
 			ctx.session.subsIdsHashTable[shortId] = sub.id;
 		}
 	}
 
-	private formatSubscriptionMessage(
-		ctx: MyContext,
-		subscription: Subscription
-	): string {
-		const key = this.findShortId(ctx, subscription.id);
-		if (!key) return `❌ Unable to locate subscription ID`;
+	private formatSubscriptionMessage(ctx: MyContext, sub: Subscription): string {
+		const shortId = this.findShortId(ctx, sub.id);
+		if (!shortId) return `❌ Unable to locate subscription ID`;
 
-		const { target, strategy, isActive } = subscription;
-
-		const statusEmoji = isActive ? '🟢' : '🔴';
+		const { target, strategy, isActive } = sub;
+		const status = isActive ? '🟢' : '🔴';
 		const unit = strategy.type === 'percentage' ? '%' : '$';
-		const threshold = `<b>${strategy.threshold}${unit}</b>\n<i>${strategy.type}</i> threshold.`;
+		const thresholdText = `<b>${strategy.threshold}${unit}</b>\n<i>${strategy.type}</i> threshold.`;
 
-		if (target.type === 'nft') {
-			return `${statusEmoji} 🖼️ <b>${target.name}</b> is being stalked at <b>${target.lastNotifiedPrice} ${target.symbol}</b> with ${threshold} /edit_${key}`;
+		switch (target.type) {
+			case 'nft':
+				return `${status} 🖼️ <b>${target.name}</b> is being stalked at <b>${target.lastNotifiedPrice} ${target.symbol}</b> with ${thresholdText} /edit_${shortId}`;
+
+			case 'token':
+				return `${status} 🪙 <b>${target.symbol}</b> is being stalked at <b>${target.lastNotifiedPrice} ${target.symbol}</b> with ${thresholdText} /edit_${shortId}`;
+
+			default:
+				this._logger.warn(`Unknown subscription target type: ${target["type"]}`);
+				return `❌ Unknown subscription type`;
 		}
-
-		if (target.type === 'token') {
-			return `${statusEmoji} 🪙 <b>${target.symbol}</b> is being stalked at <b>${target.lastNotifiedPrice} ${target.symbol}</b> with ${threshold} /edit_${key}`;
-		}
-
-		return `❌ Unknown subscription type`;
 	}
 
-	private findShortId(
-		ctx: MyContext,
-		fullId: string
-	): string | undefined {
-		return Object.entries(ctx.session.subsIdsHashTable || {}).find(
-			([, value]) => value === fullId
-		)?.[0];
+	private findShortId(ctx: MyContext, fullId: string): string | undefined {
+		for (const [key, value] of Object.entries(ctx.session.subsIdsHashTable)) {
+			if (value === fullId) return key;
+		}
+		return undefined;
 	}
 
-	private buildEmptyMessage() {
+	private buildEmptyMessage(): { text: string; options: { reply_markup: { inline_keyboard: any[][] } } } {
 		return {
 			text: "You don't have any subscriptions yet.\nChoose one of the options below to create a new subscription.",
 			options: {

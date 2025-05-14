@@ -15,7 +15,10 @@ export const ACTION_TYPES = {
 	CreateCollectionAction: Symbol.for("CreateCollectionAction"),
 	MyStalksAction: Symbol.for("MyStalksAction"),
 	MenuAction: Symbol.for("MenuAction"),
-	CancelAction: Symbol.for("CancelAction")
+	CancelAction: Symbol.for("CancelAction"),
+
+	DeactivateSubscription: Symbol.for("DeactivateSubscriptionCommand"),
+
 }
 
 export const COMMAND_TYPES = {
@@ -25,5 +28,6 @@ export const COMMAND_TYPES = {
 
 	CreateToken: Symbol.for("CreateTokenCommand"),
 	CreateColection: Symbol.for("CreateColectionCommand"),
+
 	EditSubscription: Symbol.for("EditSubscriptionCommand"),
 }

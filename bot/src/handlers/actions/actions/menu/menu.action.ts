@@ -24,12 +24,11 @@ export class MenuAction extends Action {
 	public handle(): void {
 		this.bot.action(MenuAction.handler, async (ctx) => {
 			try {
-				await ctx.answerCbQuery();
 				await ctx.scene.leave();
 				
 				await ctx.reply(
-					menuOption.text,
-					menuOption.options
+					menuOption().text,
+					menuOption().options
 				);
 			} catch (error) {
 				if (error instanceof Error) this._logger.error(error.message); 

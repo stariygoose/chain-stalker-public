@@ -18,12 +18,12 @@ export class MenuCommand extends Command {
 	public handle(): void {
 		this.bot.command('menu', async (ctx) => {
 			const message = [
-				menuOption.text
+				menuOption().text
 			]
 
 			await ctx.reply(
 				message.join('\n'),
-				menuOption.options
+				menuOption().options
 			);
 		});
 	} 

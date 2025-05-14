@@ -18,6 +18,8 @@ export interface ISubscriptionService {
 
 	getAllByUserId(userId: number, type?: unknown): Promise<GetAllSubscriptionsDto>;
 	getById(id: string): Promise<Subscription>;
+
+	changeStatusById(id: string): Promise<Subscription>;
 }
 
 @injectable()
@@ -92,6 +94,26 @@ export class SubscriptionService implements ISubscriptionService {
 
 			return subscriptionFromDb;
 		} catch (error) {
+			throw error;
+		}
+	}
+
+	public async changeStatusById(id: string): Promise<Subscription> {
+		if (!Types.ObjectId.isValid(id)) {
+			throw new ApiError.BadRequestError("Invalid ID");
+		}
+
+		try {
+			const subscription = await this._db.changeStatusById(id);
+
+			if (!subscription) {
+				throw new ApiError.NotFoundError("Subscription not found");
+			}
+
+			this._logger.debug(`Subscription [${subscription.id}] was successfuly deactivated.`);
+
+			return subscription;
+		} catch (error: unknown) {
 			throw error;
 		}
 	}

@@ -26,11 +26,12 @@ export const createCollectionScene = SceneBuilder
 	.create<ICreateCollectionSceneWizard>(SceneTitle.CREATE_COLLECTION)
 	.step(`Get Collection Slug`, async (ctx) => {
 		const message = [
-			`What's the collection slug ?`,
-			`Currently, i work only with OpensSea.`
+			`🖼️ What's the collection slug ?`,
+			`❗ Currently, i work only with OpensSea.`
 		];
 
 		await ctx.reply(message.join("\n"), {
+			parse_mode: "HTML",
 			...Markup.inlineKeyboard([
 				[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
 			])
@@ -56,7 +57,7 @@ export const createCollectionScene = SceneBuilder
 		ctx.wizard.state.slug = slug;
 
 		const message = [
-			`Which strategy to notify would you like to use ?`
+			`🎯 Which strategy to notify would you like to use ?`
 		];
 
 		await ctx.reply(message.join("\n"), {
@@ -79,11 +80,12 @@ export const createCollectionScene = SceneBuilder
 			ctx.wizard.state.strategy = strategy;
 
 			const message = [
-				`Provide you threshold.`,
-				`You will be notified when price cross this value.`
+				`⚖️ Provide you threshold.`,
+				`<i>You will be notified when price cross this value.</i>`
 			];
 	
 			await ctx.reply(message.join("\n"), {
+				parse_mode: "HTML",
 				...Markup.inlineKeyboard([
 					[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
 				])
@@ -134,13 +136,13 @@ export const createCollectionScene = SceneBuilder
 			const endingForThreshold = ctx.wizard.state.strategy === "percentage" ? "%" : "$";
 
 			const message = [
-				`Shall we lock this in... or retrace our steps?`,
-				`Collection: <a href="${collectionData.openseaUrl}">${ctx.wizard.state.name}</a>`,
-				`Slug: <strong>${ctx.wizard.state.slug}</strong>`,
-				`Chain: <strong>${ctx.wizard.state.chain}</strong>`,
-				`Floor Price: <strong>${ctx.wizard.state.floorPrice} ${ctx.wizard.state.symbol}</strong>`,
-				`Strategy: <strong>${ctx.wizard.state.strategy}</strong>`,
-				`Threshold: <strong>${ctx.wizard.state.threshold} ${endingForThreshold}</strong>`
+				`💡 Shall we lock this in... or retrace our steps?`,
+				`<i>Collection:</i> <a href="${collectionData.openseaUrl}">${ctx.wizard.state.name}</a>`,
+				`<i>Slug</i>: <b>${ctx.wizard.state.slug}</b>`,
+				`<i>Chain</i>: <b>${ctx.wizard.state.chain}</b>`,
+				`<i>Floor Price</i>: <b>${ctx.wizard.state.floorPrice} ${ctx.wizard.state.symbol}</b>`,
+				`<i>Strategy</i>: <b>${ctx.wizard.state.strategy}</b>`,
+				`<i>Threshold</i>: <b>${ctx.wizard.state.threshold} ${endingForThreshold}</b>`
 			];
 
 			await ctx.reply(message.join("\n"), {
@@ -156,14 +158,14 @@ export const createCollectionScene = SceneBuilder
 			if (error instanceof ApiError) {
 				await ctx.reply(
 					error.botMessage,
-					menuOption.options
+					menuOption().options
 				);
 				return ctx.scene.leave();
 			}
 
 			await ctx.reply(
 				error.message,
-				menuOption.options
+				menuOption().options
 			);
 
 			return ctx.scene.leave();
@@ -202,11 +204,14 @@ export const createCollectionScene = SceneBuilder
 	
 					await ctx.reply(
 						`✅ Collection Subscription created successfully.`, 
-						menuOption.options
+						menuOption().options
 					);
 					break;
 				case "cancel":
-					await ctx.reply(menuOption.text, menuOption.options);
+					await ctx.reply(
+						menuOption().text,
+						menuOption().options
+					);
 					break;
 				default:
 					break;
@@ -217,14 +222,14 @@ export const createCollectionScene = SceneBuilder
 			if (error instanceof ApiError) {
 				await ctx.reply(
 					error.message,
-					menuOption.options
+					menuOption().options
 				);
 				return ctx.scene.leave();
 			}
 			
 			await ctx.reply(
 				`⚠️ An error occurred while creating the collection subscription. Please try again later.`,
-				menuOption.options
+				menuOption().options
 			);
 			return ctx.scene.leave();
 		}	

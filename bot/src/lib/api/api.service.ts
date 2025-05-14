@@ -18,6 +18,7 @@ export class ApiService {
 	public static readonly COLLECTION_URL: string = `${ApiService.V1_URL}/collection`;
 
 	public static readonly SUBSCRIPTIONS_URL: string = `${ApiService.V1_URL}/subscriptions`;
+	public static readonly SUBSCRIPTIONS_CHANGE_STATUS_URL: string = `${ApiService.SUBSCRIPTIONS_URL}/change_status`;
 
 	private readonly BASE_URL: string;
 
@@ -77,7 +78,7 @@ export class ApiService {
 		};
 
 		try {
-			const response = await axios.post(
+			const response = await axios.post<T>(
 				url,
 				data, 
 				{
@@ -100,6 +101,43 @@ export class ApiService {
 		}
 	}
 
+	public async put<T>(
+		endpoint: string,
+		data: unknown,
+		session: MySession,
+		retry = true
+	): Promise<T> {
+		const url = `${this.BASE_URL}${endpoint}`;
+		const headers = {
+			'Content-Type': 'application/json',
+			'Accept': 'application/json',
+			'Authorization': `Bearer ${session.jwt?.accessToken}`
+		};
+
+		try {
+			const response = await axios.put<T>(
+				url,
+				data,
+				{
+					headers
+				}
+			);
+
+			return response.data;
+		} catch (error: any) {
+			if (error.response.status === 401 && retry) {
+				const tokens = await this.refreshToken(session);
+				session.jwt = tokens;
+
+				return await this.put<T>(endpoint, data, session, false);
+			};
+
+			this.handleResponseError(
+				error
+			);
+		}
+	}
+
 	private handleResponseError(
 		error: any
 	): never {
@@ -107,28 +145,28 @@ export class ApiService {
 			case 409:
 				throw new DuplicateApiError(
 					error.response.data.error,
-					`You are already logged in.`
+					`⚠️ You are already logged in.`
 				);
 			case 400:
 				throw new BadRequestApiError(
 					error.response.data.error + `| Details: ${error.response.data.details}`,
-					`Error while creating subscription. Please check your data and try again.`
+					`⚠️ Error while creating subscription. Please check your data and try again.`
 				);
 			case 503:
 				throw new ApiError(
 					error.response.data.error,
-					`Your target probably doesn't exist or is not supported by the server.`
+					`⚠️ Your target probably doesn't exist or is not supported by the server.`
 				)
 			case 404:
 				throw new ApiError(
 					error.response.data.error,
-					`This target doesn't exist or is not supported by the server.`
+					`⚠️ This target doesn't exist or is not supported by the server.`
 				)
 			default:
 				this._logger.error(`Unexpected error while sending request to a server: ${error.message}`);
 				throw new ApiError(
 					error.message,
-					`Unexpected error while sending request to a server. Please try again later.`
+					`⚠️ Iternal server error. Please try again later.`
 				);
 		}
 	}

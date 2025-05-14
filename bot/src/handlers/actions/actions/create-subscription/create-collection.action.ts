@@ -24,7 +24,6 @@ export class CreateCollectionAction extends Action {
 	public handle(): void {
 		this.bot.action(CreateCollectionAction.handler, async (ctx) => {
 			try {
-				await ctx.answerCbQuery();
 				await ctx.scene.enter(SceneTitle.CREATE_COLLECTION);
 			} catch (error) {
 				if (error instanceof Error) this._logger.error(error.message); 

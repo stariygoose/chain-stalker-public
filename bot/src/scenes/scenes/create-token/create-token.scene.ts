@@ -24,11 +24,12 @@ export const createTokenScene = SceneBuilder
 	.create<ICreateTokenSceneWizard>(SceneTitle.CREATE_TOKEN)
 	.step(`Get Token Symbol`, async (ctx) => {
 		const message = [
-			`What's the token symbol ?`,
-			`Currently, i work only with Binance.`
+			`🪙 What's the token symbol ?`,
+			`❗ Currently, i work only with Binance.`
 		];
 
 		await ctx.reply(message.join("\n"), {
+			parse_mode: "HTML",
 			...Markup.inlineKeyboard([
 				[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
 			])
@@ -40,7 +41,7 @@ export const createTokenScene = SceneBuilder
 		ctx.wizard.state.symbol = ctx.message.text;
 
 		const message = [
-			`Which strategy to notify would you like to use ?`
+			`🎯 Which strategy to notify would you like to use ?`
 		];
 
 		await ctx.reply(message.join("\n"), {
@@ -63,11 +64,12 @@ export const createTokenScene = SceneBuilder
 			ctx.wizard.state.strategy = strategy;
 
 			const message = [
-				`Provide you threshold.`,
-				`You will be notified when price cross this value.`
+				`⚖️ Provide you threshold.`,
+				`<i>You will be notified when price cross this value.</i>`
 			];
 
 			await ctx.reply(message.join("\n"), {
+				parse_mode: "HTML",
 				...Markup.inlineKeyboard([
 					[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
 				])
@@ -87,20 +89,20 @@ export const createTokenScene = SceneBuilder
 			return;
 		}
 	}))
-	.step(`Accept Token Data`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/^\d+$/, async (ctx) => {
-		const threshold = Number(ctx.message.text);
-		if (isNaN(threshold)) {
-			await ctx.reply(`⚠️ Please provide a valid positive number.`, {
-				...Markup.inlineKeyboard([
-					[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
-				])
-			})
-			return ;
-		}
-
-		ctx.wizard.state.threshold = threshold;
-
+	.step(`Accept Token Data`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/^\d+(\.\d+)?$/, async (ctx) => {
 		try {
+			const threshold = Number(ctx.message.text);
+			if (isNaN(threshold) || threshold <= 0) {
+				await ctx.reply(`⚠️ Please provide a valid positive number.`, {
+					...Markup.inlineKeyboard([
+						[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
+					])
+				})
+				return ;
+			}
+
+			ctx.wizard.state.threshold = threshold;
+
 			const apiService = container.get<ApiService>(TYPES.ApiService);
 
 			const tokenData = await apiService.get<ResponseToken>(
@@ -114,11 +116,11 @@ export const createTokenScene = SceneBuilder
 			const endingForThreshold = ctx.wizard.state.strategy === "percentage" ? "%" : "$";
 
 			const message = [
-				`Shall we lock this in... or retrace our steps?`,
-				`Symbol: <strong>${ctx.wizard.state.symbol}</strong>`,
-				`Price: <strong>${ctx.wizard.state.price}</strong>`,
-				`Strategy: <strong>${ctx.wizard.state.strategy}</strong>`,
-				`Threshold: <strong>${ctx.wizard.state.threshold} ${endingForThreshold}</strong>`
+				`💡 Shall we lock this in... or retrace our steps?`,
+				`<i>Symbol</i>: <b>${ctx.wizard.state.symbol}</b>`,
+				`<i>Price</i>: <b>${ctx.wizard.state.price}$</b>`,
+				`<i>Strategy</i>: <b>${ctx.wizard.state.strategy}</b>`,
+				`<i>Threshold</i>: <b>${ctx.wizard.state.threshold}${endingForThreshold}</b>`
 			];
 	
 			await ctx.reply(message.join("\n"), {
@@ -130,25 +132,24 @@ export const createTokenScene = SceneBuilder
 					]
 				]).oneTime().resize()
 			});
+
+			return ctx.wizard.next();
 		} catch (error: any) {
 			if (error instanceof ApiError) {
 				await ctx.reply(
 					error.botMessage,
-					menuOption.options
+					menuOption().options
 				);
 				return ctx.scene.leave();
 			}
 
 			await ctx.reply(
 				error.message,
-				menuOption.options
+				menuOption().options
 			);
-
 			return ctx.scene.leave();
 		}
-	
-		return ctx.wizard.next();
-	}))
+}))
 	.step(`Send Token Data to Server`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/.*/, async (ctx) => {
 		try {
 			const answer = ctx.message.text.split(' ')[1].toLowerCase();
@@ -177,11 +178,11 @@ export const createTokenScene = SceneBuilder
 	
 					await ctx.reply(
 						`✅ Token Subscription created successfully.`, 
-						menuOption.options
+						menuOption().options
 					);
 					break;
 				case "cancel":
-					await ctx.reply(menuOption.text, menuOption.options);
+					await ctx.reply(menuOption().text, menuOption().options);
 					break;
 				default:
 					break;
@@ -191,15 +192,15 @@ export const createTokenScene = SceneBuilder
 		} catch (error) {
 			if (error instanceof ApiError) {
 				await ctx.reply(
-					error.message,
-					menuOption.options
+					error.botMessage,
+					menuOption().options
 				);
 				return ctx.scene.leave();
 			}
 			
 			await ctx.reply(
 				`⚠️ An error occurred while creating the token subscription. Please try again later.`,
-				menuOption.options
+				menuOption().options
 			);
 			return ctx.scene.leave();
 		}	

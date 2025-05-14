@@ -8,6 +8,7 @@ import { TYPES } from "#di/index.js";
 import { ApiService } from "#lib/api/api.service.js";
 import { NftSubscription, Subscription, TokenSubscription } from "#lib/api/response.js";
 import { Buttons } from "#ui/index.js";
+import { MyContext } from "#context/context.interface.js";
 
 
 @injectable()
@@ -27,26 +28,34 @@ export class EditSubscriptionCommand extends Command {
 			try {
 				const hashId = ctx.text?.split('_')[1];
 				if (!hashId) return;
-
-				const targetId = ctx.session.subsIdsHashTable?.[hashId];
-				if (!targetId) {
-					await ctx.reply("⚠️ Subscription not found or expired.");
-					return;
-				}
-
-				const subscription = await this._apiService.get<Subscription>(
-					`${ApiService.SUBSCRIPTIONS_URL}/${targetId}`,
-					ctx.session
-				);
-
-				const { text, options } = this.buildSubscriptionMessage(subscription, hashId);
-				await ctx.reply(text, options);
+	
+				await this.showSubscriptionInfo(ctx, hashId);
 			} catch (error) {
 				this._logger.error(`Error handling /edit_ command: ${(error as Error).message}`);
 			}
 		});
 	}
 
+	public async showSubscriptionInfo(
+		ctx: MyContext, 
+		hashId: string
+	): Promise<void> {
+		const targetId = ctx.session.subsIdsHashTable?.[hashId];
+	
+		if (!targetId) {
+			await ctx.reply("⚠️ Subscription not found or expired.");
+			return;
+		}
+	
+		const subscription = await this._apiService.get<Subscription>(
+			`${ApiService.SUBSCRIPTIONS_URL}/${targetId}`,
+			ctx.session
+		);
+	
+		const { text, options } = this.buildSubscriptionMessage(subscription, hashId);
+		await ctx.reply(text, options);
+	}
+	
 	private buildSubscriptionMessage(
 		subscription: Subscription,
 		hashId: string
@@ -99,20 +108,25 @@ export class EditSubscriptionCommand extends Command {
 	}
 
 	private buildInlineKeyboard(hashId: string, isActive: boolean) {
+		const strategyBtn = Buttons.changeStrategyBtn(hashId);
+		const thresholdBtn = Buttons.changeThesholdBtn(hashId);
+		const statusBtn = Buttons.subStatusBtn(hashId, isActive);
+		const deleteBtn = Buttons.deleteBtn(hashId);
+
 		return {
 			parse_mode: 'HTML' as ParseMode,
 			reply_markup: {
 				inline_keyboard: [
 					[
-						{ text: '🎯 Change strategy', callback_data: `edit:${hashId}:strategy` },
-						{ text: '⚖️ Change threshold', callback_data: `edit:${hashId}:threshold` }
+						{ text: strategyBtn.text, callback_data: strategyBtn.callback_data },
+						{ text: thresholdBtn.text, callback_data: thresholdBtn.callback_data }
 					],
 					[
 						{
-							text: isActive ? '🔴 Deactivate' : '🟢 Activate',
-							callback_data: `edit:${hashId}:isActive:${!isActive}`
+							text: statusBtn.text,
+							callback_data: statusBtn.callback_data
 						},
-						{ text: '🗑️ Delete', callback_data: `edit:${hashId}:delete` }
+						{ text: deleteBtn.text, callback_data: deleteBtn.callback_data }
 					],
 					[
 						{ text: Buttons.menuBtn.text, callback_data: Buttons.menuBtn.callback_data }

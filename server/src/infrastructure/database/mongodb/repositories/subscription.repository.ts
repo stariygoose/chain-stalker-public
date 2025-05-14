@@ -179,6 +179,32 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 		}
 	}
 
+	public async changeStatusById(id: string): Promise<Subscription | null> {
+		try {
+			const subscription = await SubscriptionModel.findById(id).lean<SubscriptionDbDto>();
+
+			if (!subscription) return null;
+
+			const updatedSubscription = await SubscriptionModel.findByIdAndUpdate(
+				id,
+				{ isActive: !subscription.isActive },
+				{ new: true }
+			).lean<SubscriptionDbDto>();
+
+			if (!updatedSubscription) return null;
+			
+			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+				updatedSubscription._id,
+				updatedSubscription.userId,
+				updatedSubscription.target,
+				updatedSubscription.strategy,
+				updatedSubscription.isActive
+			));
+		} catch (error: unknown) {
+			this._handleDbError(error);
+		}
+	}
+
 	public async drop(): Promise<void> {
 		try {
 			await SubscriptionModel.deleteMany({});

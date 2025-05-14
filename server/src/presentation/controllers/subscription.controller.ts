@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { inject } from "inversify";
-import { controller, httpGet, httpPost, next, queryParam, request, requestParam, response } from "inversify-express-utils";
+import { controller, httpGet, httpPost, httpPut, next, queryParam, request, requestParam, response } from "inversify-express-utils";
 
 import { ISubscriptionService } from "#application/services/subscription.service.js";
 import { TYPES } from "#di/types.js";
@@ -61,4 +61,22 @@ export class SubscriptionController {
 			next(error);
 		}
 	}
+
+	@httpPut('/change_status/:id')
+	public async changeStatus(
+		@requestParam("id") id: string,
+		@request() req: Request,
+		@response() res: Response,
+		@next() next: NextFunction
+	) {
+		try {
+			const subscription = await this._subscriptionService.changeStatusById(id);
+
+			return res.status(201).json(subscription);
+		} catch (error: unknown) {
+			next(error);
+		}
+	}
+
+
 }

@@ -19,12 +19,14 @@ import { LoginCommand } from "#handlers/commands/commands/login.command.js";
 import { MyStalksAction } from "#handlers/actions/actions/my-stalks/mystalks.action.js";
 import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
 import { MenuAction } from "#handlers/actions/actions/menu/menu.action.js";
+import { DeactivateSubscriptionAction } from "#handlers/actions/actions/edit-subscription/deactivate.action.js";
+import { CallbackQuery } from "telegraf/types";
 
 
 export interface IBot {
 	init(): void;
 	command(trigger: string | RegExp, handler: (ctx: MyContext) => Promise<void>): void;
-	action(route: string, handler: (ctx: MyContext) => Promise<void>): void;
+	action(route: string | RegExp, handler: (ctx: MyContext) => Promise<void>): void;
 }
 
 @injectable()
@@ -85,7 +87,8 @@ export class Bot implements IBot {
 	public command(trigger: string | RegExp, handler: (ctx: MyContext) => Promise<void>): void {
 		this.bot.command(trigger, async (ctx) => {
 			try {
-				await handler(ctx);	
+				await ctx.deleteMessage(ctx.message?.message_id);
+				await handler(ctx);
 			} catch (error: any) {
 				this._logger.debug(`Error for the user: ${ctx.from?.id} while processing a command: ${ctx.command}. Error: ${error.message}`);
 				throw error;
@@ -93,9 +96,11 @@ export class Bot implements IBot {
 		});
 	}
 
-	public action(route: string, handler: (ctx: MyContext) => Promise<void>): void {
+	public action(route: string | RegExp, handler: (ctx: MyContext) => Promise<void>): void {
 		this.bot.action(route, async (ctx) => {
 			try {
+				await ctx.answerCbQuery();
+				await ctx.deleteMessage();
 				await handler(ctx);
 			} catch (error: any) {
 				this._logger.debug(`Error for the user: ${ctx.from?.id} while processing an action. Error: ${error.message}`);
@@ -121,7 +126,9 @@ export class Bot implements IBot {
 			container.get<CreateCollectionAction>(ACTION_TYPES.CreateCollectionAction),
 			container.get<MyStalksAction>(ACTION_TYPES.MyStalksAction),
 			container.get<MenuAction>(ACTION_TYPES.MenuAction),
-			container.get<CancelAction>(ACTION_TYPES.CancelAction)
+			container.get<CancelAction>(ACTION_TYPES.CancelAction),
+
+			container.get<DeactivateSubscriptionAction>(ACTION_TYPES.DeactivateSubscription)
 		]
 	}
 }

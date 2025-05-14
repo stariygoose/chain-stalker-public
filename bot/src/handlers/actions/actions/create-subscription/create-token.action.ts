@@ -24,7 +24,6 @@ export class CreateTokenAction extends Action {
 	public handle(): void {
 		this.bot.action(CreateTokenAction.handler, async (ctx) => {
 			try {
-				await ctx.answerCbQuery();
 				await ctx.scene.enter(SceneTitle.CREATE_TOKEN);
 			} catch (error) {
 				if (error instanceof Error) this._logger.error(error.message); 

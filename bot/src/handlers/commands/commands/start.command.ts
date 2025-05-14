@@ -28,13 +28,12 @@ export class StartCommand extends Command {
 
 			const message = [
 				`🕵🏻 Welcome, <b>${user}</b>.`,
-				`I'm waiting for your commands.`,
-				menuOption.text
+				menuOption().text
 			]
 
 			await ctx.reply(
 				message.join('\n'),
-				menuOption.options
+				menuOption().options
 			);
 		});
 	} 
