@@ -6,6 +6,10 @@ export const cancelBtn = {
 	text: '❌ Cancel', callback_data: 'action:cancel'
 }
 
+export const menuBtn = {
+	text: '🏠 Menu', callback_data: 'action:menu'
+}
+
 export const yesBtn = {
 	text: '✅ Yes'
 }
@@ -29,3 +33,4 @@ export const collectionCommand = {
 export const myStalksCommand = {
 	text: 'My Stalks', callback_data: 'scene:stalks'
 }
+

@@ -14,6 +14,7 @@ export const ACTION_TYPES = {
 	CreateTokenAction: Symbol.for("CreateTokenAction"),
 	CreateCollectionAction: Symbol.for("CreateCollectionAction"),
 	MyStalksAction: Symbol.for("MyStalksAction"),
+	MenuAction: Symbol.for("MenuAction"),
 	CancelAction: Symbol.for("CancelAction")
 }
 

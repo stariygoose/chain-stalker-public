@@ -7,15 +7,16 @@ import { RedisConfig } from "#lib/redis/redis.config.js";
 import { IRedisStore, RedisStore } from "#lib/index.js";
 import { Bot, IBot } from "#bot/bot.js";
 import { CreateTokenCommand, StartCommand } from "#handlers/index.js";
-import { CreateTokenAction } from "#handlers/actions/actions/create-token.action.js";
-import { CancelAction } from "#handlers/actions/actions/cancel.action.js";
+import { CreateTokenAction } from "#handlers/actions/actions/create-subscription/create-token.action.js";
+import { CancelAction } from "#handlers/actions/actions/cancel/cancel.action.js";
 import { MenuCommand } from "#handlers/commands/commands/menu.command.js";
 import { CreateCollectionCommand } from "#handlers/commands/commands/create-collection.command.js";
-import { CreateCollectionAction } from "#handlers/actions/actions/create-collection.action.js";
+import { CreateCollectionAction } from "#handlers/actions/actions/create-subscription/create-collection.action.js";
 import { LoginCommand } from "#handlers/commands/commands/login.command.js";
 import { ApiService } from "#lib/api/api.service.js";
-import { MyStalktsAction } from "#handlers/actions/actions/mystalks.action.js";
+import { MyStalksAction } from "#handlers/actions/actions/my-stalks/mystalks.action.js";
 import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
+import { MenuAction } from "#handlers/actions/actions/menu/menu.action.js";
 
 
 export let container = new Container();
@@ -41,6 +42,7 @@ container.bind<EditSubscriptionCommand>(COMMAND_TYPES.EditSubscription).to(EditS
 // ACTIONS
 container.bind<CreateTokenAction>(ACTION_TYPES.CreateTokenAction).to(CreateTokenAction);
 container.bind<CreateCollectionAction>(ACTION_TYPES.CreateCollectionAction).to(CreateCollectionAction);
-container.bind<MyStalktsAction>(ACTION_TYPES.MyStalksAction).to(MyStalktsAction);
+container.bind<MyStalksAction>(ACTION_TYPES.MyStalksAction).to(MyStalksAction);
+container.bind<MenuAction>(ACTION_TYPES.MenuAction).to(MenuAction);
 container.bind<CancelAction>(ACTION_TYPES.CancelAction).to(CancelAction);
 
