@@ -15,6 +15,7 @@ import { CreateCollectionAction } from "#handlers/actions/actions/create-collect
 import { LoginCommand } from "#handlers/commands/commands/login.command.js";
 import { ApiService } from "#lib/api/api.service.js";
 import { MyStalktsAction } from "#handlers/actions/actions/mystalks.action.js";
+import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
 
 
 export let container = new Container();
@@ -34,6 +35,8 @@ container.bind<MenuCommand>(COMMAND_TYPES.MenuCommand).to(MenuCommand);
 
 container.bind<CreateTokenCommand>(COMMAND_TYPES.CreateToken).to(CreateTokenCommand);
 container.bind<CreateCollectionCommand>(COMMAND_TYPES.CreateColection).to(CreateCollectionCommand);
+
+container.bind<EditSubscriptionCommand>(COMMAND_TYPES.EditSubscription).to(EditSubscriptionCommand);
 
 // ACTIONS
 container.bind<CreateTokenAction>(ACTION_TYPES.CreateTokenAction).to(CreateTokenAction);

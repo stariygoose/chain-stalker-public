@@ -23,5 +23,6 @@ export const COMMAND_TYPES = {
 	MenuCommand: Symbol.for("MenuCommand"),
 
 	CreateToken: Symbol.for("CreateTokenCommand"),
-	CreateColection: Symbol.for("CreateColectionCommand")
+	CreateColection: Symbol.for("CreateColectionCommand"),
+	EditSubscription: Symbol.for("EditSubscriptionCommand"),
 }

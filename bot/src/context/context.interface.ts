@@ -6,15 +6,9 @@ export interface Jwt {
 	accessToken?: string;
 }
 
-interface TokenRequest {
-	symbol?: string;
-	strategy?: 'percentage' | 'absolute';
-	threshold?: number;
-}
-
 export interface MySession<T extends Scenes.WizardSessionData = Scenes.WizardSessionData> extends Scenes.WizardSession<T> {
 	jwt: Jwt;
-	tokenRequest: TokenRequest;
+	subsIdsHashTable: Record<string, string>;
 }
 
 export interface MyContext<T extends Scenes.WizardSessionData = Scenes.WizardSessionData> extends Context {

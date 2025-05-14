@@ -1,5 +1,5 @@
-import { format } from 'winston';
 import { inject, injectable } from "inversify";
+import { nanoid } from "nanoid";
 
 import { IBot } from "#bot/bot.js";
 import { ILogger } from "#config/index.js";
@@ -7,8 +7,8 @@ import { TYPES } from "#di/types.js";
 import { Action } from "#handlers/actions/action.abstract.js";
 import { Buttons } from "#ui/index.js";
 import { ApiService } from "#lib/api/api.service.js";
-import { NftSubscription, ResponseMyStalks, TokenSubscription } from "#lib/api/response.js";
-import { Markup } from 'telegraf';
+import { NftSubscription, ResponseMyStalks, Subscription, TokenSubscription } from "#lib/api/response.js";
+import { MyContext } from '#context/context.interface.js';
 
 
 
@@ -40,30 +40,17 @@ export class MyStalktsAction extends Action {
 				);
 
 				const { subscriptions } = response;
+				this.createHashTableForSubscriptionsIds(ctx, subscriptions);
 
 				if (subscriptions.length <= 0) {
+					const message = this.messageWhenNoSubscriptions();
 					await ctx.reply(
-						"You don't have any subscriptions yet.\nChoose one of the options below to create a new subscription.",
-						{
-							reply_markup: {
-								inline_keyboard: [
-									[{ text: Buttons.tokenCommand.text, callback_data: Buttons.tokenCommand.callback_data }],
-									[{ text: Buttons.collectionCommand.text, callback_data: Buttons.collectionCommand.callback_data }],
-								]
-							}
-						}
-					)
+						message.text,
+						message.options
+					);
 				} else {
 					const message = subscriptions.map((subscription) => {
-						const { target, strategy } = subscription;
-						switch (target.type) {
-							case 'nft':
-								return this.formatNftSubscription(subscription as NftSubscription);
-							case 'token':
-								return this.formatTokenSubscription(subscription as TokenSubscription);
-							default:
-								return this.formatDefaultSubscription(subscription);
-						}
+						return this.getMessageBasedTarget(ctx, subscription);
 					}).join('\n\n');
 
 					await ctx.reply(
@@ -75,28 +62,86 @@ export class MyStalktsAction extends Action {
 				}
 			} catch (error) {
 				if (error instanceof Error) this._logger.error(error.message); 
-				await ctx.scene.leave();
 			}
 		});
 	}
 
-	public formatNftSubscription(subscription: NftSubscription): string {
+	private createHashTableForSubscriptionsIds(
+		ctx: MyContext, 
+		subscriptions: Subscription[]
+	): void {
+		if (!ctx.session.subsIdsHashTable) {
+			ctx.session.subsIdsHashTable = {};
+		}
+
+		subscriptions.forEach((subscription) => {
+			const id = nanoid(6);
+
+			ctx.session.subsIdsHashTable[id] = subscription.id;
+		});
+	} 
+
+	private getMessageBasedTarget(
+		ctx: MyContext,
+		subscription: Subscription
+	): string {
+		const { target } = subscription;
+
+		switch (target.type) {
+			case 'nft':
+				return this.formatNftSubscription(ctx, subscription as NftSubscription);
+			case 'token':
+				return this.formatTokenSubscription(ctx, subscription as TokenSubscription);
+			default:
+				return this.formatDefaultSubscription(subscription);
+		}
+	}
+
+	private formatNftSubscription(
+		ctx: MyContext,
+		subscription: NftSubscription
+	): string {
 		const { target, strategy } = subscription;
 
+		const activityIndificator = subscription.isActive ? '🟢' : '🔴';
 		const endingForThreshold = strategy.type === "percentage" ? "%" : "$";
+		const key = Object.keys(ctx.session.subsIdsHashTable).find(
+			(key) => ctx.session.subsIdsHashTable[key] === subscription.id
+		);
 		
-		return `🖼️ <b>${target.name}</b> is being stalked at <b>${target.lastNotifiedPrice} ${target.symbol}</b> with a <b>${strategy.threshold} ${endingForThreshold}</b> <i>${strategy.type}</i> threshold`;
+		return `${activityIndificator} 🖼️ <b>${target.name}</b> is being stalked at <b>${target.lastNotifiedPrice} ${target.symbol}</b> with a <b>${strategy.threshold}${endingForThreshold}</b>\n<i>${strategy.type}</i> threshold. /edit_${key}`;
 	}
 
-	public formatTokenSubscription(subscription: TokenSubscription): string {
+	private formatTokenSubscription(
+		ctx: MyContext, 
+		subscription: TokenSubscription
+	): string {
 		const { target, strategy } = subscription;
 
+		const activityIndificator = subscription.isActive ? '🟢' : '🔴';
 		const endingForThreshold = strategy.type === "percentage" ? "%" : "$";
+		const key = Object.keys(ctx.session.subsIdsHashTable).find(
+			(key) => ctx.session.subsIdsHashTable[key] === subscription.id
+		);
 
-		return `🪙 <b>${target.symbol}</b> is being stalked at <b>${target.lastNotifiedPrice} ${target.symbol}</b> with a <b>${strategy.threshold} ${endingForThreshold}</b> <i>${strategy.type}</i> threshold`;
+		return `${activityIndificator} 🪙 <b>${target.symbol}</b> is being stalked at <b>${target.lastNotifiedPrice} ${target.symbol}</b> with a <b>${strategy.threshold}${endingForThreshold}</b>\n<i>${strategy.type}</i> threshold. /edit_${key}`;
 	}
 
-	public formatDefaultSubscription(subscription: NftSubscription | TokenSubscription): string {
+	private formatDefaultSubscription(subscription: NftSubscription | TokenSubscription): string {
 		return `❌ Unknown subscription type`;
+	}
+
+	private messageWhenNoSubscriptions() {
+		return {
+			text: "You don't have any subscriptions yet.\nChoose one of the options below to create a new subscription.",
+			options: {
+				reply_markup: {
+					inline_keyboard: [
+						[{ text: Buttons.tokenCommand.text, callback_data: Buttons.tokenCommand.callback_data }],
+						[{ text: Buttons.collectionCommand.text, callback_data: Buttons.collectionCommand.callback_data }],
+					]
+				}
+			}
+		};
 	}
 }

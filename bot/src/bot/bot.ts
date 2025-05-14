@@ -17,11 +17,12 @@ import { CreateCollectionCommand } from "#handlers/commands/commands/create-coll
 import { CreateCollectionAction } from "#handlers/actions/actions/create-collection.action.js";
 import { LoginCommand } from "#handlers/commands/commands/login.command.js";
 import { MyStalktsAction } from "#handlers/actions/actions/mystalks.action.js";
+import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
 
 
 export interface IBot {
 	init(): void;
-	command(trigger: string, handler: (ctx: MyContext) => Promise<void>): void;
+	command(trigger: string | RegExp, handler: (ctx: MyContext) => Promise<void>): void;
 	action(route: string, handler: (ctx: MyContext) => Promise<void>): void;
 }
 
@@ -50,7 +51,7 @@ export class Bot implements IBot {
 				store: this._store.store,
 				defaultSession: (): MySession => ({
 					jwt: {},
-					tokenRequest: {}
+					subsIdsHashTable: {},
 				})
 			})
 		);
@@ -80,7 +81,7 @@ export class Bot implements IBot {
 		}
 	}
 
-	public command(trigger: string, handler: (ctx: MyContext) => Promise<void>): void {
+	public command(trigger: string | RegExp, handler: (ctx: MyContext) => Promise<void>): void {
 		this.bot.command(trigger, async (ctx) => {
 			try {
 				await handler(ctx);	
@@ -108,7 +109,8 @@ export class Bot implements IBot {
 			container.get<MenuCommand>(COMMAND_TYPES.MenuCommand),
 
 			container.get<CreateTokenCommand>(COMMAND_TYPES.CreateToken),
-			container.get<CreateCollectionCommand>(COMMAND_TYPES.CreateColection)
+			container.get<CreateCollectionCommand>(COMMAND_TYPES.CreateColection),
+			container.get<EditSubscriptionCommand>(COMMAND_TYPES.EditSubscription)
 		];
 	}
 

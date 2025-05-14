@@ -32,7 +32,6 @@ export class SubscriptionController {
     }
   }
 
-
 	@httpGet('/:id')
 	public async getById(
 		@requestParam("id") id: string,

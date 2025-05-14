@@ -49,7 +49,7 @@ export interface TokenSubscription {
 	isActive: boolean;
 }
 
-type Subscription = NftSubscription | TokenSubscription;
+export type Subscription = NftSubscription | TokenSubscription;
 
 export interface ResponseMyStalks {
 	userId: number;
