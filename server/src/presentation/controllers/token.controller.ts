@@ -14,7 +14,7 @@ export class TokenController {
 	) {}
 
 	@httpGet('/:symbol')
-	public async getNftBySymbol(
+	public async getTokenBySymbol(
 		@requestParam('symbol') symbol: string,
 		@request() req: Request,
 		@response() res: Response,

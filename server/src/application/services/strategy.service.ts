@@ -10,7 +10,7 @@ import { ApiError } from "#infrastructure/errors/index.js";
 
 
 export interface IStrategyService {
-	updateById(id: string, payload: unknown): Promise<Subscription>;
+	updateById(userId: number, id: string, payload: unknown): Promise<Subscription>;
 	updateByUserIdAndSlug(userId: number, slug: string, payload: unknown): Promise<Subscription>;
 	updateByUserIdAndSymbol(userId: number, symbol: string, payload: unknown): Promise<Subscription>;
 }
@@ -24,13 +24,22 @@ export class StrategyService implements IStrategyService {
 		private readonly _logger: Logger
 	) {}
 
-	public async updateById(id: string, payload: Strategy): Promise<Subscription> {
+	public async updateById(
+		userId: number,
+		id: string,
+		payload: Strategy
+	): Promise<Subscription> {
 		if (!Types.ObjectId.isValid(id)) {
 			throw new ApiError.BadRequestError("Invalid ID");
 		}
 
+		const filter: Record<string, unknown> = {
+			_id: id,
+			userId: userId
+		}
+
 		try {
-			const updated = await this._db.updateStrategy({ _id: id }, payload);
+			const updated = await this._db.updateStrategy(filter, payload);
 
 			if (!updated) {
 				throw new ApiError.NotFoundError("Subscription not found");
@@ -44,12 +53,18 @@ export class StrategyService implements IStrategyService {
 		}
 	}
 
-	public async updateByUserIdAndSlug(userId: number, slug: string, payload: Strategy): Promise<Subscription> {
+	public async updateByUserIdAndSlug(
+		userId: number,
+		slug: string,
+		payload: Strategy
+	): Promise<Subscription> {
+		const filter: Record<string, unknown> = {
+			userId: userId,
+			'target.slug': slug
+		};
+
 		try {
-			const updated = await this._db.updateStrategy({ 
-				userId: userId,
-				'target.slug': slug
-			}, payload);
+			const updated = await this._db.updateStrategy(filter, payload);
 
 			if (!updated) {
 				throw new ApiError.NotFoundError("Subscription not found");
@@ -63,13 +78,18 @@ export class StrategyService implements IStrategyService {
 		}
 	}
 
-	public async updateByUserIdAndSymbol(userId: number, symbol: string, payload: Strategy): Promise<Subscription> {
+	public async updateByUserIdAndSymbol(
+		userId: number,
+		symbol: string,
+		payload: Strategy
+	): Promise<Subscription> {
+		const filter: Record<string, unknown> = {
+			userId: userId,
+			'target.symbol': symbol.toUpperCase()
+		};
+
 		try {
-			console.log(`${userId} ${symbol} ${payload}`);
-			const updated = await this._db.updateStrategy({ 
-				userId: userId,
-				'target.symbol': symbol.toUpperCase()
-			}, payload);
+			const updated = await this._db.updateStrategy(filter, payload);
 
 			if (!updated) {
 				throw new ApiError.NotFoundError("Subscription not found");

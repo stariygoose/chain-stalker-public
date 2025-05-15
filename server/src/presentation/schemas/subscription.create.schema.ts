@@ -3,7 +3,6 @@ import { strategyAbsoluteSchema, strategyPercentageSchema } from "#presentation/
 import { tokenTargetSchema, nftTargetSchema } from "#presentation/schemas/common/token-target.schema.js";
 
 export const subscriptionCreateSchema = Joi.object({
-	userId: Joi.number().required(),
 	target: Joi.alternatives()
 						.conditional(Joi.object({ type: Joi.valid("token").required() }).unknown(), {
 							then: tokenTargetSchema,
