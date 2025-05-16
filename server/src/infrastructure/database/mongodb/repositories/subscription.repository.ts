@@ -205,6 +205,14 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 		}
 	}
 
+	public async deleteById(userId: number, id: string): Promise<void> {
+		try {
+			await SubscriptionModel.deleteOne({ _id: id, userId: userId });
+		} catch (error: unknown) {
+			this._handleDbError(error);
+		}
+	}
+
 	public async drop(): Promise<void> {
 		try {
 			await SubscriptionModel.deleteMany({});

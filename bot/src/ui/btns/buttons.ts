@@ -15,11 +15,6 @@ export const changeStrategyBtn = {
 	callback_data: `edit:strategy`
 }
 
-export const changeThesholdBtn = {
-	text: '⚖️ Change threshold',
-	callback_data: `edit:threshold`
-}
-
 export const subStatusBtn = (
 	isActive: boolean
 ) => {

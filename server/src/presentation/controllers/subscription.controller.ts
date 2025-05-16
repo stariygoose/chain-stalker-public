@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { inject } from "inversify";
-import { controller, httpGet, httpPost, httpPut, next, queryParam, request, requestParam, response } from "inversify-express-utils";
+import { controller, httpDelete, httpGet, httpPost, httpPut, next, queryParam, request, requestParam, response } from "inversify-express-utils";
 
 import { ISubscriptionService } from "#application/services/subscription.service.js";
 import { TYPES } from "#di/types.js";
@@ -49,7 +49,11 @@ export class SubscriptionController {
 	}
 
 	@httpPost('/create', joiValidator(subscriptionCreateSchema))
-	public async create(@request() req: Request, @response() res: Response, @next() next: NextFunction) {
+	public async create(
+		@request() req: Request,
+		@response() res: Response,
+		@next() next: NextFunction
+	) {
 		try {
 			const { body } = req;
 
@@ -78,5 +82,18 @@ export class SubscriptionController {
 		}
 	}
 
+	@httpDelete('/delete/:id')
+	public async delete(
+		@requestParam("id") id: string,
+		@request() req: Authorize,
+		@response() res: Response,
+		@next() next: NextFunction
+	) {
+		try {
 
+			const subscription = await this._subscriptionService.
+		} catch (error) {
+
+		}
+	}
 }

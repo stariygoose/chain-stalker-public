@@ -20,6 +20,8 @@ export interface ISubscriptionService {
 	getById(id: string): Promise<Subscription>;
 
 	changeStatusById(id: string): Promise<Subscription>;
+
+	deleteById(userId: number, id: string): Promise<void>;
 }
 
 @injectable()
@@ -113,6 +115,18 @@ export class SubscriptionService implements ISubscriptionService {
 			this._logger.debug(`Subscription [${subscription.id}] was successfuly deactivated.`);
 
 			return subscription;
+		} catch (error: unknown) {
+			throw error;
+		}
+	}
+
+	public async deleteById(userId: number, id: string): Promise<void> {
+		if (!Types.ObjectId.isValid(id)) {
+			throw new ApiError.BadRequestError("Invalid ID");
+		}
+
+		try {
+			await this._db.
 		} catch (error: unknown) {
 			throw error;
 		}

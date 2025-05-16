@@ -103,7 +103,7 @@ export const changeStrategyScene = new SceneBuilder<IChangeStrategyScene>(SceneT
 			const { id } = ctx.session.targetToEdit;
 			const { strategy } = ctx.wizard.state;
 
-			const res = await apiService.put(
+			await apiService.put(
 				ApiService.STRATEGY_EDIT + '/' + id,
 				{ strategy },
 				ctx.session

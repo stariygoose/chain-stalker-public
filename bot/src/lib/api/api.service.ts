@@ -18,6 +18,7 @@ export class ApiService {
 	public static readonly COLLECTION_URL: string = `${ApiService.V1_URL}/collection`;
 
 	public static readonly SUBSCRIPTIONS_URL: string = `${ApiService.V1_URL}/subscriptions`;
+	public static readonly SUBSCRIPTION_DELETE: string = `${ApiService.SUBSCRIPTIONS_URL}/`
 	public static readonly SUBSCRIPTIONS_CHANGE_STATUS_URL: string = `${ApiService.SUBSCRIPTIONS_URL}/change_status`;
 	
 	public static readonly STRATEGY_URL: string = `${ApiService.V1_URL}/strategy`;

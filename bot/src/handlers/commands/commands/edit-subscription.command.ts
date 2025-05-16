@@ -126,7 +126,6 @@ export class EditSubscriptionCommand extends Command {
 
 	private buildInlineKeyboard(isActive: boolean) {
 		const strategyBtn = Buttons.changeStrategyBtn;
-		const thresholdBtn = Buttons.changeThesholdBtn;
 		const statusBtn = Buttons.subStatusBtn(isActive);
 		const deleteBtn = Buttons.deleteBtn;
 
