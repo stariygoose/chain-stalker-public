@@ -6,6 +6,7 @@ import { ISubscriptionService } from "#application/services/subscription.service
 import { TYPES } from "#di/types.js";
 import { joiValidator } from "#presentation/middlewares/validation/subscription.create.validator.js";
 import { subscriptionCreateSchema } from "#presentation/schemas/subscription.create.schema.js";
+import { AuthenticatedRequest } from "#presentation/middlewares/auth/auth.middleware.js";
 
 
 @controller('/subscriptions')
@@ -17,14 +18,15 @@ export class SubscriptionController {
 
 	@httpGet("/")
   public async getAllByUserId(
-    @queryParam("userId") userId: number,
     @queryParam("type") type: string,
-    @request() req: Request,
+    @request() req: AuthenticatedRequest,
     @response() res: Response,
     @next() next: NextFunction
   ) {
     try {
-      const subs = await this._subscriptionService.getAllByUserId(userId, type);
+			const { context } = req;
+
+      const subs = await this._subscriptionService.getAllByUserId(context.userId, type);
 
       return res.status(200).json(subs);
     } catch (error) {
@@ -35,12 +37,13 @@ export class SubscriptionController {
 	@httpGet('/:id')
 	public async getById(
 		@requestParam("id") id: string,
-		@request() req: Request,
+		@request() req: AuthenticatedRequest,
 		@response() res: Response,
 		@next() next: NextFunction
 	) {
+		const { context } = req;
 		try {
-			const subscription = await this._subscriptionService.getById(id);
+			const subscription = await this._subscriptionService.getById(context.userId, id);
 
 			return res.status(200).json(subscription);
 		} catch (error: unknown) {
@@ -50,14 +53,14 @@ export class SubscriptionController {
 
 	@httpPost('/create', joiValidator(subscriptionCreateSchema))
 	public async create(
-		@request() req: Request,
+		@request() req: AuthenticatedRequest,
 		@response() res: Response,
 		@next() next: NextFunction
 	) {
 		try {
-			const { body } = req;
+			const { body, context } = req;
 
-			const subscription = await this._subscriptionService.create(body);
+			const subscription = await this._subscriptionService.create(context.userId, body);
 
 			return res.status(201).json(subscription);
 
@@ -69,12 +72,14 @@ export class SubscriptionController {
 	@httpPut('/change_status/:id')
 	public async changeStatus(
 		@requestParam("id") id: string,
-		@request() req: Request,
+		@request() req: AuthenticatedRequest,
 		@response() res: Response,
 		@next() next: NextFunction
 	) {
 		try {
-			const subscription = await this._subscriptionService.changeStatusById(id);
+			const { userId } = req.context;
+
+			const subscription = await this._subscriptionService.changeStatusById(userId, id);
 
 			return res.status(201).json(subscription);
 		} catch (error: unknown) {

@@ -20,8 +20,8 @@ export interface IJwtService {
 	updateRefreshToken(oldRefreshToken: string, newRefreshToken: string): Promise<JwtDbRecord>;
 
 	generatePair(payload: Record<any, unknown>): IJwtTokens;
-	validateAccessToken(token: string): boolean;
 	validateRefreshToken(token: string): boolean;
+	decodeAccessToken(token: string): string | jwt.JwtPayload;
 }
 
 @injectable()
@@ -78,21 +78,20 @@ export class JwtService implements IJwtService {
 		return { accessToken, refreshToken };
 	}
 
-	public validateAccessToken(token: string): boolean {
-		try {
-			jwt.verify(token, this.ACCESS_SECRET);
-			return true;
-		} catch (error) {
-			return false;
-		}
-	}
-
 	public validateRefreshToken(token: string): boolean {
 		try {
 			jwt.verify(token, this.REFRESH_SECRET);
 			return true;
 		} catch (error) {
 			return false;
+		}
+	}
+
+	public decodeAccessToken(token: string): string | jwt.JwtPayload {
+		try {
+			return jwt.verify(token, this.ACCESS_SECRET);
+		} catch (error) {
+			throw new ApiError.UnauthorizedError('Invalid access token');
 		}
 	}
 }

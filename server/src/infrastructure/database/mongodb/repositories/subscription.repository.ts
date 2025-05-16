@@ -75,9 +75,11 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 		}
 	}
 
-	public async getById(id: string): Promise<Subscription | null> {
+	public async getById(filter: Partial<Record<string, unknown>>): Promise<Subscription | null> {
 		try {
-			const subscriptionFromDb = await SubscriptionModel.findById(id).lean<SubscriptionDbDto>();
+			const subscriptionFromDb = await SubscriptionModel
+				.findOne(filter)
+				.lean<SubscriptionDbDto>();
 
 			if (!subscriptionFromDb) return null;
 
@@ -179,9 +181,11 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 		}
 	}
 
-	public async changeStatusById(id: string): Promise<Subscription | null> {
+	public async changeStatusById(userId: number, id: string): Promise<Subscription | null> {
 		try {
-			const subscription = await SubscriptionModel.findById(id).lean<SubscriptionDbDto>();
+			const subscription = await SubscriptionModel.findOne(
+				{ _id: id, userId: userId }
+			).lean<SubscriptionDbDto>();
 
 			if (!subscription) return null;
 

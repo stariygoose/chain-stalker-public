@@ -6,10 +6,21 @@ import { TYPES } from '#di/types.js';
 import { ApiError } from '#infrastructure/errors/index.js';
 
 
+export interface AuthenticatedRequest extends Request {
+	context: {
+		userId: number;
+	};
+}
+
 export const authenticateJWT = (
 	req: Request,
 	next: NextFunction
 ) => {
+	const typedReq = req as AuthenticatedRequest;
+	typedReq.context = {
+		userId: 0,
+	}
+
 	const url = req.originalUrl;
 	if (url.includes('/auth/bot-login') || url.includes('/auth/refresh')) {
 		return next();
@@ -20,13 +31,20 @@ export const authenticateJWT = (
     throw new ApiError.UnauthorizedError('Missing or invalid Authorization header');
   }
 
-  const token = authHeader.split(' ')[1];
+	try {
+		const token = authHeader.split(' ')[1];
 
-	const jwtService = container.get<IJwtService>(TYPES.JwtService);
+		const jwtService = container.get<IJwtService>(TYPES.JwtService);
+	
+		const decodeAccessToken = jwtService.decodeAccessToken(token) as { userId: number };
 
-	const isValid = jwtService.validateAccessToken(token);
+		typedReq.context.userId = decodeAccessToken.userId;
 
-	if (!isValid) throw new ApiError.UnauthorizedError('Invalid access token');
+		next();
+	} catch (error: unknown) {
+		console.error('Error:', error);
+		return next(new ApiError.UnauthorizedError('Invalid access token'));
+	}
 
-	next();
+  
 };

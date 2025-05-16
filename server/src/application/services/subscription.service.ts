@@ -14,10 +14,10 @@ import { GetAllSubscriptionsDto } from "#application/dtos/get-all-subscriptions.
 
 
 export interface ISubscriptionService {
-	create(data: ICreateSubscriptionRequest): Promise<Subscription>;
+	create(userId: number, data: ICreateSubscriptionRequest): Promise<Subscription>;
 
 	getAllByUserId(userId: number, type?: unknown): Promise<GetAllSubscriptionsDto>;
-	getById(id: string): Promise<Subscription>;
+	getById(userId: number, id: string): Promise<Subscription>;
 
 	changeStatusById(id: string): Promise<Subscription>;
 
@@ -35,7 +35,10 @@ export class SubscriptionService implements ISubscriptionService {
 		private readonly _logger: Logger
 	) {}
 
-	public async getAllByUserId(userId: number, type?: TargetTypes | undefined): Promise<GetAllSubscriptionsDto> {
+	public async getAllByUserId(
+		userId: number,
+		type?: TargetTypes | undefined
+	): Promise<GetAllSubscriptionsDto> {
 		try {
 			const filter: Record<string, unknown> = { 
 				userId: userId
@@ -57,13 +60,21 @@ export class SubscriptionService implements ISubscriptionService {
 		}
 	}
 
-	public async getById(id: string): Promise<Subscription> {
+	public async getById(
+		userId: number,
+		id: string
+	): Promise<Subscription> {
 		if (!Types.ObjectId.isValid(id)) {
 			throw new ApiError.BadRequestError("Invalid ID");
 		}
 
+		const filter: Record<string, unknown> = {
+			_id: id,
+			userId: userId
+		};
+
 		try {
-			const subscription = await this._db.getById(id);
+			const subscription = await this._db.getById(filter);
 
 			if (!subscription) {
 				throw new ApiError.NotFoundError("Subscription not found");
@@ -75,9 +86,12 @@ export class SubscriptionService implements ISubscriptionService {
 		}
 	}
 
-	public async create(data: ICreateSubscriptionRequest): Promise<Subscription> {
+	public async create(
+		userId: number,
+		data: ICreateSubscriptionRequest
+	): Promise<Subscription> {
 		const subscriptionDto = new CreateSubscriptionRequestDto(data);
-		const { userId, target, strategyType, threshold } = subscriptionDto;
+		const { target, strategyType, threshold } = subscriptionDto;
 
 		try {
 			const subscription = SubscriptionFactory.create(
@@ -100,13 +114,16 @@ export class SubscriptionService implements ISubscriptionService {
 		}
 	}
 
-	public async changeStatusById(id: string): Promise<Subscription> {
+	public async changeStatusById(
+		userId: number,
+		id: string
+	): Promise<Subscription> {
 		if (!Types.ObjectId.isValid(id)) {
 			throw new ApiError.BadRequestError("Invalid ID");
 		}
 
 		try {
-			const subscription = await this._db.changeStatusById(id);
+			const subscription = await this._db.changeStatusById(userId, id);
 
 			if (!subscription) {
 				throw new ApiError.NotFoundError("Subscription not found");
