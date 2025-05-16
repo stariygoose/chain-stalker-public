@@ -9,6 +9,8 @@ import { ApiService } from "#lib/api/api.service.js";
 import { NftSubscription, Subscription, TokenSubscription } from "#lib/api/response.js";
 import { Buttons } from "#ui/index.js";
 import { MyContext } from "#context/context.interface.js";
+import { ApiError } from "#errors/errors/api.error.js";
+import { menuOption } from "#ui/menu/menu.js";
 
 
 @injectable()
@@ -28,37 +30,52 @@ export class EditSubscriptionCommand extends Command {
 			try {
 				const hashId = ctx.text?.split('_')[1];
 				if (!hashId) return;
+
+				const targetId = ctx.session.subsIdsHashTable?.[hashId];
 	
-				await this.showSubscriptionInfo(ctx, hashId);
+				if (!targetId) {
+					await ctx.reply("⚠️ Subscription not found or expired.");
+					return;
+				}
+	
+				await this.showSubscriptionInfo(ctx, targetId);
 			} catch (error) {
+				const { options } = menuOption();
+
+				if (error instanceof ApiError)
+					await ctx.reply(
+						error.botMessage,
+						options
+					);
+					
 				this._logger.error(`Error handling /edit_ command: ${(error as Error).message}`);
+				await ctx.reply(
+					'Unexpected error.',
+					options
+				);
 			}
 		});
 	}
 
 	public async showSubscriptionInfo(
 		ctx: MyContext, 
-		hashId: string
+		id: string
 	): Promise<void> {
-		const targetId = ctx.session.subsIdsHashTable?.[hashId];
-	
-		if (!targetId) {
-			await ctx.reply("⚠️ Subscription not found or expired.");
-			return;
-		}
+		
 	
 		const subscription = await this._apiService.get<Subscription>(
-			`${ApiService.SUBSCRIPTIONS_URL}/${targetId}`,
+			`${ApiService.SUBSCRIPTIONS_URL}/${id}`,
 			ctx.session
 		);
+
+		ctx.session.targetToEdit = subscription;
 	
-		const { text, options } = this.buildSubscriptionMessage(subscription, hashId);
+		const { text, options } = this.buildSubscriptionMessage(subscription);
 		await ctx.reply(text, options);
 	}
 	
 	private buildSubscriptionMessage(
-		subscription: Subscription,
-		hashId: string
+		subscription: Subscription
 	): {
 		text: string;
 		options: {
@@ -102,16 +119,16 @@ export class EditSubscriptionCommand extends Command {
 		);
 
 		const text = [`<b>${label}</b>`, ...lines].join('\n');
-		const options = this.buildInlineKeyboard(hashId, isActive);
+		const options = this.buildInlineKeyboard(isActive);
 
 		return { text, options };
 	}
 
-	private buildInlineKeyboard(hashId: string, isActive: boolean) {
-		const strategyBtn = Buttons.changeStrategyBtn(hashId);
-		const thresholdBtn = Buttons.changeThesholdBtn(hashId);
-		const statusBtn = Buttons.subStatusBtn(hashId, isActive);
-		const deleteBtn = Buttons.deleteBtn(hashId);
+	private buildInlineKeyboard(isActive: boolean) {
+		const strategyBtn = Buttons.changeStrategyBtn;
+		const thresholdBtn = Buttons.changeThesholdBtn;
+		const statusBtn = Buttons.subStatusBtn(isActive);
+		const deleteBtn = Buttons.deleteBtn;
 
 		return {
 			parse_mode: 'HTML' as ParseMode,
@@ -119,7 +136,6 @@ export class EditSubscriptionCommand extends Command {
 				inline_keyboard: [
 					[
 						{ text: strategyBtn.text, callback_data: strategyBtn.callback_data },
-						{ text: thresholdBtn.text, callback_data: thresholdBtn.callback_data }
 					],
 					[
 						{

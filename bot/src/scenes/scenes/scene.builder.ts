@@ -2,7 +2,6 @@ import { Composer, Scenes } from "telegraf";
 
 import { MyContext } from "#context/context.interface.js";
 import { SceneKey } from "#scenes/scenes/scene.types.js";
-import { Container } from "inversify";
 
 
 type ActionHandler<T extends Scenes.WizardSessionData> = {

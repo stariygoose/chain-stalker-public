@@ -18,6 +18,7 @@ import { MyStalksAction } from "#handlers/actions/actions/my-stalks/mystalks.act
 import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
 import { MenuAction } from "#handlers/actions/actions/menu/menu.action.js";
 import { DeactivateSubscriptionAction } from "#handlers/actions/actions/edit-subscription/deactivate.action.js";
+import { ChangeStrategyAction } from "#handlers/actions/actions/edit-subscription/change-strategy.action.js";
 
 
 export let container = new Container();
@@ -48,5 +49,5 @@ container.bind<MenuAction>(ACTION_TYPES.MenuAction).to(MenuAction);
 container.bind<CancelAction>(ACTION_TYPES.CancelAction).to(CancelAction);
 
 container.bind<DeactivateSubscriptionAction>(ACTION_TYPES.DeactivateSubscription).to(DeactivateSubscriptionAction);
-
+container.bind<ChangeStrategyAction>(ACTION_TYPES.ChangeStrategyAction).to(ChangeStrategyAction);
 

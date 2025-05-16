@@ -6,13 +6,13 @@ import { COMMAND_TYPES, TYPES } from "#di/types.js";
 import { Action } from "#handlers/actions/action.abstract.js";
 import { ApiService } from "#lib/api/api.service.js";
 import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
-import { CallbackQuery } from "telegraf/types";
 import { ApiError } from "#errors/errors/api.error.js";
+import { Buttons } from "#ui/index.js";
 
 
 @injectable()
 export class DeactivateSubscriptionAction extends Action {
-	public static readonly handler: RegExp = /^edit:[^:]+:isActive:(true|false)/;
+	public static readonly handler: string = Buttons.subStatusBtn(true).callback_data;
 	
 	constructor (
 		@inject(TYPES.Bot)
@@ -30,19 +30,18 @@ export class DeactivateSubscriptionAction extends Action {
 	public handle(): void {
 		this.bot.action(DeactivateSubscriptionAction.handler, async (ctx) => {
 			try {			
-				const { data } = ctx.callbackQuery as CallbackQuery.DataQuery;
-				if (!data) return;
+				if (!ctx.session.targetToEdit)
+					throw new Error();
 
-				const [_, hashId, , newState] = data.split(":")
-				const subId = ctx.session.subsIdsHashTable[hashId];
+				const { id } = ctx.session.targetToEdit;
 
-				const res = await this._apiService.put(
-					`${ApiService.SUBSCRIPTIONS_CHANGE_STATUS_URL}/${subId}`,
+				await this._apiService.put(
+					`${ApiService.SUBSCRIPTIONS_CHANGE_STATUS_URL}/${id}`,
 					{},
 					ctx.session
 				)
 
-				await this._editSubscriptionCommand.showSubscriptionInfo(ctx, hashId);
+				await this._editSubscriptionCommand.showSubscriptionInfo(ctx, id);
 
 			} catch (error) {
 				if (error instanceof ApiError) {

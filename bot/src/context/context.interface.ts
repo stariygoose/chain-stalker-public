@@ -1,3 +1,4 @@
+import { Subscription } from "#lib/api/response.js";
 import { Context, Scenes } from "telegraf";
 
 
@@ -9,6 +10,7 @@ export interface Jwt {
 export interface MySession<T extends Scenes.WizardSessionData = Scenes.WizardSessionData> extends Scenes.WizardSession<T> {
 	jwt: Jwt;
 	subsIdsHashTable: Record<string, string>;
+	targetToEdit?: Subscription
 }
 
 export interface MyContext<T extends Scenes.WizardSessionData = Scenes.WizardSessionData> extends Context {

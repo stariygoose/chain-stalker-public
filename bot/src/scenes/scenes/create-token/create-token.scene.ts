@@ -149,7 +149,7 @@ export const createTokenScene = SceneBuilder
 			);
 			return ctx.scene.leave();
 		}
-}))
+	}))
 	.step(`Send Token Data to Server`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/.*/, async (ctx) => {
 		try {
 			const answer = ctx.message.text.split(' ')[1].toLowerCase();

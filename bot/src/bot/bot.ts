@@ -21,6 +21,7 @@ import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscr
 import { MenuAction } from "#handlers/actions/actions/menu/menu.action.js";
 import { DeactivateSubscriptionAction } from "#handlers/actions/actions/edit-subscription/deactivate.action.js";
 import { CallbackQuery } from "telegraf/types";
+import { ChangeStrategyAction } from "#handlers/actions/actions/edit-subscription/change-strategy.action.js";
 
 
 export interface IBot {
@@ -54,7 +55,7 @@ export class Bot implements IBot {
 				store: this._store.store,
 				defaultSession: (): MySession => ({
 					jwt: {},
-					subsIdsHashTable: {},
+					subsIdsHashTable: {}
 				})
 			})
 		);
@@ -128,7 +129,8 @@ export class Bot implements IBot {
 			container.get<MenuAction>(ACTION_TYPES.MenuAction),
 			container.get<CancelAction>(ACTION_TYPES.CancelAction),
 
-			container.get<DeactivateSubscriptionAction>(ACTION_TYPES.DeactivateSubscription)
+			container.get<DeactivateSubscriptionAction>(ACTION_TYPES.DeactivateSubscription),
+			container.get<ChangeStrategyAction>(ACTION_TYPES.ChangeStrategyAction),
 		]
 	}
 }

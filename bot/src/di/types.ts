@@ -18,7 +18,7 @@ export const ACTION_TYPES = {
 	CancelAction: Symbol.for("CancelAction"),
 
 	DeactivateSubscription: Symbol.for("DeactivateSubscriptionCommand"),
-
+	ChangeStrategyAction: Symbol.for("ChangeStrategyAction")
 }
 
 export const COMMAND_TYPES = {
