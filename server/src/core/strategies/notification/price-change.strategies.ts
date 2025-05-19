@@ -41,7 +41,7 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 		return Math.abs(percentage) >= this.threshold;
 	}
 
-	public calculateDifference(currentState: number, newState: number, precision: number = 2): number {
+	public calculateDifference(currentState: number, newState: number, precision: number = 6): number {
 		if (
 			NumberValidator.isInfinity(currentState) || 
 			NumberValidator.isInfinity(newState) ||
@@ -118,7 +118,7 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 			return -100;
 		}
 
-		const differance = ((newPrice - currentPrice) / currentPrice) * 100;
+		const differance = (newPrice - currentPrice) / currentPrice * 100;
 		return Number(differance.toFixed(precision));
 	}
 }

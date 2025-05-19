@@ -138,8 +138,21 @@ export class SubscriptionService implements ISubscriptionService {
 		}
 
 		try {
-			await this._db.deleteById(userId, id);
+			const deleted = await this._db.deleteById(userId, id);
 
+			if (!deleted) return;
+			const { type } = deleted.target;
+			switch (type) {
+				case "nft":
+					this._wm.deleteUserFromOpenseaStalking(userId, deleted.target.slug);
+					break;
+				case "token":
+					this._wm.deleteUserFromBinanceStalking(userId, deleted.target.symbol);
+					break;
+				default:
+					this._logger.error(`Can't delete user from a Websocket Connection. Unknown type of subscription: ${type}`);
+					break;
+			}
 		} catch (error: unknown) {
 			throw error;
 		}

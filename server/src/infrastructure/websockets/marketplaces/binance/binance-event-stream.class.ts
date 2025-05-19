@@ -49,6 +49,12 @@ export class BinanceEventStream implements ITokenEventStream {
 
 	public removeUser(userId: number): void {
 		this.users.delete(userId);
+
+		if (this.users.size === 0) {
+			this._logger.debug(`[WEBSOCKET] No more users watching <${this._symbol.toUpperCase()}>. Closing WebSocket.`);
+			this.client.close();
+			this._symbol = "";
+		}
 	}
 
 	public stalk(symbol: string): void {
@@ -88,12 +94,8 @@ export class BinanceEventStream implements ITokenEventStream {
 			this._pendingSymbols = [];
 		});
 
-		this.client.on('close', () => {
-			this._logger.warn(`Websocket connection to Binance was closed for token ${this._symbol}.`);
-		});
-
 		this.client.on("error", (err: Error) => {
-			this._logger.error(`Error on Binance Event Stream. Reason: ${err.message}`);
+			this._logger.error(`[WEBSOCKET] Error on Binance Event Stream. Reason: ${err.message}`);
 		})
 
 		this.client.on("message", (msg) => {
@@ -119,7 +121,7 @@ export class BinanceEventStream implements ITokenEventStream {
 			this
 				.handleTokenPriceUpdate(token)
 				.catch((err) => {
-					this._logger.error(`Unhandled error in handleTokenPriceUpdate: ${err}`);
+					this._logger.error(`[WEBSOCKET] Unhandled error in handleTokenPriceUpdate: ${err}`);
 				});
 			
 		})
@@ -158,7 +160,7 @@ export class BinanceEventStream implements ITokenEventStream {
 					throw error;
 				}
 				
-				this._logger.error(`Unknown error in Binance Event Stream. Reason: ${error.message}`);
+				this._logger.error(`[WEBSOCKET] Unknown error in Binance Event Stream. Reason: ${error.message}`);
 				throw new Error(`Unknown error`);
 			}
 		});

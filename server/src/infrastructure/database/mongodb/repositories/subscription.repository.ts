@@ -209,9 +209,22 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 		}
 	}
 
-	public async deleteById(userId: number, id: string): Promise<void> {
+	public async deleteById(userId: number, id: string): Promise<Subscription | null> {
 		try {
-			await SubscriptionModel.deleteOne({ _id: id, userId: userId });
+			const deletedSubscription = await SubscriptionModel.findOneAndDelete({ 
+				_id: id,
+				userId: userId 
+			}).lean<SubscriptionDbDto>();
+
+			if (!deletedSubscription) return null;
+
+			return SubscriptionMapper.toDomain(new SubscriptionDbRecord(
+				deletedSubscription._id,
+				deletedSubscription.userId,
+				deletedSubscription.target,
+				deletedSubscription.strategy,
+				deletedSubscription.isActive
+			));
 		} catch (error: unknown) {
 			this._handleDbError(error);
 		}

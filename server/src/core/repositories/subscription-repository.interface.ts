@@ -16,7 +16,7 @@ export interface ISubscriptionRepository {
 
 	changeStatusById(userId: number, id: string): Promise<Subscription | null>;
 
-	deleteById(userId: number, id: string): Promise<void>;
+	deleteById(userId: number, id: string): Promise<Subscription | null>;
 
 	drop(): Promise<void>;
 }

@@ -60,7 +60,7 @@ container.bind<IServerConfig>(TYPES.ServerConfig).to(ServerConfig).inSingletonSc
 container.bind<IMongoDbConfig>(TYPES.MongoDbConfig).to(MongoDbConfig).inSingletonScope();
 
 container.bind<ITokenEventStream>(TYPES.BinanceEventStream).to(BinanceEventStream).inTransientScope();
-container.bind<INftEventStream>(TYPES.OpenseaEventStream).to(OpenseaEventStream).inSingletonScope();
+container.bind<INftEventStream>(TYPES.OpenseaEventStream).to(OpenseaEventStream).inTransientScope();
 container.bind<WebsocketManager>(TYPES.WebsocketManager).to(WebsocketManager).inSingletonScope();
 
 container.bind<RedisClient>(TYPES.RedisClient).to(RedisClient).inTransientScope();

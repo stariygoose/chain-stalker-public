@@ -1,4 +1,5 @@
 import { MyContext } from "#context/context.interface.js";
+import { NftAlert, TokenAlert } from "#lib/redis/pubsub/redis.pubsub.js";
 import { ICreateCollectionSceneWizard } from "#scenes/scenes/create-collection/create-collection.scene.js";
 import { ICreateTokenSceneWizard } from "#scenes/scenes/create-token/create-token.scene.js";
 
@@ -85,6 +86,28 @@ export const ChainStalkerMessage = {
 			];
 
 			return message.join("\n");
+		},
+		TOKEN_ALERT: (target: TokenAlert['target'], strategy: TokenAlert['strategy'], diff: number) => {
+			const { symbol, lastNotifiedPrice } = target;
+
+			const message = [
+				`🔍 <b>#${symbol}</b> anomaly detected.`, 
+				`<b>${diff}% shift</b> — current price: <b>${lastNotifiedPrice}$</b>`,
+				`<i>ChainStalker trace updated.</i>`
+			];
+
+			return message.join('\n');
+		},
+		NFT_ALERT: (target: NftAlert['target'], strategy: NftAlert['strategy'], diff: number) => {
+			const { name, slug, symbol, lastNotifiedPrice } = target;
+
+			const message = [
+				`📡 NFT Update — <b>${name}</b> #${slug}`,
+				`Floor now at <b>${lastNotifiedPrice} ${symbol} (${diff}%)</b>`,
+				`<i>Tracking continues...</i>`
+			];
+
+			return message.join('\n');
 		}
 	}
 } as const;

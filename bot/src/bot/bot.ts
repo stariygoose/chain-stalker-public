@@ -23,12 +23,14 @@ import { DeactivateSubscriptionAction } from "#handlers/actions/actions/edit-sub
 import { CallbackQuery } from "telegraf/types";
 import { ChangeStrategyAction } from "#handlers/actions/actions/edit-subscription/change-strategy.action.js";
 import { DeleteAction } from "#handlers/actions/actions/edit-subscription/delete.action.js";
+import { IRedisPubSub } from "#lib/redis/pubsub/redis.pubsub.js";
 
 
 export interface IBot {
 	init(): void;
 	command(trigger: string | RegExp, handler: (ctx: MyContext) => Promise<void>): void;
 	action(route: string | RegExp, handler: (ctx: MyContext) => Promise<void>): void;
+	sendMessageTo(userId: number, message: string, options?: Record<string, unknown>): Promise<void>;
 }
 
 @injectable()
@@ -46,7 +48,7 @@ export class Bot implements IBot {
 		@inject(TYPES.ConfigService)
 		private readonly _config: IConfigService,
 		@inject(TYPES.RedisStore)
-		private readonly _store: IRedisStore
+		private readonly _store: IRedisStore,
 	) {
 		this._token = this._config.get(EnvVariables.TG_TOKEN);
 		this.bot = new Telegraf<MyContext>(this._token);
@@ -64,8 +66,7 @@ export class Bot implements IBot {
 
 		this.bot.catch((err: any, ctx) => {
 			this._logger.error(`Unexpected error: ${err.message}`);
-		})
-
+		});
 	}
 
 	public async init() {
@@ -79,10 +80,21 @@ export class Bot implements IBot {
 			await this.bot.launch(
 				() => this._logger.info(`Telegram Bot launched successfully.`)
 			);
-
 		} catch (error: unknown) {
 			if (error instanceof Error)
 				this._logger.error(`Error launching a bot. Message: ${error.message}`);
+		}
+	}
+
+	public async sendMessageTo(userId: number, message: string, options?: Record<string, unknown>) {
+		try {
+			await this.bot.telegram.sendMessage(userId, message, options);
+		} catch (error: unknown) {
+			this._logger.error(`Failed to send a message by using sendMessageTo method from Bot Instance. Details: ${JSON.stringify({
+				userId: userId,
+				message: message,
+				options: options
+			})}`);
 		}
 	}
 

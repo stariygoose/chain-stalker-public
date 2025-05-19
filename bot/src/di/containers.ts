@@ -21,6 +21,7 @@ import { ChangeStrategyAction } from "#handlers/actions/actions/edit-subscriptio
 import { DeleteAction } from "#handlers/actions/actions/edit-subscription/delete.action.js";
 import { ApiService } from "#lib/api/api.service.js";
 import { HttpService } from "#lib/api/http.service.js";
+import { IRedisPubSub, RedisPubSub } from "#lib/redis/pubsub/redis.pubsub.js";
 
 
 export let container = new Container();
@@ -30,7 +31,8 @@ container.bind<HttpService>(TYPES.HttpService).to(HttpService);
 container.bind<ApiService>(TYPES.ApiService).to(ApiService).inSingletonScope();
 
 container.bind<RedisConfig>(TYPES.RedisConfig).to(RedisConfig).inTransientScope();
-container.bind<IRedisStore>(TYPES.RedisStore).to(RedisStore).inSingletonScope();
+container.bind<IRedisStore>(TYPES.RedisStore).to(RedisStore).inTransientScope();
+container.bind<IRedisPubSub>(TYPES.RedisPubSub).to(RedisPubSub).inTransientScope();
 
 container.bind<IBot>(TYPES.Bot).to(Bot).inSingletonScope();
 
