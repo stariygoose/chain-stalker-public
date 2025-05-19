@@ -25,7 +25,7 @@ export class CreateCollectionCommand extends Command {
 			try {
 				await ctx.scene.enter(SceneTitle.CREATE_COLLECTION);
 			} catch (error) {
-				if (error instanceof Error) this._logger.error(error.message); 
+				if (error instanceof Error) this._logger.warn(error.message); 
 				await ctx.scene.leave();
 			}
 		});

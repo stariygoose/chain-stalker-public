@@ -11,7 +11,7 @@ export function joiValidator(
 
     if (error) {
       res.status(400).json({
-        message: "Bad Request. Validation failed.",
+        error: "Bad Request. Validation failed.",
         details: error.details.map(d => d.message),
       });
 			return ;

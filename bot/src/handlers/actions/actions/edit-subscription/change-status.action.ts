@@ -31,15 +31,11 @@ export class DeactivateSubscriptionAction extends Action {
 		this.bot.action(DeactivateSubscriptionAction.handler, async (ctx) => {
 			try {			
 				if (!ctx.session.targetToEdit)
-					throw new Error();
+					throw new Error(`Target to edit is blank.`);
 
 				const { id } = ctx.session.targetToEdit;
 
-				await this._apiService.put(
-					`${ApiService.SUBSCRIPTIONS_CHANGE_STATUS_URL}/${id}`,
-					{},
-					ctx.session
-				)
+				await this._apiService.changeStatus(ctx);
 
 				await this._editSubscriptionCommand.showSubscriptionInfo(ctx, id);
 
@@ -48,6 +44,7 @@ export class DeactivateSubscriptionAction extends Action {
 					await ctx.reply(error.botMessage);
 					return ;
 				}
+				
 				if (error instanceof Error) {
 					this._logger.error(error.message);
 					await ctx.reply("⚠️ An error occurred while deactivating the subscription.");

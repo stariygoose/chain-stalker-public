@@ -4,13 +4,14 @@ import { ParseMode } from "telegraf/types";
 import { Command } from "#handlers/commands/command.abstract.js";
 import { IBot } from "#bot/bot.js";
 import { ILogger } from "#config/index.js";
-import { TYPES } from "#di/index.js";
+import { COMMAND_TYPES, TYPES } from "#di/index.js";
 import { ApiService } from "#lib/api/api.service.js";
 import { NftSubscription, Subscription, TokenSubscription } from "#lib/api/response.js";
 import { Buttons } from "#ui/index.js";
 import { MyContext } from "#context/context.interface.js";
 import { ApiError } from "#errors/errors/api.error.js";
-import { menuOption } from "#ui/menu/menu.js";
+import { MenuCommand } from '#handlers/commands/commands/menu.command.js';
+
 
 
 @injectable()
@@ -18,9 +19,14 @@ export class EditSubscriptionCommand extends Command {
 	public static readonly handler: RegExp = /^edit_.+/;
 
 	constructor (
-		@inject(TYPES.Bot) public readonly bot: IBot,
-		@inject(TYPES.Logger) private readonly _logger: ILogger,
-		@inject(TYPES.ApiService) private readonly _apiService: ApiService
+		@inject(TYPES.Bot)
+		public readonly bot: IBot,
+		@inject(TYPES.Logger)
+		private readonly _logger: ILogger,
+		@inject(TYPES.ApiService)
+		private readonly _apiService: ApiService,
+		@inject(COMMAND_TYPES.MenuCommand)
+		private readonly _menuCommand: MenuCommand
 	) {
 		super();
 	}
@@ -33,25 +39,20 @@ export class EditSubscriptionCommand extends Command {
 
 				const targetId = ctx.session.subsIdsHashTable?.[hashId];
 	
-				if (!targetId) {
-					await ctx.reply("⚠️ Subscription not found or expired.");
-					return;
-				}
-	
 				await this.showSubscriptionInfo(ctx, targetId);
 			} catch (error) {
-				const { options } = menuOption();
-
-				if (error instanceof ApiError)
-					await ctx.reply(
-						error.botMessage,
-						options
+				if (error instanceof ApiError) {
+					await this._menuCommand.showMenu(
+						ctx,
+						error.botMessage
 					);
+					return ;
+				}
 					
-				this._logger.error(`Error handling /edit_ command: ${(error as Error).message}`);
-				await ctx.reply(
-					'Unexpected error.',
-					options
+				this._logger.error(`Error while User ${ctx.from?.id} was trying to call a COMMAND EDIT. Error ${(error as Error).message}`);
+				await this._menuCommand.showMenu(
+					ctx,
+					`⚠️ Unexpected error. Please, try again later.`
 				);
 			}
 		});
@@ -61,17 +62,19 @@ export class EditSubscriptionCommand extends Command {
 		ctx: MyContext, 
 		id: string
 	): Promise<void> {
-		
-	
-		const subscription = await this._apiService.get<Subscription>(
-			`${ApiService.SUBSCRIPTIONS_URL}/${id}`,
-			ctx.session
-		);
+		try {
+			const subscription = await this._apiService.getSubscription(
+				ctx,
+				id
+			);
 
-		ctx.session.targetToEdit = subscription;
-	
-		const { text, options } = this.buildSubscriptionMessage(subscription);
-		await ctx.reply(text, options);
+			ctx.session.targetToEdit = subscription;
+		
+			const { text, options } = this.buildSubscriptionMessage(subscription);
+			await ctx.reply(text, options);
+		} catch (error: unknown) {
+			throw error;
+		}
 	}
 	
 	private buildSubscriptionMessage(
@@ -85,43 +88,51 @@ export class EditSubscriptionCommand extends Command {
 			};
 		};
 	} {
-		const { target, strategy, isActive } = subscription;
-		const status = isActive ? '🟢' : '🔴';
-		const thresholdUnit = strategy.type === 'percentage' ? '%' : '$';
+		try {
+			const { target, strategy, isActive } = subscription;
+			const status = isActive ? '🟢' : '🔴';
+			let thresholdUnit = strategy.type === 'percentage' ? '%' : '$';
 
-		let label: string;
-		let lines: string[] = [];
+			let label: string;
+			let lines: string[] = [];
 
-		switch(target.type) {
-			case 'nft':
-				const nft = target as NftSubscription['target'];
-				label = '🖼️ NFT Subscription';
-				lines = [
-					`<b>${status} ${nft.name}</b> on <i>${nft.chain}</i>`,
-					`<b>🏷️ Last Notified Price:</b> ${nft.lastNotifiedPrice} ${nft.symbol}`,
-				];
-				break;
-			case 'token':
-				const token = target as TokenSubscription['target'];
-				label = '🪙 Token Subscription';
-				lines = [
-					`<b>${status} ${token.symbol}</b>`,
-					`<b>🏷️ Last Notified Price:</b> ${token.lastNotifiedPrice}$`,
-				];
-				break;
-			default:
-				throw new Error(`Unknown target type: ${subscription.target.type}`);
+			switch(target.type) {
+				case 'nft':
+					const nft = target as NftSubscription['target'];
+					label = '🖼️ NFT Subscription';
+					lines = [
+						`<b>${status} ${nft.name}</b> on <i>${nft.chain}</i>`,
+						`<b>🏷️ Last Notified Price:</b> ${nft.lastNotifiedPrice} ${nft.symbol}`,
+					];
+
+					if (strategy.type === 'absolute')
+						thresholdUnit = nft.symbol;
+
+					break;
+				case 'token':
+					const token = target as TokenSubscription['target'];
+					label = '🪙 Token Subscription';
+					lines = [
+						`<b>${status} ${token.symbol}</b>`,
+						`<b>🏷️ Last Notified Price:</b> ${token.lastNotifiedPrice}$`,
+					];
+					break;
+				default:
+					throw new Error(`Unknown target type: ${subscription.target.type}`);
+			}
+
+			lines.push(
+				`<b>⚖️ Threshold:</b> ${strategy.threshold} ${thresholdUnit}`,
+				`<b>🎯 Strategy:</b> ${strategy.type}`
+			);
+
+			const text = [`<b>${label}</b>`, ...lines].join('\n');
+			const options = this.buildInlineKeyboard(isActive);
+
+			return { text, options };
+		} catch (error: unknown) {
+			throw error;
 		}
-
-		lines.push(
-			`<b>⚖️ Threshold:</b> ${strategy.threshold}${thresholdUnit}`,
-			`<b>🎯 Strategy:</b> ${strategy.type}`
-		);
-
-		const text = [`<b>${label}</b>`, ...lines].join('\n');
-		const options = this.buildInlineKeyboard(isActive);
-
-		return { text, options };
 	}
 
 	private buildInlineKeyboard(isActive: boolean) {

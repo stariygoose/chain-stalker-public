@@ -13,17 +13,20 @@ import { MenuCommand } from "#handlers/commands/commands/menu.command.js";
 import { CreateCollectionCommand } from "#handlers/commands/commands/create-collection.command.js";
 import { CreateCollectionAction } from "#handlers/actions/actions/create-subscription/create-collection.action.js";
 import { LoginCommand } from "#handlers/commands/commands/login.command.js";
-import { ApiService } from "#lib/api/api.service.js";
 import { MyStalksAction } from "#handlers/actions/actions/my-stalks/mystalks.action.js";
 import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
 import { MenuAction } from "#handlers/actions/actions/menu/menu.action.js";
-import { DeactivateSubscriptionAction } from "#handlers/actions/actions/edit-subscription/deactivate.action.js";
+import { DeactivateSubscriptionAction } from "#handlers/actions/actions/edit-subscription/change-status.action.js";
 import { ChangeStrategyAction } from "#handlers/actions/actions/edit-subscription/change-strategy.action.js";
+import { DeleteAction } from "#handlers/actions/actions/edit-subscription/delete.action.js";
+import { ApiService } from "#lib/api/api.service.js";
+import { HttpService } from "#lib/api/http.service.js";
 
 
 export let container = new Container();
 container.bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
 container.bind<ILogger>(TYPES.Logger).to(Logger).inSingletonScope();
+container.bind<HttpService>(TYPES.HttpService).to(HttpService);
 container.bind<ApiService>(TYPES.ApiService).to(ApiService).inSingletonScope();
 
 container.bind<RedisConfig>(TYPES.RedisConfig).to(RedisConfig).inTransientScope();
@@ -50,4 +53,4 @@ container.bind<CancelAction>(ACTION_TYPES.CancelAction).to(CancelAction);
 
 container.bind<DeactivateSubscriptionAction>(ACTION_TYPES.DeactivateSubscription).to(DeactivateSubscriptionAction);
 container.bind<ChangeStrategyAction>(ACTION_TYPES.ChangeStrategyAction).to(ChangeStrategyAction);
-
+container.bind<DeleteAction>(ACTION_TYPES.DeleteSubscription).to(DeleteAction);

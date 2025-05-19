@@ -12,6 +12,7 @@ import { IMongoDbConfig } from "#infrastructure/database/mongodb/config/mongo.co
 import { errorMiddleware } from "#presentation/middlewares/errors/error.middleware.js";
 import { Logger } from "#utils/logger.js";
 import { authenticateJWT } from "#presentation/middlewares/auth/auth.middleware.js";
+import { requestLogger } from "#presentation/middlewares/request-logger/request-logger.middleware.js";
 
 
 export interface IServerConfig {
@@ -58,9 +59,8 @@ export class ServerConfig implements IServerConfig {
 				credentials: true,
 			}));
 
-			app.use((req, res, next) => {
-				authenticateJWT(req, next);
-			});
+			app.use(authenticateJWT);
+			app.use(requestLogger(this._logger));
 			
 		});
 

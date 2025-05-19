@@ -19,9 +19,10 @@ import { LoginCommand } from "#handlers/commands/commands/login.command.js";
 import { MyStalksAction } from "#handlers/actions/actions/my-stalks/mystalks.action.js";
 import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
 import { MenuAction } from "#handlers/actions/actions/menu/menu.action.js";
-import { DeactivateSubscriptionAction } from "#handlers/actions/actions/edit-subscription/deactivate.action.js";
+import { DeactivateSubscriptionAction } from "#handlers/actions/actions/edit-subscription/change-status.action.js";
 import { CallbackQuery } from "telegraf/types";
 import { ChangeStrategyAction } from "#handlers/actions/actions/edit-subscription/change-strategy.action.js";
+import { DeleteAction } from "#handlers/actions/actions/edit-subscription/delete.action.js";
 
 
 export interface IBot {
@@ -131,6 +132,7 @@ export class Bot implements IBot {
 
 			container.get<DeactivateSubscriptionAction>(ACTION_TYPES.DeactivateSubscription),
 			container.get<ChangeStrategyAction>(ACTION_TYPES.ChangeStrategyAction),
+			container.get<DeleteAction>(ACTION_TYPES.DeleteSubscription),
 		]
 	}
 }

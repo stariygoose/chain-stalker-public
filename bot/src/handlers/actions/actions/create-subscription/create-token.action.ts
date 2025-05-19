@@ -26,7 +26,7 @@ export class CreateTokenAction extends Action {
 			try {
 				await ctx.scene.enter(SceneTitle.CREATE_TOKEN);
 			} catch (error) {
-				if (error instanceof Error) this._logger.error(error.message); 
+				if (error instanceof Error) this._logger.warn(error.message); 
 				await ctx.scene.leave();
 			}
 		});

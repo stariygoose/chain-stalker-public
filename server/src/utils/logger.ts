@@ -15,6 +15,7 @@ export interface ILogger {
 @injectable()
 export class Logger implements ILogger {
 	private readonly _logger: winston.Logger;
+	
 	constructor (
 		@inject(TYPES.ConfigService)
 		private readonly _config: ConfigService

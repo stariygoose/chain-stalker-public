@@ -10,6 +10,7 @@ export const menuOption = () => {
 		text: getMenuMoodPhrase(),
 		options: {
 			parse_mode: "HTML" as ParseMode,
+			...Markup.removeKeyboard(),
 			...Markup.inlineKeyboard([
 				[
 					Markup.button.callback(Buttons.tokenCommand.text, Buttons.tokenCommand.callback_data), 

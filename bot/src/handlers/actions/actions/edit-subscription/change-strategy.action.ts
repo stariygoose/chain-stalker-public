@@ -26,7 +26,7 @@ export class ChangeStrategyAction extends Action {
 			try {
 				await ctx.scene.enter(SceneTitle.CHANGE_STRATEGY);
 			} catch (error) {
-				if (error instanceof Error) this._logger.error(error.message); 
+				if (error instanceof Error) this._logger.warn(error.message); 
 				await ctx.scene.leave();
 			}
 		});

@@ -1,4 +1,4 @@
-import { Request, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 import { IJwtService } from '#application/services/jwt.service.js';
 import { container } from '#di/inversify.config.js';
@@ -14,6 +14,7 @@ export interface AuthenticatedRequest extends Request {
 
 export const authenticateJWT = (
 	req: Request,
+	res: Response,
 	next: NextFunction
 ) => {
 	const typedReq = req as AuthenticatedRequest;
@@ -42,9 +43,6 @@ export const authenticateJWT = (
 
 		next();
 	} catch (error: unknown) {
-		console.error('Error:', error);
 		return next(new ApiError.UnauthorizedError('Invalid access token'));
 	}
-
-  
 };

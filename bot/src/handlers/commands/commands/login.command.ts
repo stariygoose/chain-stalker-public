@@ -1,13 +1,14 @@
 import { menuOption } from '#ui/menu/menu.js';
 import { inject, injectable } from "inversify";
 
-import { TYPES } from "#di/types.js";
+import { COMMAND_TYPES, TYPES } from "#di/types.js";
 import { IBot } from "#bot/bot.js";
 import { ILogger } from "#config/index.js";
 import { Command } from "#handlers/commands/command.abstract.js";
-import { ApiService } from "#lib/api/api.service.js";
-import { ApiError } from "#errors/errors/api.error.js";
-import { ResponseJwt } from '#lib/api/response.js';
+import { ApiService } from '#lib/api/api.service.js';
+import { ApiError } from '#errors/errors/api.error.js';
+import { MenuCommand } from '#handlers/commands/commands/menu.command.js';
+import { ChainStalkerMessage } from '#ui/index.js';
 
 
 @injectable()
@@ -21,34 +22,37 @@ export class LoginCommand extends Command {
 		private readonly _logger: ILogger,
 		@inject(TYPES.ApiService)
 		private readonly _apiService: ApiService,
+		@inject(COMMAND_TYPES.MenuCommand)
+		private readonly _menuCommand: MenuCommand
 	) {
 		super();
 	}
 
 	public handle(): void {
 		this.bot.command(LoginCommand.handler, async (ctx) => {
+			const id = ctx.from?.id;
+
 			try {
-				const user = ctx.from?.id;
-				const request = await this._apiService.post<ResponseJwt>(
-					ApiService.LOGIN_URL,
-					{
-						userId: user
-					},
-					ctx.session
+				await this._apiService.login(ctx);
+
+				await this._menuCommand.showMenu(
+					ctx,
+					ChainStalkerMessage.SMS.LOGIN_SUCCESS(ctx)
 				);
 
-				ctx.session.jwt = request;
-
-				await ctx.reply(
-					`You have been successfully logged in.\n${menuOption().text}`, 
-					menuOption().options
-				);
 			} catch (error: unknown) {
 				if (error instanceof ApiError) {
-					await ctx.reply(error.botMessage, menuOption().options);
-					return ;
+					await this._menuCommand.showMenu(
+						ctx,
+						error.botMessage + '\n'
+					);
 				}
-				throw error;
+
+				this._logger.error(`Unexpected error when User ${id} was trying to log in. Error: ${(error as Error).message}`);
+				await this._menuCommand.showMenu(
+					ctx,
+					ChainStalkerMessage.SMS.UNKNOWN_ERROR
+				)
 			}
 		});
 	}

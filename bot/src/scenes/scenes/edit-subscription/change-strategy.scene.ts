@@ -2,7 +2,7 @@ import { Composer, Markup, Scenes } from "telegraf";
 
 import { SceneBuilder } from "#scenes/scenes/scene.builder.js";
 import { SceneTitle } from "#scenes/scenes/scene.types.js";
-import { Buttons } from "#ui/index.js";
+import { Buttons, ChainStalkerMessage } from "#ui/index.js";
 import { MyContext } from "#context/context.interface.js";
 import { checkStrategy } from "#lib/helpers/helpers.js";
 import { container, TYPES } from "#di/index.js";
@@ -13,7 +13,7 @@ import { COMMAND_TYPES } from "#di/types.js";
 import { EditSubscriptionCommand } from "#handlers/commands/commands/edit-subscription.command.js";
 
 
-interface IChangeStrategyScene extends Scenes.WizardSessionData {
+export interface IChangeStrategyScene extends Scenes.WizardSessionData {
 	strategy?: {
 		type?: 'percentage' | 'absolute';
 		threshold?: number;
@@ -24,27 +24,19 @@ export const changeStrategyScene = new SceneBuilder<IChangeStrategyScene>(SceneT
 	.step('Ask for a strategy', async (ctx) => {
 		ctx.wizard.state.strategy = {};
 
-		const message = [
-			"Patterns await interpretation. Input your alert algorithm. 🎯"
-		];
+		await ctx.reply(
+			ChainStalkerMessage.SMS.GET_STRATEGY,
+			{
+				...Markup.keyboard([
+					[
+						Markup.button.text(Buttons.percentageStrategy.text),
+						Markup.button.text(Buttons.absoluteStrategy.text)
+					]
+				]).oneTime().resize()
+			}
+		);
 
-		try {
-			await ctx.reply(
-				message.join('\n'),
-				{
-					...Markup.keyboard([
-						[
-							Markup.button.text(Buttons.percentageStrategy.text),
-							Markup.button.text(Buttons.absoluteStrategy.text)
-						]
-					]).oneTime().resize()
-				}
-			);
-
-			return ctx.wizard.next();
-		} catch (error: any) {
-			await ctx.reply('Unknown error while trying to send a Change Strategy message');
-		}
+		return ctx.wizard.next();
 	})
 	.step('Get a strategy from a user and send a threshold message', new Composer<MyContext<IChangeStrategyScene>>().hears(/.*/, async (ctx) => {
 		try {
@@ -54,25 +46,27 @@ export const changeStrategyScene = new SceneBuilder<IChangeStrategyScene>(SceneT
 
 			ctx.wizard.state.strategy!.type = strategy;
 
-			const message = [
-				'What fluctuation is worth pursuing? Set the threshold now.'
-			];
-
 			await ctx.reply(
-				message.join('\n'),
-				Markup.removeKeyboard()
+				ChainStalkerMessage.SMS.GET_THRESHOLD,
+				{
+					parse_mode: "HTML",
+					...Markup.removeKeyboard()
+				}
 			);
 
 			return ctx.wizard.next();
 		} catch (error) {
-			await ctx.reply("⚠️ Please choose a valid strategy from your keyboard.", {
-				...Markup.keyboard([
-					[
-						Markup.button.text(Buttons.percentageStrategy.text),
-						Markup.button.text(Buttons.absoluteStrategy.text)
-					]
-				]).oneTime().resize()
-			});
+			await ctx.reply(
+				ChainStalkerMessage.SMS.INVALID_STRATEGY,
+				{
+					...Markup.keyboard([
+						[
+							Markup.button.text(Buttons.percentageStrategy.text),
+							Markup.button.text(Buttons.absoluteStrategy.text)
+						]
+					]).oneTime().resize()
+				}
+			);
 		}
 	}))
 	.step('Verify a threshold and send data to a server and a success message', new Composer<MyContext<IChangeStrategyScene>>().hears(/.*/, async (ctx) => {
@@ -81,11 +75,14 @@ export const changeStrategyScene = new SceneBuilder<IChangeStrategyScene>(SceneT
 		try {
 			const threshold = Number(ctx.message.text);
 			if (isNaN(threshold) || threshold <= 0) {
-				await ctx.reply(`⚠️ Please provide a valid positive number.`, {
-					...Markup.inlineKeyboard([
-						[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
-					])
-				})
+				await ctx.reply(ChainStalkerMessage.SMS.INVALID_THRESHOLD, 
+					{
+						...Markup.removeKeyboard(),
+						...Markup.inlineKeyboard([
+							[ Markup.button.callback(Buttons.cancelBtn.text, Buttons.cancelBtn.callback_data) ]
+						])
+					}
+				);
 				return ;
 			}
 
@@ -94,20 +91,12 @@ export const changeStrategyScene = new SceneBuilder<IChangeStrategyScene>(SceneT
 			const apiService = container.get<ApiService>(TYPES.ApiService);
 
 			if (!ctx.session.targetToEdit) {
-				await ctx.reply(
-					'Target is not specified.'
-				);
+				await ctx.reply(ChainStalkerMessage.SMS.INVALID_TARGET);
 				throw new Error('Target to edit is undefined');
 			}
-
 			const { id } = ctx.session.targetToEdit;
-			const { strategy } = ctx.wizard.state;
 
-			await apiService.put(
-				ApiService.STRATEGY_EDIT + '/' + id,
-				{ strategy },
-				ctx.session
-			);
+			await apiService.changeStrategy(ctx, id);
 
 			const editCommand = container.get<EditSubscriptionCommand>(COMMAND_TYPES.EditSubscription);
 

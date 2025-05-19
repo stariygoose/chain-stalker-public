@@ -2,12 +2,14 @@ import { inject, injectable } from "inversify";
 
 import { IBot } from "#bot/bot.js";
 import { ILogger } from "#config/index.js";
-import { TYPES } from "#di/types.js";
+import { COMMAND_TYPES, TYPES } from "#di/types.js";
 import { Action } from "#handlers/actions/action.abstract.js";
-import { Buttons } from "#ui/index.js";
+import { Buttons, ChainStalkerMessage } from "#ui/index.js";
 import { ApiService } from "#lib/api/api.service.js";
-import { ResponseMyStalks, Subscription } from "#lib/api/response.js";
-import { MyContext } from '#context/context.interface.js';
+import { ApiError } from "#errors/errors/api.error.js";
+import { MenuCommand } from "#handlers/commands/commands/menu.command.js";
+import { MyContext } from "#context/context.interface.js";
+import { Subscription } from "#lib/api/response.js";
 import { safeNanoId } from "#lib/helpers/helpers.js";
 
 
@@ -17,9 +19,14 @@ export class MyStalksAction extends Action {
 	public static readonly handler = Buttons.myStalksCommand.callback_data;
 
 	constructor(
-		@inject(TYPES.Bot) public readonly bot: IBot,
-		@inject(TYPES.Logger) private readonly _logger: ILogger,
-		@inject(TYPES.ApiService) private readonly _apiService: ApiService,
+		@inject(TYPES.Bot)
+		public readonly bot: IBot,
+		@inject(TYPES.Logger)
+		private readonly _logger: ILogger,
+		@inject(TYPES.ApiService)
+		private readonly _apiService: ApiService,
+		@inject(COMMAND_TYPES.MenuCommand)
+		private readonly _menuCommand: MenuCommand
 	) {
 		super();
 	}
@@ -27,36 +34,41 @@ export class MyStalksAction extends Action {
 	public handle(): void {
 		this.bot.action(MyStalksAction.handler, async (ctx) => {
 			try {
-				const userId = ctx.from?.id;
-				const response = await this._apiService.get<ResponseMyStalks>(
-					`${ApiService.SUBSCRIPTIONS_URL}?userId=${userId}`,
-					ctx.session
-				);
+				const response = await this._apiService.getStalks(ctx);
 
 				const { subscriptions } = response;
 
 				this.cacheSubscriptionIds(ctx, subscriptions);
 
-				if (subscriptions.length === 0) {
-					const { text, options } = this.buildEmptyMessage();
-					await ctx.reply(text, options);
-					return;
-				}
-
 				const message = subscriptions
 					.map((sub) => this.formatSubscriptionMessage(ctx, sub))
 					.join('\n\n');
 
-				await ctx.reply(message, {
-					parse_mode: "HTML",
-					reply_markup: {
-						inline_keyboard: [[
-							{ text: Buttons.menuBtn.text, callback_data: Buttons.menuBtn.callback_data }
-						]]
+				await ctx.reply(
+					message, 
+					{
+						parse_mode: "HTML",
+						reply_markup: {
+							inline_keyboard: [[
+								{ text: Buttons.menuBtn.text, callback_data: Buttons.menuBtn.callback_data }
+							]]
+						}
 					}
-				});
+				);
 			} catch (error) {
-				this._logger.error((error as Error).message);
+				if (error instanceof ApiError) {
+					await this._menuCommand.showMenu(
+						ctx,
+						error.botMessage
+					);
+					return ;
+				}
+
+				this._logger.error(`Unexpected error when user ${ctx.from?.id} was trying to see them stalks: ${(error as Error).message}`);
+				await this._menuCommand.showMenu(
+					ctx,
+					ChainStalkerMessage.SMS.UNKNOWN_ERROR
+				);
 			}
 		});
 	}
@@ -97,19 +109,5 @@ export class MyStalksAction extends Action {
 			if (value === fullId) return key;
 		}
 		return undefined;
-	}
-
-	private buildEmptyMessage(): { text: string; options: { reply_markup: { inline_keyboard: any[][] } } } {
-		return {
-			text: "You don't have any subscriptions yet.\nChoose one of the options below to create a new subscription.",
-			options: {
-				reply_markup: {
-					inline_keyboard: [
-						[{ text: Buttons.tokenCommand.text, callback_data: Buttons.tokenCommand.callback_data }],
-						[{ text: Buttons.collectionCommand.text, callback_data: Buttons.collectionCommand.callback_data }],
-					]
-				}
-			}
-		};
 	}
 }

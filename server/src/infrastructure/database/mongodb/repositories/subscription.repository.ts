@@ -220,7 +220,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 	public async drop(): Promise<void> {
 		try {
 			await SubscriptionModel.deleteMany({});
-			this._logger.warn(`DATABASE WAS DROPPED.`);
+			this._logger.error(`[DB] SUBSCRIPTIONS COLLECTION WAS DROPPED!!!!`);
 		} catch (error: unknown) {
 			this._handleDbError(error);
 		}
@@ -228,11 +228,11 @@ export class SubscriptionRepository implements ISubscriptionRepository {
 
 	private _handleDbError(error: unknown): never {
 		if (error instanceof AbstractDatabaseError) {
-			this._logger.error(error.message);
+			this._logger.error('[DB]' + error.message);
 			throw error;
 		}
 	
-		this._logger.error(`Unexpected Database Error. Reason: ${(error as Error).message}`);
+		this._logger.error(`[DB] Unexpected Database Error. Reason: ${(error as Error).message}`);
 		throw new LayerError.DatabaseError('Unexpected Database Error.');
 	}
 

@@ -19,7 +19,7 @@ export interface ISubscriptionService {
 	getAllByUserId(userId: number, type?: unknown): Promise<GetAllSubscriptionsDto>;
 	getById(userId: number, id: string): Promise<Subscription>;
 
-	changeStatusById(id: string): Promise<Subscription>;
+	changeStatusById(userId: number, id: string): Promise<Subscription>;
 
 	deleteById(userId: number, id: string): Promise<void>;
 }
@@ -104,8 +104,6 @@ export class SubscriptionService implements ISubscriptionService {
 
 			const subscriptionFromDb = await this._db.createOrUpdate(subscription);
 
-			this._logger.debug(`Subscription [${subscriptionFromDb.id}] was successfuly created.`);
-
 			this._stalk(userId, subscription.target);
 
 			return subscriptionFromDb;
@@ -124,12 +122,9 @@ export class SubscriptionService implements ISubscriptionService {
 
 		try {
 			const subscription = await this._db.changeStatusById(userId, id);
-
 			if (!subscription) {
 				throw new ApiError.NotFoundError("Subscription not found");
 			}
-
-			this._logger.debug(`Subscription [${subscription.id}] was successfuly deactivated.`);
 
 			return subscription;
 		} catch (error: unknown) {
@@ -143,7 +138,8 @@ export class SubscriptionService implements ISubscriptionService {
 		}
 
 		try {
-			await this._db.
+			await this._db.deleteById(userId, id);
+
 		} catch (error: unknown) {
 			throw error;
 		}
@@ -151,6 +147,7 @@ export class SubscriptionService implements ISubscriptionService {
 
 	private _stalk(userId: number, target: Target): void {
 		const { type } = target;
+
 		switch (type) {
 			case "nft":
 				this._logger.debug(`Subscription type is <${type}>. Opening Opensea Event Stream.`);

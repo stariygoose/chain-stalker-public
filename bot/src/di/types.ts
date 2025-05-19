@@ -1,6 +1,7 @@
 export const TYPES = {
 	ConfigService: Symbol.for("ConfigService"),
 	Logger: Symbol.for("Logger"),
+	HttpService: Symbol.for("HttpService"),
 	ApiService: Symbol.for("ApiService"),
 
 	Bot: Symbol.for("Bot"),
@@ -18,7 +19,8 @@ export const ACTION_TYPES = {
 	CancelAction: Symbol.for("CancelAction"),
 
 	DeactivateSubscription: Symbol.for("DeactivateSubscriptionCommand"),
-	ChangeStrategyAction: Symbol.for("ChangeStrategyAction")
+	ChangeStrategyAction: Symbol.for("ChangeStrategyAction"),
+	DeleteSubscription: Symbol.for("DeleteSubscription")
 }
 
 export const COMMAND_TYPES = {
