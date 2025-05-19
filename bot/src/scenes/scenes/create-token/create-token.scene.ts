@@ -88,7 +88,7 @@ export const createTokenScene = SceneBuilder
 			return;
 		}
 	}))
-	.step(`Accept Token Data`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/^\d+(\.\d+)?$/, async (ctx) => {
+	.step(`Accept Token Data`, new Composer<MyContext<ICreateTokenSceneWizard>>().hears(/.*/, async (ctx) => {
 		try {
 			const threshold = Number(ctx.message.text);
 			if (isNaN(threshold) || threshold <= 0) {

@@ -25,7 +25,7 @@ export const ChainStalkerMessage = {
 		GET_TOKEN_BAD_REQUEST: "⚠️ The signal is malformed.\nThe system cannot interpret this token symbol.",
 		GET_TOKEN_NOT_FOUND: "⚠️ The token you seek does not echo back.\nNo such asset found on the grid.",
 		GET_TOKEN_GENERIC: "⚠️ The system faltered.\nA rupture in the data stream prevented token lookup. Try again later.",
-		CREATE_NFT_SUBSCRIPTION_BAD_REQUEST:"⚠️ The ritual was incomplete.\nYour data was malformed and could not be interpreted. Review your input.",
+		CREATE_NFT_SUBSCRIPTION_BAD_REQUEST:"⚠️ The ritual was incomplete.\nYour data was malformed and could not be interpreted.",
 		CREATE_NFT_SUBSCRIPTION_GENERIC: "⚠️ The core fractured.\nThe system failed to process your subscription. Try again later or contact @stariy_goose.",
 		CREATE_TOKEN_SUBSCRIPTION_BAD_REQUEST: "⚠️ The parameters were distorted.\nThe system rejected your token subscription request as malformed.",
 		CREATE_TOKEN_SUBSCRIPTION_GENERIC: "⚠️ The core trembled.\nAn internal failure prevented the token from being linked. Try again later or contact @stariy_goose.",

@@ -88,8 +88,8 @@ export class MyStalksAction extends Action {
 
 		const { target, strategy, isActive } = sub;
 		const status = isActive ? '🟢' : '🔴';
-		const unit = strategy.type === 'percentage' ? '%' : '$';
-		const thresholdText = `<b>${strategy.threshold}${unit}</b>\n<i>${strategy.type}</i> threshold.`;
+		const unit = strategy.type === 'percentage' ? '%' : target.type === 'nft' ? target.symbol : '$';
+		const thresholdText = `<b>${strategy.threshold} ${unit}</b>\n<i>${strategy.type}</i> threshold.`;
 
 		switch (target.type) {
 			case 'nft':

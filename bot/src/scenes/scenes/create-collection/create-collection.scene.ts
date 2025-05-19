@@ -102,7 +102,7 @@ export const createCollectionScene = SceneBuilder
 			return;
 		}
 	}))
-	.step(`Accept Collection Data`, new Composer<MyContext<ICreateCollectionSceneWizard>>().hears(/^\d+$/, async (ctx) => {
+	.step(`Accept Collection Data`, new Composer<MyContext<ICreateCollectionSceneWizard>>().hears(/.*/, async (ctx) => {
 		const threshold = Number(ctx.message.text);
 		if (isNaN(threshold)) {
 			await ctx.reply(
@@ -198,7 +198,7 @@ export const createCollectionScene = SceneBuilder
 		} catch (error) {
 			if (error instanceof ApiError) {
 				await ctx.reply(
-					error.message,
+					error.botMessage,
 					options
 				);
 				return ctx.scene.leave();
