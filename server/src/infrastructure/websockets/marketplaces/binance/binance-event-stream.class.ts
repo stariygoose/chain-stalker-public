@@ -138,6 +138,11 @@ export class BinanceEventStream implements ITokenEventStream {
 					return;
 				}
 
+				if (!userTokenSubscription.isActive) {
+					this._logger.debug(`Subscription ${userTokenSubscription.id} has status inactive.`);
+					return;
+				}
+
 				if (!userTokenSubscription.shouldNotify(price)) {
 					return;
 				}
