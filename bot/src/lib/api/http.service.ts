@@ -1,9 +1,9 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { injectable, inject } from "inversify";
 
 import { TYPES } from "#di/types.js";
 import { EnvVariables, IConfigService, ILogger } from "#config/index.js";
-import { ApiError, BadRequestApiError, DuplicateApiError, NotAuthorizedApiError } from '#errors/errors/api.error.js';
+import { ApiError } from '#errors/errors/api.error.js';
 import { Jwt, MySession } from '#context/context.interface.js';
 
 @injectable()
@@ -29,8 +29,6 @@ export class HttpService {
 	constructor (
 		@inject(TYPES.ConfigService)
 		private readonly _configService: IConfigService,
-		@inject(TYPES.Logger)
-		private readonly _logger: ILogger
 	) {
 		this.BASE_URL = this._configService.get(EnvVariables.SERVER_URL);
 	}
@@ -188,7 +186,10 @@ export class HttpService {
 			return response.data;
 		} catch (error: any) {
 			if (error.response.status === 400) {
-				throw new ApiError(error.response.data.error);
+				throw new ApiError(
+					error.response.data.error,
+					`🫥 Can’t track you... No credentials detected. You probably skipped the login. /login`
+				);
 			}
 			if (error.response.status === 404) {
 				throw new ApiError(

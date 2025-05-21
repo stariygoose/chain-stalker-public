@@ -49,7 +49,7 @@ export const generateEnv = (answers: Record<EnvKeys, string>) => {
 		`${Rows.JWT_REFRESH_SECRET}=${answers.JWT_REFRESH_SECRET}`
 	];
 
-  const envPath = path.join(rootDir, '.env.test');
+  const envPath = path.join(rootDir, '.env');
 
   fs.writeFileSync(envPath, envContent.join('\n'));
 

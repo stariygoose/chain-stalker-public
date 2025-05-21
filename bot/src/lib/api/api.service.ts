@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { inject, injectable } from "inversify";
+import { Scenes } from "telegraf";
 
 import { TYPES } from "#di/types.js";
 import { HttpService } from "#lib/api/http.service.js";
@@ -8,7 +9,6 @@ import { ResponseCollection, ResponseJwt, ResponseMyStalks, ResponseToken, Subsc
 import { ILogger } from "#config/index.js";
 import { ApiError, BadRequestApiError, DuplicateApiError } from "#errors/errors/api.error.js";
 import { ChainStalkerMessage } from "#ui/index.js";
-import { Scenes } from "telegraf";
 import { ICreateCollectionSceneWizard } from "#scenes/scenes/create-collection/create-collection.scene.js";
 import { ICreateTokenSceneWizard } from "#scenes/scenes/create-token/create-token.scene.js";
 import { IChangeStrategyScene } from "#scenes/scenes/edit-subscription/change-strategy.scene.js";
