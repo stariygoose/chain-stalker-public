@@ -1,9 +1,10 @@
-# Chain Stalker: NFT and Token Price Tracker (Work in Progress)
+# Chain Stalker: NFT and Token Price Tracker
 
 **Chain Stalker** is an ongoing project designed to help users monitor NFT collections and track token prices. The project includes a Telegram bot that notifies users when the price of an NFT or token changes by a specified percentage. Currently, the bot is integrated with Binance to notify users of token price changes and with OpenSea to provide updates on NFT listings and price changes. 
 
 > ⚠️ **Warning!** The tool is in development, and new features are being added. ⚠️
 
+## 🔧 Installation (Self-Hosted)
 
 # Installation
 As the first step, navigate to the **Releases** section and select version **0.1.0-alpha.1**. Once the bot archive has finished downloading, extract it to a directory of your choice.
@@ -29,8 +30,8 @@ The core component of this project is the Telegram Bot. To create a Telegram bot
 2. Start a chat with BotFather and send the command `/newbot`.
 3. BotFather will ask for:
 
-    A name for your bot.  
-    A username for your bot (must end with bot).
+If you answer `yes`, you’ll be asked to enter your own values.  
+**⚠ A space is considered a value**, so leave fields empty to accept the default. (press `Enter`)
 
 4. After this, BotFather will provide your bot's API Key.
 
@@ -67,5 +68,17 @@ Once all configurations are complete, start the bot using Docker Compose:
 ```
 docker-compose up --build
 ```
-🎉 That's it! Your bot should now be up and running.  
-You can test the bot by sending `/start` or `/menu` in Telegram.
+
+When running correctly, you’ll see logs from `bot`, `server`, and `mongodb` containers.
+
+> 📡 You can interact with the bot in Telegram by sending `/start`.
+
+---
+
+## 📬 Feedback & Contributions
+- Pull requests and issues are welcome!
+- Follow development updates in this repo.
+
+---
+
+Made with 🧠 by ChainStalker team.

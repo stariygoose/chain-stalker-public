@@ -1,0 +1,1 @@
+export { ConfigError } from "#utils/errors/config-error.js"

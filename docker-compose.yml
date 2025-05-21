@@ -2,27 +2,27 @@ version: '3.8'
 
 services:
 
-  nginx:
-    image: nginx:1.27.3
-    depends_on: 
-      - bot
-      - server
-      - client
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./client/dist:/usr/share/nginx/html:ro
-    ports:
-      - ${TUNNEL_PORT}:${TUNNEL_PORT}
-    networks:
-      - main
+  # nginx:
+  #   image: nginx:1.27.3
+  #   depends_on: 
+  #     - bot
+  #     - server
+  #     - client
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./client/dist:/usr/share/nginx/html:ro
+  #   ports:
+  #     - ${TUNNEL_PORT}:${TUNNEL_PORT}
+  #   networks:
+  #     - ${NODE_MODE}
 
-  ngrok:
-    image: ngrok/ngrok:3.19.0-alpine
-    volumes:
-      - ./ngrok.yml:/var/lib/ngrok/ngrok.yml
-    command: ["start", "web", "--authtoken", "${NGROK_TOKEN}"]
-    networks:
-      - main
+  # ngrok:
+  #   image: ngrok/ngrok:3.19.0-alpine
+  #   volumes:
+  #     - ./ngrok.yml:/var/lib/ngrok/ngrok.yml
+  #   command: ["start", "web", "--authtoken", "${NGROK_TOKEN}"]
+  #   networks:
+  #     - ${NODE_MODE}
 
   bot:
     build:
@@ -30,12 +30,24 @@ services:
     depends_on:
       - server
     environment:
+      - NODE_MODE=${NODE_MODE}
+
       - TG_TOKEN=${TG_BOT_TOKEN}
-      - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
-      - SERVER_URL=http://server:${SERVER_PORT}
       - TG_BOT_PORT=${TG_BOT_PORT}
+
+      # - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
+      - SERVER_URL=http://server:${SERVER_PORT}
+
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    env_file:
+      - .env
+    ports:
+      - ${TG_BOT_PORT}:${TG_BOT_PORT}
+    volumes:
+      - ./bot/.logs:/bot/.logs
     networks:
-      - main
+      - ${NODE_MODE}
 
   server:
     build:
@@ -44,7 +56,9 @@ services:
       - mongodb
       - redis
     environment:
-      - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
+      - NODE_MODE=${NODE_MODE}
+
+      # - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
       - SERVER_PORT=${SERVER_PORT}
 
       - MONGODB_URL=mongodb://${DB_USER}:${DB_PASS}@mongodb:${DB_PORT}/${DB_DATABASE}?authSource=${DB_DATABASE}&directConnection=true
@@ -56,17 +70,25 @@ services:
       - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
 
-      - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    networks:
-      - main
 
-  client:
-    build:
-      context: ./client
+      # - MARKETPLACE_KEY_OPENSEA=${MARKETPLACE_KEY_OPENSEA}
+      # - MARKETPLACE_KEY_BINANCE=${MARKETPLACE_KEY_BINANCE}
+    env_file:
+      - .env
+    volumes:
+      - ./server/.logs:/server/.logs
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
     networks:
-      - main
+      - ${NODE_MODE}
+
+  # client:
+  #   build:
+  #     context: ./client
+  #   networks:
+  #     - ${NODE_MODE}
 
   mongodb:
     image: mongo:latest
@@ -81,23 +103,27 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./mongod.conf:/config/mongod.conf:ro
-      - ./_volume/mongodb:/data/db
+      - ./.volume/mongodb:/data/db
     networks:
-      - main
+      - ${NODE_MODE}
 
   redis:
     image: redis:latest
     restart: always
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
-    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT}
     volumes: 
-      - ./_volume/redis:/data
+      - ./.volume/redis:/data
     networks:
-      - main
+      - ${NODE_MODE}
 
     
 networks:
-  main:
+  dev:
     driver: bridge
-    name: main
+    name: dev
+  prod:
+    driver: bridge
+    name: prod
+

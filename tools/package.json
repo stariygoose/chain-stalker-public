@@ -1,0 +1,16 @@
+{
+	"scripts": {
+		"start": "tsx setup.ts"
+	},
+	"dependencies": {
+		"boxen": "^8.0.1",
+		"chalk": "^5.4.1",
+		"figlet": "^1.8.1",
+		"inquirer": "^12.6.1",
+		"tsx": "^4.19.4"
+	},
+	"devDependencies": {
+		"@types/figlet": "^1.7.0",
+		"@types/node": "^22.15.19"
+	}
+}

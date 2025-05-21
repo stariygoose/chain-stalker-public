@@ -2,18 +2,29 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
-    "moduleResolution": "nodenext",
-    "outDir": "./dist/",
-    "rootDir": "./src/",
+		"moduleResolution": "nodenext",
 
-    "strict": true,
+		"paths": {
+			"#*": ["./src/*"]
+		},
+		"baseUrl": ".",
+		"rootDir": "./src",
+		"outDir": "./dist",
+
+		"types": [
+			"node",
+			"jest"
+		],
+
+		"strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-		// "noUnusedLocals": true,
-		// "noUnusedParameters": true,
-		"paths": {
-			"@/*": ["./src/*",]
-		}
-  }
+		"forceConsistentCasingInFileNames": true,
+
+		"experimentalDecorators": true,  
+    "emitDecoratorMetadata": true
+  },
+	"include": ["src/**/*", "src/utils", "src/server.ts", "src/__tests__", "src/application", "src/presentation", "src/infrastructure", "src/di", "src/core", "src/config"],
+	"exclude": ["dist", "node_modules"],
 }
