@@ -41,7 +41,7 @@ export class PercentageChangeStrategy extends AbstractPriceChangeStrategy {
 		return Math.abs(percentage) >= this.threshold;
 	}
 
-	public calculateDifference(currentState: number, newState: number, precision: number = 6): number {
+	public calculateDifference(currentState: number, newState: number, precision: number = 2): number {
 		if (
 			NumberValidator.isInfinity(currentState) || 
 			NumberValidator.isInfinity(newState) ||

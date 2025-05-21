@@ -123,7 +123,21 @@ export class SubscriptionService implements ISubscriptionService {
 		try {
 			const subscription = await this._db.changeStatusById(userId, id);
 			if (!subscription) {
-				throw new ApiError.NotFoundError("Subscription not found");
+				throw new ApiError.NotFoundError(`Subscription ${id} for user ${userId} not found`);
+			}
+
+			const { target } = subscription;
+
+			if (!subscription.isActive) {
+				if (target.type === "nft") this._wm.deleteUserFromOpenseaStalking(userId, target.slug);
+				if (target.type === "token") this._wm.deleteUserFromBinanceStalking(userId, target.symbol);
+			} else {
+				if (target.type === "nft" && this._wm.openseaCollectionUsersCount(target.slug) <= 0) {
+					this._wm.stalkFromOpensea(userId, target.slug);
+				}
+				if (target.type === "token" && this._wm.binanceTokenUsersCount(target.symbol) <= 0) {
+					this._wm.stalkFromBinance(userId, target.symbol);
+				}
 			}
 
 			return subscription;

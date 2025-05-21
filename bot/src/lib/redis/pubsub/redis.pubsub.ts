@@ -86,7 +86,7 @@ export class RedisPubSub implements IRedisPubSub {
 				
 			});
 	
-			this._logger.info(`✅ Subscribed to Redis channel: ${RedisPubSub.channel}`);
+			this._logger.info(`Subscribed to Redis channel: ${RedisPubSub.channel}`);
 		} catch (error) {
 			this._logger.error(`[Redis PubSub] Error: ${error}`);
 		}

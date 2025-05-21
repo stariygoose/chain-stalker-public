@@ -254,19 +254,19 @@ async function main() {
 
 
 	const openseaToken = await ask(`[REQUIRED]: Your Opensea Auth Token : `);
-	const ngrokToken = await ask(`[REQUIRED]: Your Ngrok Auth Token : `);
+	// const ngrokToken = await ask(`[REQUIRED]: Your Ngrok Auth Token : `);
 	const tgBotToken = await ask(`[REQUIRED]: Your Telegram Bot Auth Token : `);
 	const tgBotName = await ask('[REQUIRED]: Your Telegram Bot Username (without @ prefix) : ');
-	const domainUrl = await ask('[REQUIRED]: Your Ngrok Static Domain (without https:// prefix) : ');
+	// const domainUrl = await ask('[REQUIRED]: Your Ngrok Static Domain (without https:// prefix) : ');
 
-	const tunnelPort = isPorts ?
-				(await ask(`[OPTIONAL]: Your port for tunneling requests (leave blank to use default value: ` + 
-					`${DEFAULT_TUNNEL_PORT}) : `) || DEFAULT_TUNNEL_PORT)
-				: DEFAULT_TUNNEL_PORT;
-	const clientPort = isPorts ?
-				(await ask(`[OPTIONAL]: Your port for the Website (leave blank to use default value: ` + 
-					`${DEFAULT_CLIENT_PORT}) : `) || DEFAULT_CLIENT_PORT) 
-				: DEFAULT_CLIENT_PORT;
+	// const tunnelPort = isPorts ?
+	// 			(await ask(`[OPTIONAL]: Your port for tunneling requests (leave blank to use default value: ` + 
+	// 				`${DEFAULT_TUNNEL_PORT}) : `) || DEFAULT_TUNNEL_PORT)
+	// 			: DEFAULT_TUNNEL_PORT;
+	// const clientPort = isPorts ?
+	// 			(await ask(`[OPTIONAL]: Your port for the Website (leave blank to use default value: ` + 
+	// 				`${DEFAULT_CLIENT_PORT}) : `) || DEFAULT_CLIENT_PORT) 
+	// 			: DEFAULT_CLIENT_PORT;
 	const serverPort = isPorts ?
 				(await ask(`[OPTIONAL]: Your port for the Server (leave blank to use default value: ` +
 					`${DEFAULT_SERVER_PORT}) : `) || DEFAULT_SERVER_PORT)

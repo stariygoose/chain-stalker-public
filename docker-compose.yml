@@ -2,27 +2,27 @@ version: '3.8'
 
 services:
 
-  nginx:
-    image: nginx:1.27.3
-    depends_on: 
-      - bot
-      - server
-      - client
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./client/dist:/usr/share/nginx/html:ro
-    ports:
-      - ${TUNNEL_PORT}:${TUNNEL_PORT}
-    networks:
-      - ${NODE_MODE}
+  # nginx:
+  #   image: nginx:1.27.3
+  #   depends_on: 
+  #     - bot
+  #     - server
+  #     - client
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./client/dist:/usr/share/nginx/html:ro
+  #   ports:
+  #     - ${TUNNEL_PORT}:${TUNNEL_PORT}
+  #   networks:
+  #     - ${NODE_MODE}
 
-  ngrok:
-    image: ngrok/ngrok:3.19.0-alpine
-    volumes:
-      - ./ngrok.yml:/var/lib/ngrok/ngrok.yml
-    command: ["start", "web", "--authtoken", "${NGROK_TOKEN}"]
-    networks:
-      - ${NODE_MODE}
+  # ngrok:
+  #   image: ngrok/ngrok:3.19.0-alpine
+  #   volumes:
+  #     - ./ngrok.yml:/var/lib/ngrok/ngrok.yml
+  #   command: ["start", "web", "--authtoken", "${NGROK_TOKEN}"]
+  #   networks:
+  #     - ${NODE_MODE}
 
   bot:
     build:
@@ -35,7 +35,7 @@ services:
       - TG_TOKEN=${TG_BOT_TOKEN}
       - TG_BOT_PORT=${TG_BOT_PORT}
 
-      - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
+      # - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
       - SERVER_URL=http://server:${SERVER_PORT}
 
       - REDIS_PORT=${REDIS_PORT}
@@ -58,7 +58,7 @@ services:
     environment:
       - NODE_MODE=${NODE_MODE}
 
-      - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
+      # - DOMAIN_URL=${NGROK_STATIC_DOMAIN}
       - SERVER_PORT=${SERVER_PORT}
 
       - MONGODB_URL=mongodb://${DB_USER}:${DB_PASS}@mongodb:${DB_PORT}/${DB_DATABASE}?authSource=${DB_DATABASE}&directConnection=true
@@ -73,8 +73,8 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
 
-      - MARKETPLACE_KEY_OPENSEA=${MARKETPLACE_KEY_OPENSEA}
-      - MARKETPLACE_KEY_BINANCE=${MARKETPLACE_KEY_BINANCE}
+      # - MARKETPLACE_KEY_OPENSEA=${MARKETPLACE_KEY_OPENSEA}
+      # - MARKETPLACE_KEY_BINANCE=${MARKETPLACE_KEY_BINANCE}
     env_file:
       - .env
     volumes:
@@ -84,11 +84,11 @@ services:
     networks:
       - ${NODE_MODE}
 
-  client:
-    build:
-      context: ./client
-    networks:
-      - ${NODE_MODE}
+  # client:
+  #   build:
+  #     context: ./client
+  #   networks:
+  #     - ${NODE_MODE}
 
   mongodb:
     image: mongo:latest

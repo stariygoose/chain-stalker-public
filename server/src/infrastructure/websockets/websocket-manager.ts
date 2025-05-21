@@ -17,6 +17,17 @@ export class WebsocketManager {
 		private readonly _logger: Logger
 	) {}
 
+	public binanceTokenUsersCount(symbol: string): number {
+		const socket = this._binanceMap.get(symbol)
+		
+		return socket ? socket.users.size : 0;
+	}
+
+	public openseaCollectionUsersCount(slug: string): number {
+		const socket = this._osMap.get(slug);
+		return socket ? socket.users.size : 0;
+	}
+
 	public deleteUserFromBinanceStalking(userId: number, symbol: string): void {
 		const socket = this._binanceMap.get(symbol);
 		socket?.removeUser(userId);
