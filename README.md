@@ -25,7 +25,10 @@ Before you begin, ensure you have:
 ## 🔧 Installation (Self-Hosted)
 
 ### Step 1: Download the release
-Go to the **Releases** section and download version **0.1.1-alpha.2**. Extract it to your desired directory.
+Go to the **Releases** section and download version **0.1.1-alpha-2**. Extract it to your desired directory - or use the command line instead:
+```bash
+git clone https://github.com/stariygoose/chain-stalker-public.git chainstalker
+```
 
 ### Step 2: Get your API keys
 You will need the following:
