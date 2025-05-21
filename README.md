@@ -1,66 +1,102 @@
 # Chain Stalker: NFT and Token Price Tracker
 
-## You are free to set up your own bot or use hosted version @chainstalker_bot in Telegram
+## 🤖 Use the hosted bot
+You are free to set up your own bot or use the hosted version: [@ChainStalkerBot](https://t.me/ChainStalkerBot) on Telegram.
 
-**Chain Stalker** is an ongoing project designed to help users monitor NFT collections and track token prices. The project includes a Telegram bot that notifies users when the price of an NFT or token changes by a specified percentage or an absolute value difference. Currently, the bot is integrated with Binance to notify users of token price changes and with OpenSea to provide updates on NFT listings and price changes. 
+**Chain Stalker** helps users monitor NFT collections and token prices. It includes a Telegram bot that notifies users when an NFT or token changes price by a defined percentage or absolute value.
 
-> ⚠️ **Warning!** The tool is in development, and new features are being added. ⚠️
+Currently integrated with:
+- **Binance** — for token price updates
+- **OpenSea** — for NFT listings and sales
 
+> ⚠️ **Warning:** This tool is in active development. Features may change.
 
-# Installation
-As the first step, navigate to the **Releases** section and select version **0.1.0-alpha.1**. Once the bot archive has finished downloading, extract it to a directory of your choice.
+---
 
-The second step is to obtain the necessary API keys for the bot to function. 
-> #### ❗For convenience, we recommend saving all your API keys in a text file.
+## 📦 Prerequisites
+Before you begin, ensure you have:
+- Docker & Docker Compose
+- Node.js 18+
+- A Telegram account
+- An OpenSea API key (free to obtain)
 
-### Opensea Stream API Installation
-The server uses the Opensea Stream API to track NFT listings and sales. This is a crucial part of the server.  
-To configure the Opensea Stream API, you need to obtain an API key. Follow this [guide](https://docs.opensea.io/reference/api-keys) to get your Opensea API Key.  
-> #### ❗ Important advice:
-> *To avoid getting banned by Opensea, do not use generic project names or GitHub links like* `test`, `https://github.com/test` *and etc.*
+---
 
-### Telegram Bot Installation
-The core component of this project is the Telegram Bot. To create a Telegram bot, follow these steps:  
-1. Open Telegram and search for `@BotFather`.
-2. Start a chat with BotFather and send the command `/newbot`.
-3. BotFather will ask for:
+## 🔧 Installation (Self-Hosted)
 
-  - A name for your bot.  
-  - A username for your bot (must end with bot).
+### Step 1: Download the release
+Go to the **Releases** section and download version **0.1.1-alpha.2**. Extract it to your desired directory.
 
-4. After this, BotFather will provide your bot's API Key.
+### Step 2: Get your API keys
+You will need the following:
+- Telegram Bot Token
+- Telegram Bot Username
+- OpenSea API Key  
 
-### Configuring the `.env` File  
+> 💡 *Tip: Save all your keys in a text file for easy access.*
 
-To set up the `.env` file, you need to run the script located in the root directory of the bot using the following command:
-```
+### Step 3: Obtain OpenSea API Key
+The server uses the OpenSea Stream API to track NFTs. You need to [apply for a key here](https://docs.opensea.io/reference/api-keys).
+
+> ❗ **Important:** Use a unique project name and avoid generic names like `test` or GitHub links like `https://github.com/test`.
+
+### Step 4: Create Telegram Bot
+1. Open Telegram and search for `@BotFather`
+2. Run `/newbot`
+3. Provide:
+   - Bot name
+   - Bot username (must end with `bot`)
+4. Copy the token provided
+
+### Step 5: Run `.env` setup script
+In the project root, run:
+
+```bash
 cd tools &&
 npm i &&
 npm run start
 ```
-The script will prompt you with three mandatory questions requiring the following information:  
-- **Telegram Bot API Key**  
-- **Telegram Bot Username** (without `@` prefix)
-- **Opensea API Key**  
 
-# PHOTO TO REPLACE
+You will be prompted to answer required questions:
+- **Telegram Bot Token**
+- **Telegram Bot Username** (without `@`)
+- **OpenSea API Key**
 
-After these questions, you will be asked four optional questions. We recommend to provide your own credentials to better security.
+![Required questions](https://github.com/user-attachments/assets/5a811595-8e3d-44e9-94a9-ebf89d24283e)
 
-# PHOTO TO REPLACE
+Then you’ll be asked optional config questions:
 
-Lastly, if you answered `yes` to the additional parameters, you will need to fill them in with your values. If you leave the field blank, the default value will remain. (A space is considered a value, so please be careful.)
+![Optional section](https://github.com/user-attachments/assets/8082466e-57fb-406d-b18f-270d191c1256)
 
-# PHOTO TO REPLACE
+If you answer `yes`, you’ll be asked to enter your own values.  
+**⚠ A space is considered a value**, so leave fields empty to accept the default. (press `Enter`)
 
-If everything was filled out successfully, you will see that some project files have been created.
+![Final answer](https://github.com/user-attachments/assets/f64a70dd-5e6a-43b7-b1e6-b130a0967bc7)
 
-# PHOTO TO REPLACE
+Once complete, your `.env` file will be generated:
 
-## Starting the Bot
-Once all configurations are complete, start the bot using Docker Compose:  
-```
+![Success](https://github.com/user-attachments/assets/a9aa88d8-01d3-4656-bbc1-ccf73d7c05aa)
+
+---
+
+## 🟢 Launching ChainStalker
+
+Run the bot using Docker Compose:
+
+```bash
 docker-compose up --build
 ```
-🎉 That's it! Your bot should now be up and running.  
-You can test The Bot by sending `/start` in Telegram.
+
+When running correctly, you’ll see logs from `bot`, `server`, and `mongodb` containers.
+
+> 📡 You can interact with the bot in Telegram by sending `/start`.
+
+---
+
+## 📬 Feedback & Contributions
+- Pull requests and issues are welcome!
+- Follow development updates in this repo.
+
+---
+
+Made with 🧠 by ChainStalker team.
