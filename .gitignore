@@ -5,6 +5,9 @@ dist
 .env.*
 !.env.example
 mongod.conf
+client
+nginx.conf.example
+ngrok.yml.example
 nginx.conf
 ngrok.yml
 replace_env.js

@@ -1,8 +1,0 @@
-# Version of the ngrok Agent Configuration file. Required.
-version: 3
-
-tunnels:
-  web:
-    addr: nginx:{{YOUR_TUNNEL_PORT}}
-    proto: http
-    domain: {{YOUR_NGROK_STATIC_DOMAIN}}
