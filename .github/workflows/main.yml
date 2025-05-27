@@ -30,8 +30,10 @@ jobs:
         with:
           host: ${{secrets.HOST}}
           username: ${{secrets.USER}}
-          key: ${{secrets.SSH_PRIVATE_KEY}}
+          key: ${{secrets.SSH_PRIVATE_KEY}}  
           script: |
             la
             cd ~/chainstalker
+            git pull
+            docker compose down
             docker compose up -d --build
