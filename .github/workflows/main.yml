@@ -1,0 +1,37 @@
+name: "Chain Stalker Pipeline"
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  test:
+    name: Server Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - name: Install Server Deps
+        working-directory: ./server
+        run: npm install
+      - name: Run Server Tests
+        working-directory: ./server
+        run: npm run test
+  deploy:
+    name: Deploy To VPS
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USER}}
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          script: |
+            la
+            cd ~/chainstalker
+            docker compose up -d --build
