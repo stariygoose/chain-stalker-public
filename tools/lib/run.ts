@@ -1,5 +1,3 @@
-// tools/lib/run.ts
-import chalk from 'chalk';
 import { logHeader } from './ui.js';
 import { 
 	defaultQuestions, 

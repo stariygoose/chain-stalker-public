@@ -15,7 +15,6 @@ export const defaultQuestions = async () => {
       name: Rows.TG_BOT_NAME,
       message: '[REQUIRED] Your Telegram Bot Username (without @ prefix):',
 			validate: (value) => /^[^@]*$/.test(value),
-			
     },
     {
       type: 'input',
@@ -105,7 +104,7 @@ export const customDbQuestions = async () => {
 		},
 		{
 			type: 'password',
-			mask: 'yes',
+			mask: '*',
 			name: Rows.DB_ROOT_PASSWORD,
 			message: `Set admin password:`,
 			default: `${DefaultValues.DATABASE.ADMIN}`
@@ -124,7 +123,7 @@ export const customDbQuestions = async () => {
 		},
 		{
 			type: 'password',
-			mask: 'yes',
+			mask: '*',
 			name: Rows.DB_PASS,
 			message: `Set your user password:`,
 			default: `${DefaultValues.DATABASE.USER_PASSWORD}`
@@ -142,7 +141,7 @@ export const customRedisQuestions = async () => {
 		},
 		{
 			type: 'password',
-			mask: 'yes',
+			mask: '*',
 			name: Rows.REDIS_PASSWORD,
 			message: `Set your redis password:`,
 			default: `${DefaultValues.REDIS.PASS}`
