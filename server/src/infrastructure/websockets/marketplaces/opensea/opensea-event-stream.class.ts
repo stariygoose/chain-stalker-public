@@ -23,18 +23,19 @@ export class OpenseaEventStream {
 
   constructor(
     @inject(TYPES.ConfigService) private readonly _config: ConfigService,
-    @inject(TYPES.SubscriptionRepository) private readonly _db: ISubscriptionRepository,
+    @inject(TYPES.SubscriptionRepository)
+    private readonly _db: ISubscriptionRepository,
     @inject(TYPES.RedisPubSub) private readonly _redisPubSub: IPubSub,
     @inject(TYPES.RedisCache) private readonly _cache: ICache,
     @inject(TYPES.OpenSeaAPI) private readonly _osApi: OpenSeaAPI,
-    @inject(TYPES.Logger) private readonly _logger: ILogger
+    @inject(TYPES.Logger) private readonly _logger: ILogger,
   ) {
     this._client = this._createClient();
   }
 
-	get users(): Set<number> {
-		return this._users;
-	}
+  get users(): Set<number> {
+    return this._users;
+  }
 
   public setSlug(slug: string): void {
     this._slug = slug;
@@ -67,61 +68,87 @@ export class OpenseaEventStream {
 
   private async _handlePriceEvent(): Promise<void> {
     for (const userId of this._users) {
-			try {
-				const subscription = await this._db.getOneByUserIdAndSlug(userId, this._slug);
-				if (!subscription || !subscription.isActive) {
-					this._logger.debug(`Subscription with slug ${this._slug} for user ${userId} doesn't exist or is not active.`)
-					continue;
-				};
-	
-				const { lastNotifiedPrice } = subscription.target;
-	
-				let floorPrice: number;
-				const cached = await this._cache.get<number>(`floor:${this._slug}`);
-				if (cached) {
-					floorPrice = cached;
-					this._logger.debug(`Floor price for [${this._slug}] restored from cache.`);
-				} else {
-					this._logger.debug(`Cache was cleared. Fetching API to get Floor Price for [${this._slug}].`);
-	
-					const fetchedFloorPrice = await this._osApi.getFloorPrice(this._slug);
-					floorPrice = fetchedFloorPrice.floorPrice;
-					await this._cache.set(`floor:${this._slug}`, floorPrice);
-				}
+      try {
+        const subscription = await this._db.getOneByUserIdAndSlug(
+          userId,
+          this._slug,
+        );
+        if (!subscription || !subscription.isActive) {
+          this._logger.debug(
+            `Subscription with slug ${this._slug} for user ${userId} doesn't exist or is not active.`,
+          );
+          continue;
+        }
 
-				const shouldNotify = subscription.strategy.shouldNotify(lastNotifiedPrice, floorPrice);
-				if (!shouldNotify) {
-					this._logger.debug(`[${userId}:${this._slug}] No notification needed. Skipping.`);
-					continue;
-				}
-	
-				const difference = subscription.strategy.calculateDifference(lastNotifiedPrice, floorPrice);
-				const updated = subscription.withUpdatedState(floorPrice);
-	
-				await Promise.all([
-					this._db.createOrUpdate(updated),
-					this._redisPubSub.publish(RedisPubSub.UpdatePriceChannel, {
-						...updated,
-						difference
-					}),
-				]);
-	
-				this._logger.debug(`Updated subscription for [${userId}:${this._slug}] and published update.`);
-	
-			} catch (error: any) {
-				if (error instanceof AbstractDatabaseError) {
-					throw error;
-				}
-	
-				this._logger.error(`Unknown error in Opensesa Event Stream. Reason: ${error.message}`);
-				throw new Error(error.message);
-			}
+        const { lastNotifiedPrice } = subscription.target;
+
+        let floorPrice: number;
+        const cached = await this._cache.get<number>(`floor:${this._slug}`);
+        if (cached) {
+          floorPrice = cached;
+          this._logger.debug(
+            `Floor price for [${this._slug}] restored from cache is: ${floorPrice}.`,
+          );
+        } else {
+          this._logger.debug(
+            `Cache was cleared. Fetching API to get Floor Price for [${this._slug}].`,
+          );
+
+          const fetchedFloorPrice = await this._osApi.getFloorPrice(this._slug);
+          floorPrice = fetchedFloorPrice.floorPrice;
+          this._logger.debug(
+            `New floor price for [${this._slug}] is ${floorPrice}`,
+          );
+          await this._cache.set(`floor:${this._slug}`, floorPrice);
+        }
+
+        const shouldNotify = subscription.strategy.shouldNotify(
+          lastNotifiedPrice,
+          floorPrice,
+        );
+        if (!shouldNotify) {
+          this._logger.debug(
+            `[${userId}:${this._slug}] No notification needed. Skipping.`,
+          );
+          continue;
+        }
+
+        const difference = subscription.strategy.calculateDifference(
+          lastNotifiedPrice,
+          floorPrice,
+        );
+        const updated = subscription.withUpdatedState(floorPrice);
+
+        await Promise.all([
+          this._db.createOrUpdate(updated),
+          this._redisPubSub.publish(RedisPubSub.UpdatePriceChannel, {
+            ...updated,
+            difference,
+          }),
+        ]);
+
+        this._logger.debug();
+        this._logger.debug(
+          `Updated subscription for [${userId}:${this._slug}] and published update.`,
+        );
+      } catch (error: any) {
+        if (error instanceof AbstractDatabaseError) {
+          throw error;
+        }
+
+        this._logger.error(
+          `Unknown error in Opensesa Event Stream. Reason: ${error.message}`,
+        );
+        throw new Error(error.message);
+      }
     }
   }
 
   public disconnect(): void {
     this._client.disconnect(() => {
-      this._logger.warn(`Disconnected from OpenSea Event Stream for [${this._slug}]`);
+      this._logger.warn(
+        `Disconnected from OpenSea Event Stream for [${this._slug}]`,
+      );
     });
   }
 
@@ -132,10 +159,16 @@ export class OpenseaEventStream {
       logLevel: 50,
       onError: (error) => {
         if (error instanceof Error) {
-          this._logger.error(`Failed to connect to OpenSea Stream: ${error.message}`);
-          throw new LayerError.SubscribeEventError("OpenseaEventStream", error.message);
+          this._logger.error(
+            `Failed to connect to OpenSea Stream: ${error.message}`,
+          );
+          throw new LayerError.SubscribeEventError(
+            "OpenseaEventStream",
+            error.message,
+          );
         }
-      }
+      },
     });
   }
 }
+
