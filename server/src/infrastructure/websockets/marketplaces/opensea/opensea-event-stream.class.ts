@@ -127,7 +127,6 @@ export class OpenseaEventStream {
           }),
         ]);
 
-        this._logger.debug();
         this._logger.debug(
           `Updated subscription for [${userId}:${this._slug}] and published update.`,
         );
@@ -171,4 +170,3 @@ export class OpenseaEventStream {
     });
   }
 }
-
