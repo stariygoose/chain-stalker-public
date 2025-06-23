@@ -6,7 +6,6 @@ import { ConfigService } from "#config/config.service.js";
 import { EnvVariables } from "#config/env-variables.js";
 import { ISubscriptionRepository } from "#core/repositories/subscription-repository.interface.js";
 import { TYPES } from "#di/types.js";
-import { fromWeiToEth } from "#infrastructure/helpers/index.js";
 import { IPubSub } from "#infrastructure/lib/redis/pubsub/pubsub.interface.js";
 import { OpenSeaAPI } from "#infrastructure/lib/apis/index.js";
 import { ICache } from "#infrastructure/lib/redis/index.js";
@@ -22,13 +21,18 @@ export class OpenseaEventStream {
   private _slug = "";
 
   constructor(
-    @inject(TYPES.ConfigService) private readonly _config: ConfigService,
+    @inject(TYPES.ConfigService)
+    private readonly _config: ConfigService,
     @inject(TYPES.SubscriptionRepository)
     private readonly _db: ISubscriptionRepository,
-    @inject(TYPES.RedisPubSub) private readonly _redisPubSub: IPubSub,
-    @inject(TYPES.RedisCache) private readonly _cache: ICache,
-    @inject(TYPES.OpenSeaAPI) private readonly _osApi: OpenSeaAPI,
-    @inject(TYPES.Logger) private readonly _logger: ILogger,
+    @inject(TYPES.RedisPubSub)
+    private readonly _redisPubSub: IPubSub,
+    @inject(TYPES.RedisCache)
+    private readonly _cache: ICache,
+    @inject(TYPES.OpenSeaAPI)
+    private readonly _osApi: OpenSeaAPI,
+    @inject(TYPES.Logger)
+    private readonly _logger: ILogger,
   ) {
     this._client = this._createClient();
   }
@@ -102,6 +106,22 @@ export class OpenseaEventStream {
           await this._cache.set(`floor:${this._slug}`, floorPrice);
         }
 
+        const priceRounded = floorPrice.toFixed(6);
+        const dedupKey = `nft:dedup:${userId}:${this._slug}:${priceRounded}`;
+        const dedupTTL = 180;
+
+        const isFirst = await this._cache.setIfNotExists(
+          dedupKey,
+          "1",
+          dedupTTL,
+        );
+        if (!isFirst) {
+          this._logger.debug(
+            `[${userId}:${this._slug}] Already notified. Skipping.`,
+          );
+          continue;
+        }
+
         const shouldNotify = subscription.strategy.shouldNotify(
           lastNotifiedPrice,
           floorPrice,
@@ -156,7 +176,7 @@ export class OpenseaEventStream {
       token: this._config.get(EnvVariables.OPENSEA_TOKEN),
       connectOptions: { transport: WebSocket },
       logLevel: 50,
-      onError: (error) => {
+      onError: (error: unknown) => {
         if (error instanceof Error) {
           this._logger.error(
             `Failed to connect to OpenSea Stream: ${error.message}`,
