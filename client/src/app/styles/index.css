@@ -3,26 +3,24 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
-  --bg: #f9fafb;
-  --surface: #ffffff;
-  --brand-green: #01694e;
-  --brand-green-light: #04a36d;
-  --brand-red: #f40405;
-  --text-primary: #1f2937;
-  --text-secondary: #4b5563;
-  --border: #e5e7eb;
+  --bg-main: #f7fcfa;
+  --bg-second: #e5f5ed;
+  --text-green-light: #08872b;
+  --text-red: #e82908;
+  --text-primary: #0d1c14;
+  --text-secondary: #479e78;
+  --border: #2e6b4f;
 }
 
 @layer base {
   [data-theme="dark"] {
-    --bg: #0b0f10;
-    --surface: #12171a;
-    --brand-green: #01694e;
-    --brand-green-light: #04a36d;
-    --brand-red: #f40405;
-    --text-primary: #e5e7eb;
-    --text-secondary: #94a3b8;
-    --border: #1f2937;
+    --bg-main: #0f241c;
+    --bg-second: #214a38;
+    --text-green-light: #0ad945;
+    --text-red: #fa5438;
+    --text-primary: #ffffff;
+    --text-secondary: #8fccb2;
+    --border: #2e6b4f;
   }
 
   body {
@@ -35,21 +33,21 @@
 }
 
 @layer components {
-  .glass-bg-effect {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
+  /* .glass-bg-effect { */
+  /*   background: rgba(255, 255, 255, 0.1); */
+  /*   border-radius: 16px; */
+  /*   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); */
+  /*   backdrop-filter: blur(10px); */
+  /*   -webkit-backdrop-filter: blur(10px); */
+  /* } */
 }
 
 @layer utilities {
   .bg-primary {
-    background: var(--bg);
+    background: var(--bg-main);
   }
-  .bg-surface {
-    background-color: var(--surface);
+  .bg-secondary {
+    background-color: var(--bg-second);
   }
   .text-primary {
     color: var(--text-primary);
@@ -57,19 +55,13 @@
   .text-secondary {
     color: var(--text-secondary);
   }
-  .border-main {
+  .border-color {
     border-color: var(--border);
   }
-  .brand-green {
-    color: var(--brand-green);
+  .text-green-light {
+    color: var(--text-green-light);
   }
-  .brand-green-light {
-    color: var(--brand-green-light);
-  }
-  .brand-red {
-    color: var(--brand-red);
-  }
-  .border-brand {
-    border-color: var(--brand-green);
+  .text-red {
+    color: var(--text-red);
   }
 }
