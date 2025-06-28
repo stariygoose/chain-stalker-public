@@ -1,7 +1,6 @@
 import Lottie, { type LottieRefCurrentProps } from "lottie-react";
 import { useEffect, useRef, useState, type FC } from "react";
 
-// import sun_to_moon_unfilled from "@/shared/assets/sun_to_moon_unfilled.json";
 import sunToMoonDark from "@/shared/assets/sun_to_moon_theme_dark.json";
 import sunToMoonLight from "@/shared/assets/sun_to_moon_theme_light.json";
 
@@ -26,7 +25,6 @@ export const ThemeToggler: FC<ThemeTogglerProps> = ({
   useEffect(() => {
     const frame = theme === "dark" ? 0 : 14;
     lottieRef.current?.goToAndStop(frame, true);
-    console.log("Theme toggler re-render");
   }, [theme]);
 
   const onClick = () => {

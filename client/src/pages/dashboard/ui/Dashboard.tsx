@@ -1,8 +1,8 @@
-import { DashboardWidget } from "@/widgets/sidebar";
+import { DashboardWidget } from "@/widgets/dashboard";
 
 export const DashboardPage = () => {
   return (
-    <section className="flex w-[calc(100%-250px)] h-full glass-bg-effect p-2 border-l-1 border-brand">
+    <section className="flex w-[calc(100%-250px)] h-full">
       <DashboardWidget />
     </section>
   );
