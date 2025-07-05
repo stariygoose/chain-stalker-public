@@ -13,6 +13,7 @@ import { ILogger } from "#utils/logger.js";
 import { AbstractDatabaseError } from "#infrastructure/errors/database-errors/database-errors.abstract.js";
 import { RedisPubSub } from "#infrastructure/lib/redis/pubsub/redis-pubsub.class.js";
 import { LayerError } from "#infrastructure/errors/index.js";
+import { ApiError } from "#infrastructure/errors/api-errors/api-error.abstract.js";
 
 @injectable()
 export class OpenseaEventStream {
@@ -103,7 +104,8 @@ export class OpenseaEventStream {
           this._logger.debug(
             `New floor price for [${this._slug}] is ${floorPrice}`,
           );
-          await this._cache.set(`floor:${this._slug}`, floorPrice);
+          // 10 mins cache
+          await this._cache.set(`floor:${this._slug}`, floorPrice, 600);
         }
 
         const priceRounded = floorPrice.toFixed(6);
@@ -151,7 +153,10 @@ export class OpenseaEventStream {
           `Updated subscription for [${userId}:${this._slug}] and published update.`,
         );
       } catch (error: any) {
-        if (error instanceof AbstractDatabaseError) {
+        if (
+          error instanceof AbstractDatabaseError ||
+          error instanceof ApiError
+        ) {
           throw error;
         }
 
