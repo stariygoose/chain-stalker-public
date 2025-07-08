@@ -48,7 +48,7 @@ export class OpenSeaAPI {
         );
       }
 
-      throw new ApiError.ExternalApiError();
+      throw new ApiError.ExternalApiError(error.message);
     }
   }
 
@@ -72,8 +72,7 @@ export class OpenSeaAPI {
         );
       }
 
-      throw new ApiError.ExternalApiError();
+      throw new ApiError.ExternalApiError(error.message);
     }
   }
 }
-
