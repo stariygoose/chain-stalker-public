@@ -2,7 +2,7 @@ import { DashboardWidget } from "@/widgets/dashboard";
 
 export const DashboardPage = () => {
   return (
-    <section className="flex w-[calc(100%-250px)] h-full">
+    <section className="flex w-full h-full">
       <DashboardWidget />
     </section>
   );

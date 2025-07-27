@@ -1,7 +1,7 @@
 import { UserMiniProfile } from "@/entities/user";
 import { SidebarNavigation } from "@/features/navigation";
 import { useTheme } from "@/shared/lib";
-import { ThemeToggler } from "@/shared/ui";
+import { ThemeToggler } from "@/shared";
 
 export const Sidebar = () => {
   const { theme, setTheme } = useTheme();

@@ -1,8 +1,9 @@
+import { NavLink } from "react-router-dom";
+
 import DashboardIcon from "@/features/navigation/assets/dashboard.svg?react";
 import SubscriptionsIcon from "@/features/navigation/assets/subscriptions.svg?react";
 import SettingsIcon from "@/features/navigation/assets/settings.svg?react";
-import { SVGIcon } from "@/shared/ui";
-import { NavLink } from "react-router-dom";
+import { SVGIcon } from "@/shared";
 
 const Navigation = [
   {

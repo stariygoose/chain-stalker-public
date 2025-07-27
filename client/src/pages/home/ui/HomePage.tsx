@@ -6,7 +6,7 @@ import gh_b from "@/pages/home/assets/gh_white.svg";
 import gh_w from "@/pages/home/assets/gh_black.svg";
 import tg_b from "@/pages/home/assets/tg_black.svg";
 import tg_w from "@/pages/home/assets/tg_white.svg";
-import { ThemeToggler } from "@/shared/ui";
+import { ThemeToggler } from "@/shared";
 
 export const HomePage = () => {
   const { theme, setTheme } = useTheme();
