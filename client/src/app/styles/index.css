@@ -5,6 +5,7 @@
 @theme {
   --bg-main: #f7fcfa;
   --bg-second: #e5f5ed;
+  --bg-table: #f7fcfa;
   --text-green-light: #08872b;
   --text-red: #e82908;
   --text-primary: #0d1c14;
@@ -16,6 +17,7 @@
   [data-theme="dark"] {
     --bg-main: #0f241c;
     --bg-second: #214a38;
+    --bg-table: #173629;
     --text-green-light: #0ad945;
     --text-red: #fa5438;
     --text-primary: #ffffff;
@@ -48,6 +50,9 @@
   }
   .bg-secondary {
     background-color: var(--bg-second);
+  }
+  .bg-table {
+    background-color: var(--bg-table);
   }
   .text-primary {
     color: var(--text-primary);
