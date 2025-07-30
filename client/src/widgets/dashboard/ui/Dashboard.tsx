@@ -1,36 +1,15 @@
-import { DashboardTable } from "@/pages/dashboard/ui/dashboardTable";
-import { Card } from "@/shared";
-
-const cards = [
-  {
-    title: "Total Subscriptions",
-    description: "1000",
-    footer: "+10%",
-  },
-  {
-    title: "Active Alerts",
-    description: "1000",
-    footer: "-10%",
-  },
-  {
-    title: "Notifications Count",
-    description: "1000",
-    footer: "+120%",
-  },
-];
+import { DashboardStats, DashboardTable } from "@/features/dashboard";
 
 export const DashboardWidget = () => {
   return (
-    <div className="w-full">
-      <h1 className="text-bold text-5xl mb-7">Dashboard</h1>
-      <div className="grid [grid-template-columns:repeat(auto-fit,_minmax(200px,_1fr))] gap-4">
-        {cards.map(({ title, description, footer }) => {
-          return (
-            <Card title={title} description={description} footer={footer} />
-          );
-        })}
+    <section className="flex w-full h-full">
+      <div className="w-full">
+        <h1 className="text-bold text-5xl mb-7">Dashboard</h1>
+        <DashboardStats />
+
+        <h2 className="font-bold text-3xl mt-10">Last Alerts</h2>
+        <DashboardTable />
       </div>
-      <DashboardTable />
-    </div>
+    </section>
   );
 };

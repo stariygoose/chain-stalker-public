@@ -1,20 +1,16 @@
 import Lottie, { type LottieRefCurrentProps } from "lottie-react";
 import { useEffect, useRef, useState, type FC } from "react";
 
-import sunToMoonDark from "@/shared/assets/sun_to_moon_theme_dark.json";
-import sunToMoonLight from "@/shared/assets/sun_to_moon_theme_light.json";
+import sunToMoonDark from "../assets/sun_to_moon_theme_dark.json";
+import sunToMoonLight from "../assets/sun_to_moon_theme_light.json";
+import { useThemeStore } from "@/app/model/theme.store";
 
 interface ThemeTogglerProps {
-  theme: "dark" | "light";
-  setTheme: (theme: "dark" | "light") => void;
   className?: string;
 }
 
-export const ThemeToggler: FC<ThemeTogglerProps> = ({
-  theme,
-  setTheme,
-  className,
-}) => {
+export const ThemeToggler: FC<ThemeTogglerProps> = ({ className }) => {
+  const { theme, toggleTheme } = useThemeStore();
   const lottieRef = useRef<LottieRefCurrentProps | null>(null);
   const [playing, setPlaying] = useState(false);
   const moon: [number, number] = [14, 28];
@@ -40,8 +36,7 @@ export const ThemeToggler: FC<ThemeTogglerProps> = ({
 
   const onComplete = () => {
     setPlaying(false);
-    const nextTheme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
+    toggleTheme();
   };
 
   return (

@@ -13,9 +13,5 @@ export const SVGIcon: FC<SVGIconProps> = ({
   height,
   className,
 }) => {
-  return (
-    <div>
-      <Icon className={className} width={width} height={height} />
-    </div>
-  );
+  return <Icon className={className} width={width} height={height} />;
 };
